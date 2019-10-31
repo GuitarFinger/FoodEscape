@@ -1,18 +1,16 @@
-import { ESceneName } from "./Enum_e";
-
-// ======================== 导入
+// ============================ 导入
 
 
 // ============================ 常量定义
 const {ccclass, property} = cc._decorator;
 
+
 // ============================ 变量定义
+
 
 // ============================ 类定义
 @ccclass
-export default class NewClass extends cc.Component {
-
-    @property(cc.Label)
+export default class Enemy extends cc.Component {
     label: cc.Label = null;
 
     @property
@@ -20,11 +18,7 @@ export default class NewClass extends cc.Component {
 
     // LIFE-CYCLE CALLBACKS:
 
-    onLoad () {
-        cc.director.preloadScene(ESceneName.MAIN_MENU, () => {
-            cc.director.loadScene(ESceneName.MAIN_MENU);
-        });
-    }
+    // onLoad () {}
 
     start () {
 
@@ -33,7 +27,15 @@ export default class NewClass extends cc.Component {
     // update (dt) {}
 }
 
+
+// ============================ 组件定义
+
+
 // ============================ 方法定义
+
+
+// ============================ 导出
+
 
 // ============================ 立即执行
 

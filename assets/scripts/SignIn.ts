@@ -1,4 +1,4 @@
-import { ESceneName } from "./Enum_e";
+import { ESceneName } from "./Enum";
 
 const {ccclass, property} = cc._decorator;
 
@@ -20,8 +20,8 @@ export default class SignIn extends cc.Component {
     }
 
     getDoubleSignAward () {
-        cc.director.preloadScene(ESceneName.ACCOUNT, () => {
-            cc.director.loadScene(ESceneName.ACCOUNT);
+        cc.director.preloadScene(ESceneName.MAIN_GAME, () => {
+            cc.director.loadScene(ESceneName.MAIN_GAME);
         });
     }
 
