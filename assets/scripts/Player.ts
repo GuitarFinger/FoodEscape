@@ -13,10 +13,6 @@ const {ccclass, property} = cc._decorator;
 // ============================ 类定义
 @ccclass
 export default class Player extends cc.Component {
-    label: cc.Label = null;
-
-    @property
-    text: string = 'hello';
     /**
      * 跳跃高度
      */

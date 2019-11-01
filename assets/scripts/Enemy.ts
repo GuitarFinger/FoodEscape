@@ -11,10 +11,6 @@ const {ccclass, property} = cc._decorator;
 // ============================ 类定义
 @ccclass
 export default class Enemy extends cc.Component {
-    label: cc.Label = null;
-
-    @property
-    text: string = 'hello';
     /**
      * 速度 米/秒 | 度/秒
      */
@@ -78,18 +74,6 @@ export default class Enemy extends cc.Component {
 
         roleRotateAngle = (Math.floor(angle / 90) - 1) * 90 + angle % 90;
 
-        // if (angle >= 270) {
-        //     roleRotateAngle = 180 + angle % 90;
-        // }
-        // else if (angle >= 180) {
-        //     roleRotateAngle = 90 + angle % 90;
-        // }
-        // else if (angle >= 90) {
-        //     roleRotateAngle = 0 + angle % 90;
-        // }
-        // else {
-        //     roleRotateAngle = -90 + angle % 90;
-        // }
         return roleRotateAngle;
     }
 }
