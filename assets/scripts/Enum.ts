@@ -33,7 +33,23 @@ export enum ESceneName {
  */
 export enum EBaseSetting {
     /**
+     * 地表转动360度的时间
+     */
+    ROTATE_DURATION_S = 10,
+    /**
+     * 中景转动360度的时间
+     */
+    ROTATE_DURATION_P = 40,
+    /**
      * 连跳次数
      */
     JUMP_COUNT = 2,
+    /**
+     * 初始距离
+     */
+    INIT_DISTANCE = 100,
+    /**
+     * 最大距离
+     */
+    MAX_DISTANCE = 120
 }

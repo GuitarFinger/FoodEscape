@@ -15,6 +15,26 @@ export default class Enemy extends cc.Component {
 
     @property
     text: string = 'hello';
+    /**
+     * 速度 米/秒 | 度/秒
+     */
+    speed: number = 3;
+    /**
+     * 当前相对于水平面的角度
+     */
+    relativeAngle: number;
+    /**
+     * 上一次时间
+     */
+    lastTime: number = 0;
+    /**
+     * X方向
+     */
+    directionX: 'left' | 'right' = 'left';
+    /**
+     * 主游戏上下文
+     */
+    mainGame: any = null;
 
     // LIFE-CYCLE CALLBACKS:
 
@@ -24,7 +44,54 @@ export default class Enemy extends cc.Component {
 
     }
 
-    // update (dt) {}
+    update (dt) {
+        // console.log(dt);
+        this.move(dt);
+    }
+
+
+    move = (dt: number) => {
+        const nowTime = Date.now();
+        this.lastTime = this.lastTime || nowTime;
+
+        const meterPreAngle = this.mainGame.meterPerAngle || 0.2;
+        const timeSpace = (nowTime - this.lastTime) / 1000;
+
+        const nowAngle = (this.relativeAngle + (this.directionX === 'left' ? -1 : 1) * meterPreAngle * timeSpace * this.speed) % 360;
+        const roleRotate = this.getRoleRotateAngle(nowAngle);
+
+        const nowWorldX = 375 + Math.cos(nowAngle * Math.PI / 180) * 667;
+        const nowWorldY = Math.sin(nowAngle * Math.PI / 180) * 667;
+
+        // 设置人物位置和旋转
+        this.node.setPosition(this.mainGame.node.convertToNodeSpaceAR(cc.v2(nowWorldX, nowWorldY)));
+        this.node.angle = roleRotate;
+
+        this.relativeAngle = nowAngle;
+        this.lastTime = nowTime;
+    }
+
+    getRoleRotateAngle = (angle: number) => {
+        angle = angle < 0 ? 360 + angle : angle;
+
+        let roleRotateAngle = 0;
+
+        roleRotateAngle = (Math.floor(angle / 90) - 1) * 90 + angle % 90;
+
+        // if (angle >= 270) {
+        //     roleRotateAngle = 180 + angle % 90;
+        // }
+        // else if (angle >= 180) {
+        //     roleRotateAngle = 90 + angle % 90;
+        // }
+        // else if (angle >= 90) {
+        //     roleRotateAngle = 0 + angle % 90;
+        // }
+        // else {
+        //     roleRotateAngle = -90 + angle % 90;
+        // }
+        return roleRotateAngle;
+    }
 }
 
 

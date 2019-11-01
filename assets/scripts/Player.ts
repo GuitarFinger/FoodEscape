@@ -26,14 +26,13 @@ export default class Player extends cc.Component {
      */
     jumpDuration: number = 0.3;
     /**
-     * 速度
+     * 速度 米/秒 | 度/秒
      */
-    speed: number = 1;
+    speed: number = 0;
     /**
      * 地表Y坐标
      */
     surfaceY: number = 0;
-
     /**
      * 是否跳起
      */
@@ -42,6 +41,14 @@ export default class Player extends cc.Component {
      * 跳起次数
      */
     jumpCount: number = 0;
+    /**
+     * 当前相对于水平面的角度
+     */
+    relativeAngle: number;
+    /**
+     * 主游戏上下文
+     */
+    mainGame: any = null;
 
     // LIFE-CYCLE CALLBACKS:
 

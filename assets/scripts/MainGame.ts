@@ -1,3 +1,6 @@
+import { Utils } from "./Utils";
+import { EBaseSetting } from "./Enum";
+
 // ============================ 导入
 
 
@@ -30,13 +33,20 @@ export default class MainGame extends cc.Component {
     @property(cc.Node)
     prospect: cc.Node = null;
 
+    meterPerAngle: number;
+
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
         this.bindListener();
 
-        this.nodeRotateBy(this.surface, 10, -360);
-        this.nodeRotateBy(this.prospect, 40, -360);
+        this.meterPerAngle = this.calcMeterPerAngle(
+            this.calcRelativeSurfaceAngle(this.player, 'Player'),
+            this.calcRelativeSurfaceAngle(this.enemy, 'Enemy')
+        );
+
+        this.nodeRotateBy(this.surface, EBaseSetting.ROTATE_DURATION_S, -360);
+        this.nodeRotateBy(this.prospect, EBaseSetting.ROTATE_DURATION_P, -360);
     }
     
 
@@ -48,16 +58,43 @@ export default class MainGame extends cc.Component {
 
 
     bindListener = () => {
+        const player = this.player.getComponent('Player');
+        const enemy = this.enemy.getComponent('Enemy');
+
+        player.mainGame = this;
+        enemy.mainGame = this;
+
         this.node.on(cc.Node.EventType.TOUCH_START, () => {
-            this.player.getComponent('Player').jump();
+            player.jump();
         });
     }
 
+    /**
+     * 节点旋转
+     */
     nodeRotateBy = (node: cc.Node, duration: number = 2, angle: number = 360) => {
-        const rotateAct = cc.rotateBy(duration, angle);
         const repeatRotateBy = cc.repeatForever(cc.rotateBy(duration, angle));
 
         node.runAction(repeatRotateBy);
+    }
+
+    /**
+     * 计算相对于水平面角度
+     */
+    calcRelativeSurfaceAngle = (node: cc.Node, componentType: string) => {
+        const component = node.getComponent(componentType);
+        const pos = (this.node as cc.Node).convertToWorldSpaceAR(node.getPosition());
+        const angle = 180 + Utils.getTowPointerAngle({ x: pos.x, y: pos.y }, { x: 375, y: 1334 });
+
+        component.relativeAngle = angle;
+
+        return angle;
+    };
+    /**
+     * 获取 米/度
+     */
+    calcMeterPerAngle = (angle1: number, angle2: number): number => {
+        return Math.abs(Math.abs(angle1) - Math.abs(angle2)) / EBaseSetting.INIT_DISTANCE;
     }
 }
 
