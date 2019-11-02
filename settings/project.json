@@ -1,10 +1,30 @@
 {
   "group-list": [
-    "default"
+    "default",
+    "player",
+    "prop",
+    "enemy"
   ],
   "collision-matrix": [
     [
+      false
+    ],
+    [
+      false,
+      false,
+      true,
       true
+    ],
+    [
+      false,
+      true,
+      false
+    ],
+    [
+      false,
+      true,
+      false,
+      false
     ]
   ],
   "excluded-modules": [],

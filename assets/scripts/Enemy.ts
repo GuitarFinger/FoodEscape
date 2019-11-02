@@ -42,9 +42,22 @@ export default class Enemy extends cc.Component {
 
     update (dt) {
         // console.log(dt);
+        if (this.mainGame.isPaused === true) return;
+        
         this.move(dt);
     }
 
+    onCollisionEnter (other: cc.Node, self: cc.Node) {
+        
+        const oComponent = other.getComponent('Player');
+
+        if (oComponent.selfType === 'player') {
+            oComponent.node.destroy();
+
+            this.mainGame.pauseGame();
+        }
+
+    }
 
     move = (dt: number) => {
         const nowTime = Date.now();

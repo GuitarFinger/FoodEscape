@@ -21,6 +21,11 @@ export default class Loading extends cc.Component {
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
+        const collisionMgr = cc.director.getCollisionManager();
+        
+        collisionMgr.enabled = true;
+        collisionMgr.enabledDebugDraw = true;
+
         cc.director.preloadScene(ESceneName.MAIN_MENU, () => {
             cc.director.loadScene(ESceneName.MAIN_MENU);
         });

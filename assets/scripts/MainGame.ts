@@ -33,7 +33,14 @@ export default class MainGame extends cc.Component {
     @property(cc.Node)
     prospect: cc.Node = null;
 
+    /**
+     * 米/度
+     */
     meterPerAngle: number;
+    /**
+     * 游戏暂停
+     */
+    isPaused: boolean = false;
 
     // LIFE-CYCLE CALLBACKS:
 
@@ -45,17 +52,34 @@ export default class MainGame extends cc.Component {
             this.calcRelativeSurfaceAngle(this.enemy, 'Enemy')
         );
 
-        this.nodeRotateBy(this.surface, EBaseSetting.ROTATE_DURATION_S, -360);
-        this.nodeRotateBy(this.prospect, EBaseSetting.ROTATE_DURATION_P, -360);
     }
     
 
     start () {
-
+        this.startGame();
     }
 
     // update (dt) {}
 
+    /**
+     * 开始游戏
+     */
+    startGame = () => {
+        this.isPaused = false;
+
+        this.nodeRotateBy(this.surface, EBaseSetting.ROTATE_DURATION_S, -360);
+        this.nodeRotateBy(this.prospect, EBaseSetting.ROTATE_DURATION_P, -360);
+    }
+
+    /**
+     * 暂停游戏
+     */
+    pauseGame = () => {
+        this.isPaused = true;
+
+        this.surface.stopAllActions();
+        this.prospect.stopAllActions();
+    }
 
     bindListener = () => {
         const player = this.player.getComponent('Player');
@@ -65,6 +89,8 @@ export default class MainGame extends cc.Component {
         enemy.mainGame = this;
 
         this.node.on(cc.Node.EventType.TOUCH_START, () => {
+            if (this.isPaused === true) return;
+
             player.jump();
         });
     }

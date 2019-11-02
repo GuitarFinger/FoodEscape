@@ -45,6 +45,14 @@ export default class Player extends cc.Component {
      * 主游戏上下文
      */
     mainGame: any = null;
+    /**
+     * 类型
+     */
+    selfType: string = 'player';
+    /**
+     * 是否死亡
+     */
+    isDead: boolean = false;
 
     // LIFE-CYCLE CALLBACKS:
 
@@ -53,6 +61,26 @@ export default class Player extends cc.Component {
     }
 
     start () {
+        
+    }
+
+    onCollisionEnter (other: cc.Node, self: cc.Node) {
+        console.log("oh  is collision");
+        // if (other)
+        const oComponent = other.getComponent('Prop') || other.getComponent('Enemy');
+
+        switch (oComponent.selfType) {
+            case 'coin':
+                console.log('拿到一个金币');
+                oComponent.node.destroy();
+                break;
+            case 'diamond': {
+                console.log('拿到一个钻石');
+                oComponent.node.destroy();
+                break;
+            }
+        }
+
         
     }
 
@@ -100,6 +128,7 @@ export default class Player extends cc.Component {
         this.isJump = false;
         this.jumpCount = 0;
     }
+    
 }
 
 
