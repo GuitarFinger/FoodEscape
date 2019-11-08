@@ -173,7 +173,13 @@ export default class Player extends cc.Component {
         this.isDead = true;
         this.selfSkeleton.setAnimation(0, 'death', false);
     }
-    
+
+    /**
+     * 设置时间缩放
+     */
+    setTimeScale = (scale: number = 1) => {
+        this.selfSkeleton.timeScale = scale;
+    }
 
     /**
      * @method 重置数据

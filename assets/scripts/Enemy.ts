@@ -42,10 +42,20 @@ export default class Enemy extends cc.Component {
      * 是否正在手动移动
      */
     isHandMove: boolean = false;
+    /**
+     * 骨骼
+     */
+    selfSkeleton: sp.Skeleton;
 
     // LIFE-CYCLE CALLBACKS:
 
-    // onLoad () {}
+    init() {
+        this.selfSkeleton = this.node.getChildByName('spine').getComponent(sp.Skeleton);
+    }
+    
+    onLoad () {
+        this.init();
+    }
 
     start () {
 
@@ -155,6 +165,13 @@ export default class Enemy extends cc.Component {
         roleRotateAngle = (Math.floor(angle / 90) - 1) * 90 + angle % 90;
 
         return roleRotateAngle;
+    }
+
+    /**
+     * 设置时间缩放
+     */
+    setTimeScale = (scale: number = 1) => {
+        this.selfSkeleton.timeScale = scale;
     }
 }
 

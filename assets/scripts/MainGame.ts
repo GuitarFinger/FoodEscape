@@ -27,16 +27,16 @@ export default class MainGame extends cc.Component {
 
     // 预制体
     @property(cc.Prefab)
-    playerFab: cc.Prefab;
+    playerFab: cc.Prefab = null;
 
     @property(cc.Prefab)
-    enemyFab: cc.Prefab;
+    enemyFab: cc.Prefab = null;
 
     @property(cc.Prefab)
-    propFab: cc.Prefab;
+    propFab: cc.Prefab = null;
 
     @property(cc.Prefab)
-    obstacleFab: cc.Prefab;
+    obstacleFab: cc.Prefab = null;
 
     /**
      * 玩家节点
@@ -145,7 +145,6 @@ export default class MainGame extends cc.Component {
             if (!this.isPaused) {
                 player.jump();
             }
-            
         });
     }
 
