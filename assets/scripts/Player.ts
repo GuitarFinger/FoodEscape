@@ -83,7 +83,7 @@ export default class Player extends cc.Component {
 
         const oComponent = other.getComponent('Prop') || other.getComponent('Enemy') || other.getComponent('Obstacle');
 
-        if (oComponent === null) return;
+        if (oComponent === null || this.isDead) return;
 
         switch (oComponent.selfType) {
             case 'coin':
@@ -170,6 +170,7 @@ export default class Player extends cc.Component {
         // const spineNode = this.node.getChildByName('spine');
         // const skeleton = spineNode.getComponent(sp.Skeleton);
 
+        this.isDead = true;
         this.selfSkeleton.setAnimation(0, 'death', false);
     }
     

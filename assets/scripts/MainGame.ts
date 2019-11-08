@@ -5,6 +5,9 @@
 import { Utils } from "./Utils";
 import { EBaseSetting } from "./Enum";
 
+// ============================ 类型定义
+type NodeType = 'player' | 'enemy' | 'prop' | 'obstacle';
+
 // ============================ 常量定义
 const {ccclass, property} = cc._decorator;
 
@@ -15,24 +18,42 @@ const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class MainGame extends cc.Component {
-
-    @property(cc.Label)
-    label: cc.Label = null;
-
-    @property
-    text: string = 'hello';
-
-    @property(cc.Node)
-    player: cc.Node = null;
-
-    @property(cc.Node)
-    enemy: cc.Node = null;
-
+    // 界面可编辑节点
     @property(cc.Node)
     surface: cc.Node = null;
 
     @property(cc.Node)
     prospect: cc.Node = null;
+
+    // 预制体
+    @property(cc.Prefab)
+    playerFab: cc.Prefab;
+
+    @property(cc.Prefab)
+    enemyFab: cc.Prefab;
+
+    @property(cc.Prefab)
+    propFab: cc.Prefab;
+
+    @property(cc.Prefab)
+    obstacleFab: cc.Prefab;
+
+    /**
+     * 玩家节点
+     */
+    player: cc.Node;
+    /**
+     * 敌人节点
+     */
+    enemy: cc.Node;
+    /**
+     * 道具
+     */
+    propPool: cc.NodePool = new cc.NodePool();
+    /**
+     * 障碍
+     */
+    obstaclePool: cc.NodePool = new cc.NodePool();
 
     /**
      * 米/度
@@ -56,9 +77,12 @@ export default class MainGame extends cc.Component {
     startRTime: number = 0;
 
     // // LIFE-CYCLE CALLBACKS:
-
     onLoad () {
-        cc.log("1111111111");
+        this.createPlayer();
+        this.createEnemey();
+        this.createProp();
+        this.createObstacle();
+
         this.bindListener();
 
         this.meterPerAngle = this.calcMeterPerAngle(
@@ -67,42 +91,23 @@ export default class MainGame extends cc.Component {
         );
 
     }
-    
 
     start () {
         this.startGame();
-
-        this.startRTime = Date.now();
     }
 
-    // update (dt) {
-    //     const nowTime = Date.now();
-    //     const timeDif = (nowTime - this.startRTime) / 1000;
-    //     // const displacement = this.initSpeed * timeDif + 1/2 * this.acceleration * Math.pow(timeDif, 2);
-    //     let nowV = this.initSpeed + this.acceleration * timeDif;
-
-    //     nowV = nowV > 100 ? 200 : nowV;
-
-    //     const displacement = (this.initSpeed + nowV) /2 * timeDif;
-
-    //     console.log("角度变化", displacement - this.surface.angle);
-    //     this.surface.angle = displacement;
-
-    //     // console.log("当前速度", nowV);
-    //     // console.log("角度变化", displacement);
-    //     // console.log("当前角度", this.surface.angle);
-    // }
+    // update (dt) {}
 
     /**
      * 开始游戏
      */
     startGame = () => {
+        this.startRTime = Date.now();
         this.isPaused = false;
 
         this.nodeRotateBy(this.surface, EBaseSetting.ROTATE_DURATION_S, -360);
         this.nodeRotateBy(this.prospect, EBaseSetting.ROTATE_DURATION_P, -360);    
     }
-
 
     // async test () {
     //     const a = await this.testAsync();
@@ -136,9 +141,11 @@ export default class MainGame extends cc.Component {
         enemy.mainGame = this;
 
         this.node.on(cc.Node.EventType.TOUCH_START, () => {
-            if (this.isPaused === true) return;
 
-            player.jump();
+            if (!this.isPaused) {
+                player.jump();
+            }
+            
         });
     }
 
@@ -168,6 +175,54 @@ export default class MainGame extends cc.Component {
      */
     calcMeterPerAngle = (angle1: number, angle2: number): number => {
         return Math.abs(Math.abs(angle1) - Math.abs(angle2)) / EBaseSetting.INIT_DISTANCE;
+    }
+
+    /**
+     * 生成玩家
+     */
+    createPlayer = () => {
+        this.player = cc.instantiate(this.playerFab);
+        this.node.addChild(this.player);
+    }
+
+    /**
+     * 生成敌人
+     */
+    createEnemey = () => {
+        this.enemy = cc.instantiate(this.enemyFab);
+        this.node.addChild(this.enemy);
+    }
+
+    /**
+     * 创建道具
+     */
+    createProp = () => {
+        let prop: cc.Node = null;
+
+        if (this.propPool.size() > 0) {
+            prop = this.propPool.get();
+        } else {
+            prop = cc.instantiate(this.propFab);
+            this.propPool.put(prop);
+        }
+
+        this.surface.addChild(prop);
+    }
+
+    /**
+     * 创建障碍物
+     */
+    createObstacle = () => {
+        let obstacle: cc.Node = null;
+
+        if (this.obstaclePool.size() > 0) {
+            obstacle = this.obstaclePool.get();
+        } else {
+            obstacle = cc.instantiate(this.obstacleFab);
+            this.obstaclePool.put(obstacle);
+        }
+
+        this.surface.addChild(obstacle);
     }
 }
 

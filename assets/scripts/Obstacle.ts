@@ -25,6 +25,13 @@ export default class Obstacle extends cc.Component {
     }
 
     // update (dt) {}
+
+    /**
+     * 初始化
+     */
+    init = (initData: any) => {
+        
+    }
 }
 
 

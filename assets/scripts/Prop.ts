@@ -16,6 +16,7 @@ const {ccclass, property} = cc._decorator;
 export default class Prop extends cc.Component {
     @property
     selfType: 'coin' | 'diamond' = 'coin';
+
     // LIFE-CYCLE CALLBACKS:
 
     // onLoad () {}
@@ -25,6 +26,13 @@ export default class Prop extends cc.Component {
     }
 
     // update (dt) {}
+
+    /**
+     * 初始化
+     */
+    init = (initData: any) => {
+
+    }
 }
 
 
