@@ -1,8 +1,9 @@
+/**
+ * @module 游戏主逻辑
+ */
+// ============================ 导入
 import { Utils } from "./Utils";
 import { EBaseSetting } from "./Enum";
-
-// ============================ 导入
-
 
 // ============================ 常量定义
 const {ccclass, property} = cc._decorator;
@@ -41,10 +42,23 @@ export default class MainGame extends cc.Component {
      * 游戏暂停
      */
     isPaused: boolean = false;
+    /**
+     * 初始速度
+     */
+    initSpeed: number = 40;
+    /**
+     * 加速度
+     */
+    acceleration: number = 2;
+    /**
+     * 转动开始时间
+     */
+    startRTime: number = 0;
 
-    // LIFE-CYCLE CALLBACKS:
+    // // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
+        cc.log("1111111111");
         this.bindListener();
 
         this.meterPerAngle = this.calcMeterPerAngle(
@@ -57,9 +71,27 @@ export default class MainGame extends cc.Component {
 
     start () {
         this.startGame();
+
+        this.startRTime = Date.now();
     }
 
-    // update (dt) {}
+    // update (dt) {
+    //     const nowTime = Date.now();
+    //     const timeDif = (nowTime - this.startRTime) / 1000;
+    //     // const displacement = this.initSpeed * timeDif + 1/2 * this.acceleration * Math.pow(timeDif, 2);
+    //     let nowV = this.initSpeed + this.acceleration * timeDif;
+
+    //     nowV = nowV > 100 ? 200 : nowV;
+
+    //     const displacement = (this.initSpeed + nowV) /2 * timeDif;
+
+    //     console.log("角度变化", displacement - this.surface.angle);
+    //     this.surface.angle = displacement;
+
+    //     // console.log("当前速度", nowV);
+    //     // console.log("角度变化", displacement);
+    //     // console.log("当前角度", this.surface.angle);
+    // }
 
     /**
      * 开始游戏
@@ -68,8 +100,23 @@ export default class MainGame extends cc.Component {
         this.isPaused = false;
 
         this.nodeRotateBy(this.surface, EBaseSetting.ROTATE_DURATION_S, -360);
-        this.nodeRotateBy(this.prospect, EBaseSetting.ROTATE_DURATION_P, -360);
+        this.nodeRotateBy(this.prospect, EBaseSetting.ROTATE_DURATION_P, -360);    
     }
+
+
+    // async test () {
+    //     const a = await this.testAsync();
+    //     console.log(a);
+    // }
+
+    // async testAsync(): Promise<string> {
+    //     return new Promise<string>((resolve, reject) => {
+    //         setTimeout(() => {
+    //             resolve("hello world");
+    //         }, 2000)
+    //     });
+    // }
+    
 
     /**
      * 暂停游戏

@@ -1,7 +1,9 @@
-import { ESceneName } from "./Enum";
+/**
+ * @module 加载
+ */
 
 // ======================== 导入
-
+import { ESceneName } from "./Enum";
 
 // ============================ 常量定义
 const {ccclass, property} = cc._decorator;
@@ -11,12 +13,6 @@ const {ccclass, property} = cc._decorator;
 // ============================ 类定义
 @ccclass
 export default class Loading extends cc.Component {
-
-    @property(cc.Label)
-    label: cc.Label = null;
-
-    @property
-    text: string = 'hello';
 
     // LIFE-CYCLE CALLBACKS:
 
@@ -31,9 +27,9 @@ export default class Loading extends cc.Component {
         });
     }
 
-    start () {
+    // start () {
 
-    }
+    // }
 
     // update (dt) {}
 }

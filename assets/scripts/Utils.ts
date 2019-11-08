@@ -1,3 +1,7 @@
+/**
+ * @module 通用工具
+ */
+
 type Point = { x: number, y: number };
 
 export class Utils {

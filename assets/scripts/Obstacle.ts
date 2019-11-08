@@ -1,5 +1,5 @@
 /**
- * @module 道具
+ * @module 障碍物
  */
 // ============================ 导入
 
@@ -13,9 +13,9 @@ const {ccclass, property} = cc._decorator;
 
 // ============================ 类定义
 @ccclass
-export default class Prop extends cc.Component {
+export default class Obstacle extends cc.Component {
     @property
-    selfType: 'coin' | 'diamond' = 'coin';
+    selfType: 'obstacle' = 'obstacle';
     // LIFE-CYCLE CALLBACKS:
 
     // onLoad () {}

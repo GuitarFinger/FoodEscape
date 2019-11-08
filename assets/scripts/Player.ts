@@ -1,7 +1,8 @@
-import { EBaseSetting } from "./Enum";
-
+/**
+ * @module 玩家
+ */
 // ============================ 导入
-
+import { EBaseSetting } from "./Enum";
 
 // ============================ 常量定义
 const {ccclass, property} = cc._decorator;
@@ -53,7 +54,20 @@ export default class Player extends cc.Component {
      * 是否死亡
      */
     isDead: boolean = false;
+    /**
+     * 骨骼
+     */
+    selfSkeleton: sp.Skeleton;
 
+    init = () => {
+        this.surfaceY = this.node.y;
+        this.selfSkeleton = this.node.getChildByName('spine').getComponent(sp.Skeleton);
+        this.selfSkeleton.setCompleteListener((trackEntry) => {
+            if (trackEntry.animation.name === 'death') {
+                this.node.destroy();
+            }
+        });
+    }
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
@@ -66,27 +80,35 @@ export default class Player extends cc.Component {
 
     onCollisionEnter (other: cc.Node, self: cc.Node) {
         console.log("oh  is collision");
-        // if (other)
-        const oComponent = other.getComponent('Prop') || other.getComponent('Enemy');
+
+        const oComponent = other.getComponent('Prop') || other.getComponent('Enemy') || other.getComponent('Obstacle');
+
+        if (oComponent === null) return;
 
         switch (oComponent.selfType) {
             case 'coin':
-                console.log('拿到一个金币');
                 oComponent.node.destroy();
+                this.collisonProp();
                 break;
-            case 'diamond': {
-                console.log('拿到一个钻石');
+
+            case 'diamond': 
                 oComponent.node.destroy();
+                this.collisonProp();
                 break;
-            }
+
+            case 'obstacle': 
+                this.collsionObstacle();
+                break;
+            
+            case 'enemy': 
+                this.collsionEnemy();
+                break;
         }
 
         
     }
 
-    init = () => {
-        this.surfaceY = this.node.y;
-    }
+    
 
     // update (dt) {}
 
@@ -104,7 +126,7 @@ export default class Player extends cc.Component {
                 this.jumpDown(),
                 cc.callFunc(this.resetData)
             )
-        );        
+        );      
     }
     
     /**
@@ -120,6 +142,37 @@ export default class Player extends cc.Component {
     jumpDown = () => {
         return cc.moveTo(this.jumpDuration, cc.v2(this.node.x, this.surfaceY)).easing(cc.easeCubicActionIn());
     }
+
+    /**
+     * 碰撞道具
+     */
+    collisonProp = () => {
+        const enemy = (this.mainGame.enemy as cc.Node).getComponent('Enemy');
+        const meterPerAngle = this.mainGame.meterPerAngle;
+
+        enemy.roleMove(meterPerAngle * 25);
+    }
+
+    /**
+     * 碰撞障碍
+     */
+    collsionObstacle = () => {
+        const enemy = (this.mainGame.enemy as cc.Node).getComponent('Enemy');
+        const meterPerAngle = this.mainGame.meterPerAngle;
+
+        enemy.roleMove(-meterPerAngle * 25);
+    }
+    
+    /**
+     * 碰撞敌人
+     */
+    collsionEnemy = () => {
+        // const spineNode = this.node.getChildByName('spine');
+        // const skeleton = spineNode.getComponent(sp.Skeleton);
+
+        this.selfSkeleton.setAnimation(0, 'death', false);
+    }
+    
 
     /**
      * @method 重置数据

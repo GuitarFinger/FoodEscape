@@ -3,7 +3,8 @@
     "default",
     "player",
     "prop",
-    "enemy"
+    "enemy",
+    "obstacle"
   ],
   "collision-matrix": [
     [
@@ -12,6 +13,7 @@
     [
       false,
       false,
+      true,
       true,
       true
     ],
@@ -25,10 +27,17 @@
       true,
       false,
       false
+    ],
+    [
+      false,
+      true,
+      false,
+      false,
+      false
     ]
   ],
   "excluded-modules": [],
-  "last-module-event-record-time": 0,
+  "last-module-event-record-time": 1572840214497,
   "design-resolution-width": 750,
   "design-resolution-height": 1334,
   "fit-width": true,
