@@ -1,7 +1,7 @@
 {
   "ver": "1.2.4",
-  "uuid": "98790b84-2148-47fa-8bac-b17bf746fe77",
-  "rawTextureUuid": "54212193-03b6-4f8b-b70f-bcc5783ea5e9",
+  "uuid": "4e4d8a3b-562f-44c5-89da-ce94e6a7b0d1",
+  "rawTextureUuid": "225e14cc-4042-4633-a5ec-8ef533eb6a6c",
   "size": {
     "width": 245,
     "height": 444
@@ -10,8 +10,8 @@
   "subMetas": {
     "bg_sign_gray.png": {
       "ver": "1.0.4",
-      "uuid": "b77e6df1-188d-450f-825a-b760b7b072a2",
-      "rawTextureUuid": "54212193-03b6-4f8b-b70f-bcc5783ea5e9",
+      "uuid": "1c7e31e0-c002-42e6-bb6d-e2d7e0905116",
+      "rawTextureUuid": "225e14cc-4042-4633-a5ec-8ef533eb6a6c",
       "trimType": "auto",
       "trimThreshold": 1,
       "rotated": true,
@@ -32,8 +32,8 @@
     },
     "bg_sign_normal.png": {
       "ver": "1.0.4",
-      "uuid": "5b7deaaf-c341-4b7f-96f5-85856368f425",
-      "rawTextureUuid": "54212193-03b6-4f8b-b70f-bcc5783ea5e9",
+      "uuid": "ff4f4845-005b-4e8e-8500-b255661a164c",
+      "rawTextureUuid": "225e14cc-4042-4633-a5ec-8ef533eb6a6c",
       "trimType": "auto",
       "trimThreshold": 1,
       "rotated": false,
@@ -54,8 +54,8 @@
     },
     "btn_2.png": {
       "ver": "1.0.4",
-      "uuid": "8bc5a47f-6025-44de-93e2-e6f6273128cd",
-      "rawTextureUuid": "54212193-03b6-4f8b-b70f-bcc5783ea5e9",
+      "uuid": "b2eccd33-5a90-447e-8679-2dfa1e8c2fc4",
+      "rawTextureUuid": "225e14cc-4042-4633-a5ec-8ef533eb6a6c",
       "trimType": "auto",
       "trimThreshold": 1,
       "rotated": true,
@@ -76,8 +76,8 @@
     },
     "icon_diamond_gray.png": {
       "ver": "1.0.4",
-      "uuid": "e6f3640c-aaf3-448c-b714-9814c1fafe03",
-      "rawTextureUuid": "54212193-03b6-4f8b-b70f-bcc5783ea5e9",
+      "uuid": "03224eac-744e-4992-bbcc-c73c0d05f3b7",
+      "rawTextureUuid": "225e14cc-4042-4633-a5ec-8ef533eb6a6c",
       "trimType": "auto",
       "trimThreshold": 1,
       "rotated": true,
@@ -98,8 +98,8 @@
     },
     "icon_diamond_normal.png": {
       "ver": "1.0.4",
-      "uuid": "6446adda-9de5-4033-b83f-30ad493cb9f5",
-      "rawTextureUuid": "54212193-03b6-4f8b-b70f-bcc5783ea5e9",
+      "uuid": "5b077105-7f73-43b6-9e2c-7fcd0c01d956",
+      "rawTextureUuid": "225e14cc-4042-4633-a5ec-8ef533eb6a6c",
       "trimType": "auto",
       "trimThreshold": 1,
       "rotated": false,
@@ -120,8 +120,8 @@
     },
     "icon_diamonds_normal.png": {
       "ver": "1.0.4",
-      "uuid": "17682458-c659-42d2-829c-943e8427ed13",
-      "rawTextureUuid": "54212193-03b6-4f8b-b70f-bcc5783ea5e9",
+      "uuid": "c23c6859-4202-487f-ad94-84d6b535ae01",
+      "rawTextureUuid": "225e14cc-4042-4633-a5ec-8ef533eb6a6c",
       "trimType": "auto",
       "trimThreshold": 1,
       "rotated": true,
@@ -142,8 +142,8 @@
     },
     "icon_dui.png": {
       "ver": "1.0.4",
-      "uuid": "6b788c0b-93fc-4789-9162-5afe28583c0d",
-      "rawTextureUuid": "54212193-03b6-4f8b-b70f-bcc5783ea5e9",
+      "uuid": "e59ac5bd-c43b-49fd-afa9-0a19d683023c",
+      "rawTextureUuid": "225e14cc-4042-4633-a5ec-8ef533eb6a6c",
       "trimType": "auto",
       "trimThreshold": 1,
       "rotated": true,
@@ -164,8 +164,8 @@
     },
     "icon_shadow_gray.png": {
       "ver": "1.0.4",
-      "uuid": "bf0f985b-8bd8-4971-b8ac-d7c3cf9c5a8e",
-      "rawTextureUuid": "54212193-03b6-4f8b-b70f-bcc5783ea5e9",
+      "uuid": "32eea14c-ac7f-46b6-8ced-258e0249f83d",
+      "rawTextureUuid": "225e14cc-4042-4633-a5ec-8ef533eb6a6c",
       "trimType": "auto",
       "trimThreshold": 1,
       "rotated": false,
@@ -186,8 +186,8 @@
     },
     "icon_shadow_normal.png": {
       "ver": "1.0.4",
-      "uuid": "97d5f4cf-14eb-4c95-974f-54ab67979fc7",
-      "rawTextureUuid": "54212193-03b6-4f8b-b70f-bcc5783ea5e9",
+      "uuid": "e8e98188-903e-4c32-8fbf-5aca442ebd95",
+      "rawTextureUuid": "225e14cc-4042-4633-a5ec-8ef533eb6a6c",
       "trimType": "auto",
       "trimThreshold": 1,
       "rotated": false,

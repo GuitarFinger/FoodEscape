@@ -58,8 +58,8 @@
       "__type__": "TypedArray",
       "ctor": "Float32Array",
       "array": [
-        -311.0480041503906,
-        -74.47599792480469,
+        -289.2229919433594,
+        -64.84100341796875,
         0,
         0,
         0,
@@ -179,7 +179,7 @@
     "_playTimes": 0,
     "_isAniComplete": true,
     "_N$skeletonData": {
-      "__uuid__": "d2f1f8b2-9b81-4f53-95df-dd2ea15a1a10"
+      "__uuid__": "4f141eb8-3dbb-4c97-8218-9e60bf9688d4"
     },
     "_N$_defaultCacheMode": 0,
     "_N$debugSlots": false,
@@ -197,7 +197,7 @@
     "asset": {
       "__id__": 0
     },
-    "fileId": "ceODjygqxE6LgBhADcRrDk",
+    "fileId": "17JpYjklZGMYy2ZCtNLk4+",
     "sync": false
   },
   {
@@ -211,9 +211,9 @@
     "alignMode": 1,
     "_target": null,
     "_alignFlags": 9,
-    "_left": -58.548004150390625,
+    "_left": -36.722991943359375,
     "_right": 0,
-    "_top": 635.9759979248047,
+    "_top": 626.3410034179688,
     "_bottom": 0,
     "_verticalCenter": 0,
     "_horizontalCenter": 0,
@@ -266,7 +266,7 @@
     "asset": {
       "__id__": 0
     },
-    "fileId": "85k1Ee1JNF1aVSbvPVEZ0z",
+    "fileId": "b5fFNhYTNOZ5SRFvyC0YTi",
     "sync": false
   }
 ]

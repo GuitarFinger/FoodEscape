@@ -15,6 +15,8 @@ const {ccclass, property} = cc._decorator;
 export default class Loading extends cc.Component {
 
     // LIFE-CYCLE CALLBACKS:
+    @property(cc.ProgressBar)
+    loadBar: cc.ProgressBar = null;
 
     onLoad () {
         const collisionMgr = cc.director.getCollisionManager();
@@ -22,16 +24,31 @@ export default class Loading extends cc.Component {
         collisionMgr.enabled = true;
         collisionMgr.enabledDebugDraw = true;
 
-        cc.director.preloadScene(ESceneName.MAIN_MENU, () => {
-            cc.director.loadScene(ESceneName.MAIN_MENU);
-        });
     }
 
-    // start () {
-
-    // }
+    start () {
+        this.handleLoading();
+    }
 
     // update (dt) {}
+
+    handleLoading = () => {
+        cc.loader.loadResDir('/',
+            (completeCount: number, totalCount: number, item: any) => {
+                const loadProgress = completeCount / totalCount;
+                this.loadBar.progress = loadProgress;
+            },
+            (error: Error, resource: any[], urls: string[]) => {
+                // console.log(error);
+                // console.log(resource);
+                // console.log(urls);
+                cc.director.preloadScene(ESceneName.MAIN_MENU, () => {
+                    cc.director.loadScene(ESceneName.MAIN_MENU);
+                });
+            }
+        )
+    }
+
 }
 
 // ============================ 方法定义
