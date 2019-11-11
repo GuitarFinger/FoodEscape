@@ -33,20 +33,22 @@ export default class Loading extends cc.Component {
     // update (dt) {}
 
     handleLoading = () => {
-        cc.loader.loadResDir('/',
-            (completeCount: number, totalCount: number, item: any) => {
-                const loadProgress = completeCount / totalCount;
-                this.loadBar.progress = loadProgress;
-            },
-            (error: Error, resource: any[], urls: string[]) => {
-                // console.log(error);
-                // console.log(resource);
-                // console.log(urls);
-                cc.director.preloadScene(ESceneName.MAIN_MENU, () => {
-                    cc.director.loadScene(ESceneName.MAIN_MENU);
-                });
+        const progressCB = (completeCount: number, totalCount: number, item: any) => {
+            const loadProgress = completeCount / totalCount;
+            this.loadBar.progress = loadProgress;
+        };
+
+        const completeCB = (error: Error, resource: any[], urls: string[]) => {
+            if (error) {
+                console.log(error);
+                return;
             }
-        )
+            cc.director.preloadScene(ESceneName.MAIN_MENU, () => {
+                cc.director.loadScene(ESceneName.MAIN_MENU);
+            });
+        };
+
+        cc.loader.loadResDir('/', progressCB, completeCB);
     }
 
 }
