@@ -1,11 +1,65 @@
+// /**
+//  * 方法列表
+//  */
 /**
- * 方法列表
+ * @class 发射器
  */
-const _funcTable: any = {};
+class Emitter {
+    private _funcTable: any = {};
+
+    /**
+     * 注册
+     * @param obj 
+     */
+    public register(obj: Object) {
+        for (let key in obj) {
+
+            if (!this._funcTable[key]) {
+                this._funcTable[key] = [];
+            }
+
+            this._funcTable[key].push(obj[key]);
+        }
+    }
+
+    /**
+     * 分发
+     */
+    public dispatch(key: string, data?: any) {
+        const funcArr: any[] = this._funcTable[key];
+
+        if (!funcArr) return;
+
+        funcArr.forEach(func => {
+            func && func(data);
+        });
+    }
+
+    /**
+     * 移除
+     * @param func 
+     */
+    public remove(key: string, func?: Function) {
+        if (!func) {
+            delete this._funcTable[key];
+            return;
+        }
+
+        const funcArr: Function[] = this._funcTable[key];
+        const funcIdx = funcArr.indexOf(func);
+
+        if (funcIdx > 0) {
+            funcArr.splice(funcIdx, 1);
+        }
+    }
+}
+
 /**
  * 全局变量
  */
 export const Global = {
+    /**发射器 */
+    emitter: new Emitter(),
     /**
      * 米/度
      */
@@ -43,33 +97,8 @@ export const Global = {
     set speedRatio(val) {
         if (this._speedRatio !== val) {
             this._speedRatio = val;
-            this.globalDispatch('msgSpeedChange');
+            
+            (this.emitter as Emitter).dispatch('msgSpeedChange');
         }
     },
-
-    /**
-     * 分发方法
-     */
-    globalDispatch: (key: string, data?: any) => {
-        const funcArr: any[] = _funcTable[key];
-
-        if (!funcArr) return;
-
-        funcArr.forEach(func => {
-            func && func(data);
-        });
-    },
-    /**
-     * 注册方法
-     */
-    globalRegister: (obj: Object) => {
-        for (let key in obj) {
-
-            if (!_funcTable[key]) {
-                _funcTable[key] = [];
-            }
-
-            _funcTable[key].push(obj[key]);
-        }
-    }
 };

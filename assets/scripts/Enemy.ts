@@ -51,8 +51,7 @@ export default class Enemy extends cc.Component {
 
     init() {
         this.selfSkeleton = this.node.getChildByName('spine').getComponent(sp.Skeleton);
-        
-        Global.globalRegister({
+        Global.emitter.register({
             'msgSpeedChange': () => {
                 this.setTimeScale(Global.speedRatio);
             }
