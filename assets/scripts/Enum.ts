@@ -38,6 +38,10 @@ export enum ESceneName {
  */
 export enum EBaseSetting {
     /**
+     * 中景转动倍率
+     */
+    P_ROTATE_MULTIPLE = 4,
+    /**
      * 地表转动360度的时间
      */
     ROTATE_DURATION_S = 10,

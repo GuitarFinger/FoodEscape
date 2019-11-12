@@ -18,52 +18,40 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class MainGame extends cc.Component {
     // 界面可编辑节点
+    /**地表 */
     @property(cc.Node)
     surface: cc.Node = null;
-
+    /**中景 */
     @property(cc.Node)
     prospect: cc.Node = null;
 
     // 预制体
+    /**玩家 */
     @property(cc.Prefab)
     playerFab: cc.Prefab = null;
-
+    /**敌人 */
     @property(cc.Prefab)
     enemyFab: cc.Prefab = null;
-
+    /**道具 */
     @property(cc.Prefab)
     propFab: cc.Prefab = null;
-
+    /**障碍物 */
     @property(cc.Prefab)
     obstacleFab: cc.Prefab = null;
 
-    /**
-     * 玩家节点
-     */
+    /**玩家节点 */
     player: cc.Node;
-    /**
-     * 敌人节点
-     */
+    /**敌人节点 */
     enemy: cc.Node;
-    /**
-     * 道具池
-     */
+    /**道具池 */
     propPool: cc.NodePool = new cc.NodePool();
-    /**
-     * 障碍池
-     */
+    /**障碍池 */
     obstaclePool: cc.NodePool = new cc.NodePool();
-    /**
-     * 游戏暂停
-     */
+    /**游戏是否暂停 */
     isPaused: boolean = false;
-    /**
-     * 转动开始时间
-     */
+    /**转动开始时间 */
     startRotateTime: number = 0;
-    /**
-     * 上次转动时间
-     */
+    /**上次转动时间 */
     lastRotateTime: number = 0;
 
     // // LIFE-CYCLE CALLBACKS:
@@ -89,18 +77,7 @@ export default class MainGame extends cc.Component {
     }
 
     update (dt) {
-        let nowTime: number, timeInterval: number, timeLength: number, sectionIdx: number, nowSpeed: number;
-
-        nowTime = Date.now();
-        timeInterval = (nowTime-this.lastRotateTime) / 1000;
-        timeLength = (nowTime-this.startRotateTime) / 1000;
-        sectionIdx = Utils.judgeSection(timeLength, CFG_TIME_SPEED, 'time');
-        nowSpeed = CFG_TIME_SPEED[sectionIdx].speed;
-
-        Global.speedRatio = nowSpeed / Global.initSpeed;
-
-        this.surface.angle += nowSpeed * timeInterval;
-        this.lastRotateTime = nowTime;
+        this.updateRotate();
     }
 
     /**
@@ -110,24 +87,7 @@ export default class MainGame extends cc.Component {
         this.isPaused = false;
         this.startRotateTime = Date.now();
         this.lastRotateTime = Date.now();
-
-        // this.nodeRotateBy(this.surface, EBaseSetting.ROTATE_DURATION_S, -360);
-        this.nodeRotateBy(this.prospect, EBaseSetting.ROTATE_DURATION_P, -360);
     }
-
-    // async test () {
-    //     const a = await this.testAsync();
-    //     console.log(a);
-    // }
-
-    // async testAsync(): Promise<string> {
-    //     return new Promise<string>((resolve, reject) => {
-    //         setTimeout(() => {
-    //             resolve("hello world");
-    //         }, 2000)
-    //     });
-    // }
-    
 
     /**
      * 暂停游戏
@@ -139,6 +99,9 @@ export default class MainGame extends cc.Component {
         this.prospect.stopAllActions();
     }
 
+    /**
+     * 绑定监听
+     */
     bindListener = () => {
         const player = this.player.getComponent('Player');
         const enemy = this.enemy.getComponent('Enemy');
@@ -228,6 +191,25 @@ export default class MainGame extends cc.Component {
         }
 
         this.surface.addChild(obstacle);
+    }
+
+    /**
+     * 更新转动
+     */
+    updateRotate = () => {
+        let nowTime: number, timeInterval: number, timeLength: number, sectionIdx: number, nowSpeed: number;
+
+        nowTime = Date.now();
+        timeInterval = (nowTime-this.lastRotateTime) / 1000;
+        timeLength = (nowTime-this.startRotateTime) / 1000;
+        sectionIdx = Utils.judgeSection(timeLength, CFG_TIME_SPEED, 'time');
+        nowSpeed = CFG_TIME_SPEED[sectionIdx].speed;
+
+        this.surface.angle += nowSpeed * timeInterval;
+        this.prospect.angle += nowSpeed / EBaseSetting.P_ROTATE_MULTIPLE * timeInterval;
+        this.lastRotateTime = nowTime;
+
+        Global.speedRatio = nowSpeed / Global.initSpeed;
     }
 }
 

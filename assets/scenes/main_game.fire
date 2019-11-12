@@ -168,7 +168,7 @@
       "array": [
         0,
         0,
-        270.4434814453125,
+        277.9739074707031,
         0,
         0,
         0,
@@ -583,7 +583,9 @@
     ],
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
-    "_spriteFrame": null,
+    "_spriteFrame": {
+      "__uuid__": "90003514-cee6-46e0-b9cd-dd0791de09cc"
+    },
     "_type": 0,
     "_sizeMode": 1,
     "_fillType": 0,
@@ -595,7 +597,9 @@
     "_fillStart": 0,
     "_fillRange": 0,
     "_isTrimmedMode": true,
-    "_atlas": null,
+    "_atlas": {
+      "__uuid__": "7a84ffe6-f8fd-4879-b8a1-ab3cc9a6daab"
+    },
     "_id": "afs1zozAtEcaO0MR5R3Xho"
   },
   {
