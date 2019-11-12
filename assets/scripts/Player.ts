@@ -3,6 +3,7 @@
  */
 // ============================ 导入
 import { EBaseSetting } from "./Enum";
+import { Global } from "./Global";
 
 // ============================ 常量定义
 const {ccclass, property} = cc._decorator;
@@ -148,9 +149,8 @@ export default class Player extends cc.Component {
      */
     collisonProp = () => {
         const enemy = (this.mainGame.enemy as cc.Node).getComponent('Enemy');
-        const meterPerAngle = this.mainGame.meterPerAngle;
 
-        enemy.roleMove(meterPerAngle * 25);
+        enemy.roleMove(Global.meterPerAngle * 25);
     }
 
     /**
@@ -158,9 +158,8 @@ export default class Player extends cc.Component {
      */
     collsionObstacle = () => {
         const enemy = (this.mainGame.enemy as cc.Node).getComponent('Enemy');
-        const meterPerAngle = this.mainGame.meterPerAngle;
 
-        enemy.roleMove(-meterPerAngle * 25);
+        enemy.roleMove(-Global.meterPerAngle * 25);
     }
     
     /**

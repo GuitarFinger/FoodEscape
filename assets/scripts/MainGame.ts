@@ -4,9 +4,8 @@
 // ============================ 导入
 import { Utils } from "./Utils";
 import { EBaseSetting } from "./Enum";
-
-// ============================ 类型定义
-type NodeType = 'player' | 'enemy' | 'prop' | 'obstacle';
+import { CFG_TIME_SPEED } from "./config/timeSpeedCfg";
+import { Global } from "./Global";
 
 // ============================ 常量定义
 const {ccclass, property} = cc._decorator;
@@ -47,34 +46,25 @@ export default class MainGame extends cc.Component {
      */
     enemy: cc.Node;
     /**
-     * 道具
+     * 道具池
      */
     propPool: cc.NodePool = new cc.NodePool();
     /**
-     * 障碍
+     * 障碍池
      */
     obstaclePool: cc.NodePool = new cc.NodePool();
-
-    /**
-     * 米/度
-     */
-    meterPerAngle: number;
     /**
      * 游戏暂停
      */
     isPaused: boolean = false;
     /**
-     * 初始速度
-     */
-    initSpeed: number = 40;
-    /**
-     * 加速度
-     */
-    acceleration: number = 2;
-    /**
      * 转动开始时间
      */
-    startRTime: number = 0;
+    startRotateTime: number = 0;
+    /**
+     * 上次转动时间
+     */
+    lastRotateTime: number = 0;
 
     // // LIFE-CYCLE CALLBACKS:
     onLoad () {
@@ -85,7 +75,9 @@ export default class MainGame extends cc.Component {
 
         this.bindListener();
 
-        this.meterPerAngle = this.calcMeterPerAngle(
+        Global.initSpeed = CFG_TIME_SPEED[0].speed;
+        Global.speedRatio = 1; 
+        Global.meterPerAngle = this.calcMeterPerAngle(
             this.calcRelativeSurfaceAngle(this.player, 'Player'),
             this.calcRelativeSurfaceAngle(this.enemy, 'Enemy')
         );
@@ -96,17 +88,31 @@ export default class MainGame extends cc.Component {
         this.startGame();
     }
 
-    // update (dt) {}
+    update (dt) {
+        let nowTime: number, timeInterval: number, timeLength: number, sectionIdx: number, nowSpeed: number;
+
+        nowTime = Date.now();
+        timeInterval = (nowTime-this.lastRotateTime) / 1000;
+        timeLength = (nowTime-this.startRotateTime) / 1000;
+        sectionIdx = Utils.judgeSection(timeLength, CFG_TIME_SPEED, 'time');
+        nowSpeed = CFG_TIME_SPEED[sectionIdx].speed;
+
+        Global.speedRatio = nowSpeed / Global.initSpeed;
+
+        this.surface.angle += nowSpeed * timeInterval;
+        this.lastRotateTime = nowTime;
+    }
 
     /**
      * 开始游戏
      */
     startGame = () => {
-        this.startRTime = Date.now();
         this.isPaused = false;
+        this.startRotateTime = Date.now();
+        this.lastRotateTime = Date.now();
 
-        this.nodeRotateBy(this.surface, EBaseSetting.ROTATE_DURATION_S, -360);
-        this.nodeRotateBy(this.prospect, EBaseSetting.ROTATE_DURATION_P, -360);    
+        // this.nodeRotateBy(this.surface, EBaseSetting.ROTATE_DURATION_S, -360);
+        this.nodeRotateBy(this.prospect, EBaseSetting.ROTATE_DURATION_P, -360);
     }
 
     // async test () {

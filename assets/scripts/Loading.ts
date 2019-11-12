@@ -23,7 +23,6 @@ export default class Loading extends cc.Component {
         
         collisionMgr.enabled = true;
         collisionMgr.enabledDebugDraw = true;
-
     }
 
     start () {
@@ -50,10 +49,8 @@ export default class Loading extends cc.Component {
 
         cc.loader.loadResDir('/', progressCB, completeCB);
     }
-
 }
 
 // ============================ 方法定义
 
 // ============================ 立即执行
-

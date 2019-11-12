@@ -2,7 +2,7 @@
  * @module 敌人
  */
 // ============================ 导入
-
+import { Global } from "./Global";
 
 // ============================ 常量定义
 const {ccclass, property} = cc._decorator;
@@ -51,6 +51,12 @@ export default class Enemy extends cc.Component {
 
     init() {
         this.selfSkeleton = this.node.getChildByName('spine').getComponent(sp.Skeleton);
+        
+        Global.globalRegister({
+            'msgSpeedChange': () => {
+                this.setTimeScale(Global.speedRatio);
+            }
+        });
     }
     
     onLoad () {
@@ -76,9 +82,9 @@ export default class Enemy extends cc.Component {
 
         if (oComponent === null) return;
 
-        if (oComponent.selfType === 'player') {
-            this.mainGame.pauseGame();
-        }
+        // if (oComponent.selfType === 'player') {
+        //     this.mainGame.pauseGame();
+        // }
 
     }
 
@@ -87,7 +93,7 @@ export default class Enemy extends cc.Component {
      */
     move = (dt: number) => {
         const nowTime = Date.now();
-        const meterPreAngle = this.mainGame.meterPerAngle || 0.2;
+        const meterPreAngle = Global.meterPerAngle || 0.2;
         const timeSpace = (nowTime - (this.lastTime || nowTime)) / 1000;
 
         const finalAngle = (this.relativeAngle + (this.directionX === 'left' ? -1 : 1) * meterPreAngle * timeSpace * this.speed) % 360;
@@ -130,7 +136,7 @@ export default class Enemy extends cc.Component {
             this.isHandMove = true;
 
             if (angle > 0 && this.relativeAngle < finalAngle) {
-                tempAngle = this.relativeAngle + this.mainGame.meterPerAngle;
+                tempAngle = this.relativeAngle + Global.meterPerAngle;
                 tempAngle = tempAngle > finalAngle ? finalAngle : tempAngle;
 
                 this.roleRotate(tempAngle);
@@ -138,7 +144,7 @@ export default class Enemy extends cc.Component {
                 timer = setTimeout(fun, 10);
             }
             else if (angle < 0 && this.relativeAngle > finalAngle) {
-                tempAngle = this.relativeAngle - this.mainGame.meterPerAngle;
+                tempAngle = this.relativeAngle - Global.meterPerAngle;
                 tempAngle = tempAngle < finalAngle ? finalAngle : tempAngle;
 
                 this.roleRotate(tempAngle);
@@ -172,7 +178,7 @@ export default class Enemy extends cc.Component {
      */
     setTimeScale = (scale: number = 1) => {
         this.selfSkeleton.timeScale = scale;
-    }
+    }    
 }
 
 
