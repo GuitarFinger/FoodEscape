@@ -1,8 +1,12 @@
+import { Global } from "./Global";
+
 /**
  * @module 道具
  */
 // ============================ 导入
 
+// ============================ 类型定义
+type TProp = 'coin' | 'diamond';
 
 // ============================ 常量定义
 const {ccclass, property} = cc._decorator;
@@ -15,14 +19,23 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class Prop extends cc.Component {
     @property
-    selfType: 'coin' | 'diamond' = 'coin';
+    selfType: TProp = 'coin';
+
+    /**初始X */
+    initX: number = 0;
+    /**初始Y */
+    initY: number = 0;
+    /**初始角度 */
+    initAngle: number = 0;
+
 
     // LIFE-CYCLE CALLBACKS:
 
     // onLoad () {}
 
     start () {
-
+        this.node.setPosition(cc.v2(this.initX, this.initY));
+        this.node.angle = this.initAngle;
     }
 
     // update (dt) {}
@@ -30,8 +43,16 @@ export default class Prop extends cc.Component {
     /**
      * 初始化
      */
-    init = (initData: any) => {
+    init = (x: number, y: number, angle: number, selfType: TProp) => {
+        this.initX = x;
+        this.initY = y;
+        this.initAngle = angle;
+        this.selfType = selfType;
+    }
 
+    onCollisionEnter (other: cc.Node, self: cc.Node) {
+        self.destroy();
+        Global.propPool.put(self);
     }
 }
 

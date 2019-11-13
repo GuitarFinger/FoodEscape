@@ -40,15 +40,18 @@ class Emitter {
      * @param func 
      */
     public remove(key: string, func?: Function) {
+        const funcArr: Function[] = this._funcTable[key];
+
+        if (!funcArr || !funcArr.length) return;
+
         if (!func) {
             delete this._funcTable[key];
             return;
         }
 
-        const funcArr: Function[] = this._funcTable[key];
         const funcIdx = funcArr.indexOf(func);
 
-        if (funcIdx > 0) {
+        if (funcIdx >= 0) {
             funcArr.splice(funcIdx, 1);
         }
     }
@@ -97,8 +100,15 @@ export const Global = {
     set speedRatio(val) {
         if (this._speedRatio !== val) {
             this._speedRatio = val;
-            
+
             (this.emitter as Emitter).dispatch('msgSpeedChange');
         }
     },
+
+    /**道具池 */
+    propPool: new cc.NodePool(),
+
+    /**障碍池 */
+    obstaclePool: new cc.NodePool(),
+
 };

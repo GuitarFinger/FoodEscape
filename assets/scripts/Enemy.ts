@@ -3,6 +3,7 @@
  */
 // ============================ 导入
 import { Global } from "./Global";
+import { Utils } from "./Utils";
 
 // ============================ 常量定义
 const {ccclass, property} = cc._decorator;
@@ -52,9 +53,7 @@ export default class Enemy extends cc.Component {
     init() {
         this.selfSkeleton = this.node.getChildByName('spine').getComponent(sp.Skeleton);
         Global.emitter.register({
-            'msgSpeedChange': () => {
-                this.setTimeScale(Global.speedRatio);
-            }
+            'msgSpeedChange': this.setTimeScale
         });
     }
     
@@ -73,6 +72,11 @@ export default class Enemy extends cc.Component {
         if (!this.isHandMove) {
             this.move(dt);
         }
+    }
+
+    onDestroy () {
+        this.mainGame = null;
+        Global.emitter.remove('msgSpeedChange', this.setTimeScale);
     }
 
     onCollisionEnter (other: cc.Node, self: cc.Node) {
@@ -163,7 +167,7 @@ export default class Enemy extends cc.Component {
      * 获取人物旋转角度
      */
     getRoleRotateAngle = (angle: number) => {
-        angle = angle < 0 ? 360 + angle : angle;
+        angle = Utils.convertAngle(angle);
 
         let roleRotateAngle = 0;
 
@@ -176,7 +180,7 @@ export default class Enemy extends cc.Component {
      * 设置时间缩放
      */
     setTimeScale = (scale: number = 1) => {
-        this.selfSkeleton.timeScale = scale;
+        this.selfSkeleton.timeScale = Global.speedRatio;
     }    
 }
 

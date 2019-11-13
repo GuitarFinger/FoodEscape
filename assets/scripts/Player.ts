@@ -64,9 +64,13 @@ export default class Player extends cc.Component {
         this.surfaceY = this.node.y;
         this.selfSkeleton = this.node.getChildByName('spine').getComponent(sp.Skeleton);
         this.selfSkeleton.setCompleteListener((trackEntry) => {
-            if (trackEntry.animation.name === 'death') {
-                this.node.destroy();
-            }
+            // if (trackEntry.animation.name === 'death') {
+            //     this.node.destroy();
+            // }
+        });
+
+        Global.emitter.register({
+            "msgSpeedChange": this.setTimeScale
         });
     }
     // LIFE-CYCLE CALLBACKS:
@@ -77,6 +81,10 @@ export default class Player extends cc.Component {
 
     start () {
         
+    }
+
+    onDestroy() {
+        Global.emitter.remove('msgSpeedChange', this.setTimeScale);
     }
 
     onCollisionEnter (other: cc.Node, self: cc.Node) {
@@ -108,8 +116,6 @@ export default class Player extends cc.Component {
 
         
     }
-
-    
 
     // update (dt) {}
 
@@ -166,18 +172,15 @@ export default class Player extends cc.Component {
      * 碰撞敌人
      */
     collsionEnemy = () => {
-        // const spineNode = this.node.getChildByName('spine');
-        // const skeleton = spineNode.getComponent(sp.Skeleton);
-
-        this.isDead = true;
-        this.selfSkeleton.setAnimation(0, 'death', false);
+        // this.isDead = true;
+        // this.selfSkeleton.setAnimation(0, 'death', false);
     }
 
     /**
      * 设置时间缩放
      */
     setTimeScale = (scale: number = 1) => {
-        this.selfSkeleton.timeScale = scale;
+        this.selfSkeleton.timeScale = Global.speedRatio;
     }
 
     /**

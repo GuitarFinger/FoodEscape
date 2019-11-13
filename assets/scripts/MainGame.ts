@@ -61,6 +61,8 @@ export default class MainGame extends cc.Component {
         this.createProp();
         this.createObstacle();
 
+        this.schedule(this.createProp, 2);
+
         this.bindListener();
 
         Global.initSpeed = CFG_TIME_SPEED[0].speed;
@@ -138,6 +140,7 @@ export default class MainGame extends cc.Component {
 
         return angle;
     };
+    
     /**
      * 获取 米/度
      */
@@ -165,16 +168,27 @@ export default class MainGame extends cc.Component {
      * 创建道具
      */
     createProp = () => {
-        let prop: cc.Node = null;
+        let prop: cc.Node = this.propPool.size() > 0 ?
+                                Global.propPool.get() :
+                                cc.instantiate(this.propFab);
 
-        if (this.propPool.size() > 0) {
-            prop = this.propPool.get();
-        } else {
-            prop = cc.instantiate(this.propFab);
-            this.propPool.put(prop);
-        }
+        const parentAngle = Utils.convertAngle(-this.surface.angle + EBaseSetting.SECTOR_LEVLE_ANGLE);
+        const x = Math.cos(parentAngle * Math.PI / 180) * EBaseSetting.PROP_RADIUS_MAX;
+        const y = Math.sin(parentAngle * Math.PI / 180) * EBaseSetting.PROP_RADIUS_MAX;
+
+
+        // const 
+
+        // surface的中心点就在中间 而且原点与圆点与中心点重合故可以这样计算坐标
+        prop.getComponent('Prop').init(x, y, 0, 'coin');
 
         this.surface.addChild(prop);
+        
+        // setTimeout(() => {
+            
+        //     prop.setPosition(cc.v2(Math.cos(parentAngle * Math.PI / 180) * EBaseSetting.PROP_RADIUS_MAX, Math.sin(parentAngle * Math.PI / 180) * EBaseSetting.PROP_RADIUS_MAX));
+        // }, 1)
+        // prop.getComponent('Prop')._updateLayout();
     }
 
     /**
@@ -205,11 +219,11 @@ export default class MainGame extends cc.Component {
         sectionIdx = Utils.judgeSection(timeLength, CFG_TIME_SPEED, 'time');
         nowSpeed = CFG_TIME_SPEED[sectionIdx].speed;
 
-        this.surface.angle += nowSpeed * timeInterval;
+        this.surface.angle += 0.2;
         this.prospect.angle += nowSpeed / EBaseSetting.P_ROTATE_MULTIPLE * timeInterval;
         this.lastRotateTime = nowTime;
 
-        Global.speedRatio = nowSpeed / Global.initSpeed;
+        // Global.speedRatio = nowSpeed / Global.initSpeed;
     }
 }
 

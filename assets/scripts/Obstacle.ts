@@ -4,6 +4,9 @@
 // ============================ 导入
 
 
+// ============================ 类型定义
+type TObstacle = 'obstacle';
+
 // ============================ 常量定义
 const {ccclass, property} = cc._decorator;
 
@@ -29,8 +32,10 @@ export default class Obstacle extends cc.Component {
     /**
      * 初始化
      */
-    init = (initData: any) => {
-        
+    init = (initData: { x: number, y: number, angle: number }) => {
+        this.node.x = initData.x;
+        this.node.y = initData.y;
+        this.node.angle = initData.angle;
     }
 }
 
