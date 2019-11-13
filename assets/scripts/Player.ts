@@ -64,9 +64,9 @@ export default class Player extends cc.Component {
         this.surfaceY = this.node.y;
         this.selfSkeleton = this.node.getChildByName('spine').getComponent(sp.Skeleton);
         this.selfSkeleton.setCompleteListener((trackEntry) => {
-            // if (trackEntry.animation.name === 'death') {
-            //     this.node.destroy();
-            // }
+            if (trackEntry.animation.name === 'death') {
+                this.node.destroy();
+            }
         });
 
         Global.emitter.register({
@@ -87,7 +87,7 @@ export default class Player extends cc.Component {
         Global.emitter.remove('msgSpeedChange', this.setTimeScale);
     }
 
-    onCollisionEnter (other: cc.Node, self: cc.Node) {
+    onCollisionEnter (other: cc.BoxCollider, self: cc.BoxCollider) {
         console.log("oh  is collision");
 
         const oComponent = other.getComponent('Prop') || other.getComponent('Enemy') || other.getComponent('Obstacle');
@@ -96,12 +96,10 @@ export default class Player extends cc.Component {
 
         switch (oComponent.selfType) {
             case 'coin':
-                oComponent.node.destroy();
                 this.collisonProp();
                 break;
 
             case 'diamond': 
-                oComponent.node.destroy();
                 this.collisonProp();
                 break;
 
@@ -172,8 +170,8 @@ export default class Player extends cc.Component {
      * 碰撞敌人
      */
     collsionEnemy = () => {
-        // this.isDead = true;
-        // this.selfSkeleton.setAnimation(0, 'death', false);
+        this.isDead = true;
+        this.selfSkeleton.setAnimation(0, 'death', false);
     }
 
     /**

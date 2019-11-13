@@ -19,12 +19,21 @@ const {ccclass, property} = cc._decorator;
 export default class Obstacle extends cc.Component {
     @property
     selfType: 'obstacle' = 'obstacle';
+    /**初始X */
+    initX: number = 0;
+    /**初始Y */
+    initY: number = 0;
+    /**初始角度 */
+    initAngle: number = 0;
+
     // LIFE-CYCLE CALLBACKS:
 
     // onLoad () {}
 
     start () {
-
+        this.node.setPosition(cc.v2(this.initX, this.initY));
+        this.node.angle = this.initAngle;
+        this.node.opacity = 255;
     }
 
     // update (dt) {}
@@ -32,10 +41,15 @@ export default class Obstacle extends cc.Component {
     /**
      * 初始化
      */
-    init = (initData: { x: number, y: number, angle: number }) => {
-        this.node.x = initData.x;
-        this.node.y = initData.y;
-        this.node.angle = initData.angle;
+    init = (x: number, y: number, angle: number, selfType: TObstacle ) => {
+        this.initX = x;
+        this.initY = y;
+        this.initAngle = angle;
+        this.selfType = selfType;
+    }
+
+    onCollisionEnter (other: cc.BoxCollider, self: cc.BoxCollider) {
+        this.node.destroy();
     }
 }
 

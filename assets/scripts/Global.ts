@@ -5,7 +5,7 @@
  * @class 发射器
  */
 class Emitter {
-    private _funcTable: any = {};
+    private _funcTable: Object = {};
 
     /**
      * 注册
@@ -26,7 +26,7 @@ class Emitter {
      * 分发
      */
     public dispatch(key: string, data?: any) {
-        const funcArr: any[] = this._funcTable[key];
+        const funcArr: Function[] = this._funcTable[key];
 
         if (!funcArr) return;
 
@@ -58,6 +58,55 @@ class Emitter {
 }
 
 /**
+ * @class 缓冲
+ */
+class Cache<T> {
+    /**缓冲列表 */
+    private _list: T[] = [];
+    /**最大缓冲大小 */
+    private _maxCacheSize: number = 50;
+
+    constructor(maxCacheSize: number = 50) {
+        this._maxCacheSize = maxCacheSize;
+    }
+
+    /**
+     * 获取
+     */
+    get(): T {
+        return this._list.shift()
+    }
+
+    /**
+     * 推入
+     * @param data 缓冲数据
+     */
+    put(data: T): boolean {
+
+        if (this._list.length > this._maxCacheSize) return false;
+
+        this._list.push(data);
+
+        return true;
+    }
+
+    /**
+     * 获取当前缓冲大小
+     */
+    size(): number {
+        return this._list.length;
+    }
+
+    /**
+     * 清空缓冲区
+     */
+    clear() {
+        this._list = [];
+        this._maxCacheSize = 50;
+    }
+}
+
+/**
  * 全局变量
  */
 export const Global = {
@@ -71,7 +120,7 @@ export const Global = {
     get meterPerAngle(): number {
         return this._meterPerAngle;
     },
-    set meterPerAngle(val) {
+    set meterPerAngle(val: number) {
         this._meterPerAngle = val;
     },
 
@@ -83,7 +132,7 @@ export const Global = {
     get initSpeed(): number {
         return this._initSpeed;
     },
-    set initSpeed(val) {
+    set initSpeed(val: number) {
         if (val !== this._initSpeed) {
             this._initSpeed = val;
         }
@@ -97,7 +146,7 @@ export const Global = {
     get speedRatio(): number {
         return this._speedRatio;
     },
-    set speedRatio(val) {
+    set speedRatio(val: number) {
         if (this._speedRatio !== val) {
             this._speedRatio = val;
 
@@ -106,9 +155,9 @@ export const Global = {
     },
 
     /**道具池 */
-    propPool: new cc.NodePool(),
+    propPool: new Cache<cc.Node>(),
 
     /**障碍池 */
-    obstaclePool: new cc.NodePool(),
+    obstaclePool: new Cache<cc.Node>(),
 
 };

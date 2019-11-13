@@ -31,7 +31,7 @@ export enum ESceneName {
  */
 export enum EBaseSetting {
     /**中景转动倍率 */
-    P_ROTATE_MULTIPLE = 4,
+    P_ROTATE_MULTIPLE = 1/4,
     
     /**地表转动360度的时间 */
     ROTATE_DURATION_S = 10,
@@ -61,8 +61,8 @@ export enum EBaseSetting {
     PROP_RADIUS_MAX = 900,
 
     /**障碍物最小半径 */
-    OBSTACLE_RADIUS_MIN = 600,
+    OBSTACLE_RADIUS_MIN = 650,
 
     /**障碍物最大半径 */
-    OBSTACLE_RADIUS_MAX = 600,
+    OBSTACLE_RADIUS_MAX = 650,
 }

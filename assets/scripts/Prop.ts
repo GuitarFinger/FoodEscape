@@ -36,6 +36,7 @@ export default class Prop extends cc.Component {
     start () {
         this.node.setPosition(cc.v2(this.initX, this.initY));
         this.node.angle = this.initAngle;
+        this.node.opacity = 255;
     }
 
     // update (dt) {}
@@ -50,9 +51,8 @@ export default class Prop extends cc.Component {
         this.selfType = selfType;
     }
 
-    onCollisionEnter (other: cc.Node, self: cc.Node) {
-        self.destroy();
-        Global.propPool.put(self);
+    onCollisionEnter (other: cc.BoxCollider, self: cc.BoxCollider) {
+        this.node.destroy();
     }
 }
 

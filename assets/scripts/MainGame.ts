@@ -43,10 +43,6 @@ export default class MainGame extends cc.Component {
     player: cc.Node;
     /**敌人节点 */
     enemy: cc.Node;
-    /**道具池 */
-    propPool: cc.NodePool = new cc.NodePool();
-    /**障碍池 */
-    obstaclePool: cc.NodePool = new cc.NodePool();
     /**游戏是否暂停 */
     isPaused: boolean = false;
     /**转动开始时间 */
@@ -58,10 +54,11 @@ export default class MainGame extends cc.Component {
     onLoad () {
         this.createPlayer();
         this.createEnemey();
-        this.createProp();
-        this.createObstacle();
+        // this.createProp();
+        // this.createObstacle();
 
         this.schedule(this.createProp, 2);
+        // this.schedule(this.createObstacle, 4);
 
         this.bindListener();
 
@@ -168,41 +165,32 @@ export default class MainGame extends cc.Component {
      * 创建道具
      */
     createProp = () => {
-        let prop: cc.Node = this.propPool.size() > 0 ?
-                                Global.propPool.get() :
-                                cc.instantiate(this.propFab);
+        // TODO 这里应该用缓冲池
+        const prop: cc.Node = cc.instantiate(this.propFab);
 
         const parentAngle = Utils.convertAngle(-this.surface.angle + EBaseSetting.SECTOR_LEVLE_ANGLE);
         const x = Math.cos(parentAngle * Math.PI / 180) * EBaseSetting.PROP_RADIUS_MAX;
         const y = Math.sin(parentAngle * Math.PI / 180) * EBaseSetting.PROP_RADIUS_MAX;
 
-
-        // const 
-
         // surface的中心点就在中间 而且原点与圆点与中心点重合故可以这样计算坐标
         prop.getComponent('Prop').init(x, y, 0, 'coin');
 
         this.surface.addChild(prop);
-        
-        // setTimeout(() => {
-            
-        //     prop.setPosition(cc.v2(Math.cos(parentAngle * Math.PI / 180) * EBaseSetting.PROP_RADIUS_MAX, Math.sin(parentAngle * Math.PI / 180) * EBaseSetting.PROP_RADIUS_MAX));
-        // }, 1)
-        // prop.getComponent('Prop')._updateLayout();
     }
 
     /**
      * 创建障碍物
      */
     createObstacle = () => {
-        let obstacle: cc.Node = null;
+        // TODO 这里应该用缓冲池
+        const obstacle: cc.Node = cc.instantiate(this.obstacleFab);
 
-        if (this.obstaclePool.size() > 0) {
-            obstacle = this.obstaclePool.get();
-        } else {
-            obstacle = cc.instantiate(this.obstacleFab);
-            this.obstaclePool.put(obstacle);
-        }
+        const parentAngle = Utils.convertAngle(-this.surface.angle + EBaseSetting.SECTOR_LEVLE_ANGLE);
+        const x = Math.cos(parentAngle * Math.PI / 180) * EBaseSetting.OBSTACLE_RADIUS_MIN;
+        const y = Math.sin(parentAngle * Math.PI / 180) * EBaseSetting.OBSTACLE_RADIUS_MIN;
+
+        // surface的中心点就在中间 而且原点与圆点与中心点重合故可以这样计算坐标
+        obstacle.getComponent('Obstacle').init(x, y, 0, 'obstacle');
 
         this.surface.addChild(obstacle);
     }
@@ -219,11 +207,11 @@ export default class MainGame extends cc.Component {
         sectionIdx = Utils.judgeSection(timeLength, CFG_TIME_SPEED, 'time');
         nowSpeed = CFG_TIME_SPEED[sectionIdx].speed;
 
-        this.surface.angle += 0.2;
-        this.prospect.angle += nowSpeed / EBaseSetting.P_ROTATE_MULTIPLE * timeInterval;
+        this.surface.angle += nowSpeed * timeInterval;
+        this.prospect.angle += nowSpeed * timeInterval * EBaseSetting.P_ROTATE_MULTIPLE;
         this.lastRotateTime = nowTime;
 
-        // Global.speedRatio = nowSpeed / Global.initSpeed;
+        Global.speedRatio = nowSpeed / Global.initSpeed;
     }
 }
 

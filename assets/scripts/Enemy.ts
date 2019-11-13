@@ -79,7 +79,7 @@ export default class Enemy extends cc.Component {
         Global.emitter.remove('msgSpeedChange', this.setTimeScale);
     }
 
-    onCollisionEnter (other: cc.Node, self: cc.Node) {
+    onCollisionEnter (other: cc.BoxCollider, self: cc.BoxCollider) {
         
         const oComponent = other.getComponent('Player');
 
@@ -181,6 +181,7 @@ export default class Enemy extends cc.Component {
      */
     setTimeScale = (scale: number = 1) => {
         this.selfSkeleton.timeScale = Global.speedRatio;
+        this.speed *= Global.speedRatio;
     }    
 }
 

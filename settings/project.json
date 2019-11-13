@@ -4,7 +4,8 @@
     "player",
     "prop",
     "enemy",
-    "obstacle"
+    "obstacle",
+    "border"
   ],
   "collision-matrix": [
     [
@@ -20,7 +21,10 @@
     [
       false,
       true,
-      false
+      false,
+      null,
+      null,
+      true
     ],
     [
       false,
@@ -33,6 +37,15 @@
       true,
       false,
       false,
+      false,
+      true
+    ],
+    [
+      false,
+      false,
+      true,
+      false,
+      true,
       false
     ]
   ],
