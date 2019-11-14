@@ -78,7 +78,7 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 46
+        "__id__": 45
       }
     ],
     "_prefab": null,
@@ -168,7 +168,7 @@
       "array": [
         0,
         0,
-        277.994140625,
+        270.3623046875,
         0,
         0,
         0,
@@ -250,13 +250,13 @@
     "_active": true,
     "_components": [
       {
+        "__id__": 42
+      },
+      {
         "__id__": 43
       },
       {
         "__id__": 44
-      },
-      {
-        "__id__": 45
       }
     ],
     "_prefab": null,
@@ -1751,9 +1751,6 @@
       },
       {
         "__id__": 41
-      },
-      {
-        "__id__": 42
       }
     ],
     "_prefab": null,
@@ -1779,7 +1776,7 @@
       "__type__": "TypedArray",
       "ctor": "Float32Array",
       "array": [
-        -454,
+        -454.5,
         32,
         0,
         0,
@@ -1802,39 +1799,7 @@
     "_is3DNode": false,
     "_groupIndex": 5,
     "groupIndex": 5,
-    "_id": "catQ4rvYZMBq+27FG8Kd0a"
-  },
-  {
-    "__type__": "cc.Sprite",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 39
-    },
-    "_enabled": true,
-    "_materials": [
-      {
-        "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
-      }
-    ],
-    "_srcBlendFactor": 770,
-    "_dstBlendFactor": 771,
-    "_spriteFrame": {
-      "__uuid__": "a23235d1-15db-4b95-8439-a2e005bfff91"
-    },
-    "_type": 0,
-    "_sizeMode": 0,
-    "_fillType": 0,
-    "_fillCenter": {
-      "__type__": "cc.Vec2",
-      "x": 0,
-      "y": 0
-    },
-    "_fillStart": 0,
-    "_fillRange": 0,
-    "_isTrimmedMode": true,
-    "_atlas": null,
-    "_id": "d1T1ZEsIdEGKLmwoz+O6m6"
+    "_id": "07up/ZE4FOapDEjQhxCuC4"
   },
   {
     "__type__": "cc.Widget",
@@ -1847,7 +1812,7 @@
     "alignMode": 1,
     "_target": null,
     "_alignFlags": 9,
-    "_left": -79.5,
+    "_left": -80,
     "_right": 0,
     "_top": -2.5,
     "_bottom": 0,
@@ -1861,7 +1826,7 @@
     "_isAbsVerticalCenter": true,
     "_originalWidth": 0,
     "_originalHeight": 0,
-    "_id": "9dTLNaLjRJF5sjutLWAiHg"
+    "_id": "3bfnGI94lDjZ0WAhgNyrPp"
   },
   {
     "__type__": "cc.BoxCollider",
@@ -1880,9 +1845,9 @@
     "_size": {
       "__type__": "cc.Size",
       "width": 1,
-      "height": 843
+      "height": 1275
     },
-    "_id": "00YAoqtrRCL7XITe3QiHAu"
+    "_id": "fbQbD2Y9lEJp1TEhzr7NS+"
   },
   {
     "__type__": "cc.Widget",

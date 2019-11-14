@@ -27,42 +27,42 @@ export enum ESceneName {
 }
 
 /**
- * @desc 基本设置
+ * @desc 游戏常量
  */
-export enum EBaseSetting {
+export class Constants {
     /**中景转动倍率 */
-    P_ROTATE_MULTIPLE = 1/4,
+    static P_ROTATE_MULTIPLE = 1/4;
     
     /**地表转动360度的时间 */
-    ROTATE_DURATION_S = 10,
+    static ROTATE_DURATION_S = 10;
     
     /**中景转动360度的时间 */
-    ROTATE_DURATION_P = 40,
+    static ROTATE_DURATION_P = 40;
     
     /**连跳次数 */
-    JUMP_COUNT = 2,
+    static JUMP_COUNT = 2;
     
     /**初始距离 */
-    INIT_DISTANCE = 100,
+    static INIT_DISTANCE = 100;
     
     /**最大距离 */
-    MAX_DISTANCE = 120,
+    static MAX_DISTANCE = 120;
     
     /**主游戏场景扇形角 */
-    SECTOR_ANGLE = 120,
+    static SECTOR_ANGLE = 120;
 
-    /**主游戏场景扇形角与水平面夹角(PS: 这个扇形角小于180°) [(180-EBaseSetting.SECTOR_ANGLE) / 2] */
-    SECTOR_LEVLE_ANGLE = 30,
+    /**主游戏场景扇形角与水平面夹角(PS: 这个扇形角小于180°) [(180-Constants.SECTOR_ANGLE) / 2] */
+    static SECTOR_LEVLE_ANGLE = 30;
 
     /**道具最小半径 */
-    PROP_RADIUS_MIN = 500,
+    static PROP_RADIUS_MIN = 500;
 
     /**道具最大半径 */
-    PROP_RADIUS_MAX = 900,
+    static PROP_RADIUS_MAX = 900;
 
     /**障碍物最小半径 */
-    OBSTACLE_RADIUS_MIN = 650,
+    static OBSTACLE_RADIUS_MIN = 650;
 
     /**障碍物最大半径 */
-    OBSTACLE_RADIUS_MAX = 650,
+    static OBSTACLE_RADIUS_MAX = 650;
 }

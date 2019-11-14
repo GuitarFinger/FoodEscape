@@ -2,7 +2,7 @@
  * @module 玩家
  */
 // ============================ 导入
-import { EBaseSetting } from "./Enum";
+import { Constants } from "./Enum";
 import { Global } from "./Global";
 
 // ============================ 常量定义
@@ -118,7 +118,7 @@ export default class Player extends cc.Component {
     // update (dt) {}
 
     jump = () => {
-        if (this.isJump && this.jumpCount === EBaseSetting.JUMP_COUNT) return;
+        if (this.isJump && this.jumpCount === Constants.JUMP_COUNT) return;
         
         
         this.isJump && this.node.stopAllActions();
