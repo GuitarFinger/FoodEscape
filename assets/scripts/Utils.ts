@@ -1,3 +1,5 @@
+import { Constants } from "./Enum";
+
 /**
  * @module 通用工具
  */
@@ -90,5 +92,101 @@ export class Utils {
         angle = Utils.convertAngle(angle);
 
         return (Math.floor(angle / 90) - 1) * 90 + angle % 90;
+    }
+
+    /**
+     * 首字母大写
+     */
+    public static FirstWordToUpperCase = (words: string):string => {
+        return words.charAt(0).toUpperCase() + words.slice(1);
+    }
+
+    /**
+     * 节点旋转
+     * @param 节点持续时间
+     */
+    public static nodeRotateBy = (node: cc.Node, duration: number = 2, angle: number = 360) => {
+        const repeatRotateBy = cc.repeatForever(cc.rotateBy(duration, angle));
+
+        node.runAction(repeatRotateBy);
+    }
+
+    /**
+    * 平分角度
+    * @param 角度1
+    * @param 角度2
+    * @returns 每份角度
+    */
+   public static divideAngle = (angle1: number, angle2: number, partNum: number): number => {
+        return Math.abs(Math.abs(angle1) - Math.abs(angle2)) / Constants.INIT_DISTANCE;
+    }
+}
+
+/**
+ * @TODO 对象池 后面没有变动可以把这几个方法合成一个
+ */
+export class Factory {
+    /**
+     * 生产玩家
+     * @param 预制体
+     * @parent 父节点
+     */
+    static producePlayer = (preFab: cc.Prefab, parent: cc.Node): cc.Node => {
+        const player = cc.instantiate(preFab);
+
+        parent.addChild(player);
+
+        return player;
+    }
+
+    /**
+     * 生产敌人
+     * @param 预制体
+     * @parent 父节点
+     */
+    static produceEnemy = (preFab: cc.Prefab, parent: cc.Node): cc.Node => {
+        const enemy = cc.instantiate(preFab);
+
+        parent.addChild(enemy);
+
+        return enemy;
+    }
+
+    /**
+     * 生产道具
+     */
+    static produceProp = (preFab: cc.Prefab, parent: cc.Node): cc.Node => {
+        // TODO 这里应该用缓冲池
+        const prop: cc.Node = cc.instantiate(preFab);
+
+        const ownAngle = Utils.convertAngle(Constants.SECTOR_LEVLE_ANGLE- parent.angle);
+        const x = Math.cos(ownAngle * Math.PI / 180) * Constants.SECOND_RADIUS;
+        const y = Math.sin(ownAngle * Math.PI / 180) * Constants.SECOND_RADIUS;
+
+        // surface的中心点就在中间 而且原点与圆点与中心点重合故可以这样计算坐标
+        prop.getComponent('Prop').init(x, y, ownAngle, 'coin');
+
+        parent.addChild(prop);
+
+        return prop;
+    }
+
+    /**
+     * 生产道具
+     */
+    static produceObstacle = (preFab: cc.Prefab, parent: cc.Node): cc.Node => {
+        // TODO 这里应该用缓冲池
+        const obstacle: cc.Node = cc.instantiate(preFab);
+
+        const ownAngle = Utils.convertAngle(Constants.SECTOR_LEVLE_ANGLE-parent.angle);
+        const x = Math.cos(ownAngle * Math.PI / 180) * Constants.FIRST_RADIUS;
+        const y = Math.sin(ownAngle * Math.PI / 180) * Constants.FIRST_RADIUS;
+
+        // surface的中心点就在中间 而且原点与圆点与中心点重合故可以这样计算坐标
+        obstacle.getComponent('Obstacle').init(x, y, ownAngle, 'obstacle');
+
+        parent.addChild(obstacle);
+
+        return obstacle;
     }
 }

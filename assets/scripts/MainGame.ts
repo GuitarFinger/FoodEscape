@@ -2,7 +2,7 @@
  * @module 游戏主逻辑
  */
 // ============================ 导入
-import { Utils } from "./Utils";
+import { Utils, Factory } from "./Utils";
 import { Constants } from "./Enum";
 import { CFG_TIME_SPEED } from "./config/timeSpeedCfg";
 import { Global } from "./Global";
@@ -52,21 +52,24 @@ export default class MainGame extends cc.Component {
 
     // // LIFE-CYCLE CALLBACKS:
     onLoad () {
-        this.createPlayer();
-        this.createEnemey();
-        this.createProp();
-        // this.createObstacle();
-
-        this.schedule(this.createProp, 2);
-        this.schedule(this.createObstacle, 4);
+        this.player = Factory.producePlayer(this.playerFab, this.node);
+        this.enemy = Factory.produceEnemy(this.enemyFab, this.node);
+        
+        this.schedule(() => {
+            Factory.produceProp(this.propFab, this.surface);
+        }, 2);
+        this.schedule(() => {
+            Factory.produceObstacle(this.obstacleFab, this.surface);
+        }, 4);
 
         this.bindListener();
 
         Global.initSpeed = CFG_TIME_SPEED[0].speed;
         Global.speedRatio = 1; 
-        Global.meterPerAngle = this.calcMeterPerAngle(
+        Global.meterPerAngle = Utils.divideAngle(
             this.calcRelativeSurfaceAngle(this.player, 'Player'),
-            this.calcRelativeSurfaceAngle(this.enemy, 'Enemy')
+            this.calcRelativeSurfaceAngle(this.enemy, 'Enemy'),
+            Constants.INIT_DISTANCE
         );
 
     }
@@ -117,15 +120,6 @@ export default class MainGame extends cc.Component {
     }
 
     /**
-     * 节点旋转
-     */
-    nodeRotateBy = (node: cc.Node, duration: number = 2, angle: number = 360) => {
-        const repeatRotateBy = cc.repeatForever(cc.rotateBy(duration, angle));
-
-        node.runAction(repeatRotateBy);
-    }
-
-    /**
      * 计算相对于水平面角度
      */
     calcRelativeSurfaceAngle = (node: cc.Node, componentType: string) => {
@@ -138,63 +132,6 @@ export default class MainGame extends cc.Component {
         return angle;
     };
     
-    /**
-     * 获取 米/度
-     */
-    calcMeterPerAngle = (angle1: number, angle2: number): number => {
-        return Math.abs(Math.abs(angle1) - Math.abs(angle2)) / Constants.INIT_DISTANCE;
-    }
-
-    /**
-     * 生成玩家
-     */
-    createPlayer = () => {
-        this.player = cc.instantiate(this.playerFab);
-        this.node.addChild(this.player);
-    }
-
-    /**
-     * 生成敌人
-     */
-    createEnemey = () => {
-        this.enemy = cc.instantiate(this.enemyFab);
-        this.node.addChild(this.enemy);
-    }
-
-    /**
-     * 创建道具
-     */
-    createProp = () => {
-        // TODO 这里应该用缓冲池
-        const prop: cc.Node = cc.instantiate(this.propFab);
-
-        const ownAngle = Utils.convertAngle(Constants.SECTOR_LEVLE_ANGLE- this.surface.angle);
-        const x = Math.cos(ownAngle * Math.PI / 180) * Constants.SECOND_RADIUS;
-        const y = Math.sin(ownAngle * Math.PI / 180) * Constants.SECOND_RADIUS;
-
-        // surface的中心点就在中间 而且原点与圆点与中心点重合故可以这样计算坐标
-        prop.getComponent('Prop').init(x, y, ownAngle, 'coin');
-
-        this.surface.addChild(prop);
-    }
-
-    /**
-     * 创建障碍物
-     */
-    createObstacle = () => {
-        // TODO 这里应该用缓冲池
-        const obstacle: cc.Node = cc.instantiate(this.obstacleFab);
-
-        const ownAngle = Utils.convertAngle(Constants.SECTOR_LEVLE_ANGLE-this.surface.angle);
-        const x = Math.cos(ownAngle * Math.PI / 180) * Constants.FIRST_RADIUS;
-        const y = Math.sin(ownAngle * Math.PI / 180) * Constants.FIRST_RADIUS;
-
-        // surface的中心点就在中间 而且原点与圆点与中心点重合故可以这样计算坐标
-        obstacle.getComponent('Obstacle').init(x, y, ownAngle, 'obstacle');
-
-        this.surface.addChild(obstacle);
-    }
-
     /**
      * 更新转动
      */
