@@ -16,17 +16,17 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class Player extends cc.Component {
     /**跳跃高度 */
-    private jumpHeight: number = 200;
+    private _jumpHeight: number = 200;
     /**跳跃持续时间 */
-    private jumpDuration: number = 0.3;
+    private _jumpDuration: number = 0.3;
     /**速度 米/秒 | 度/秒 */
-    private speed: number = 0;
+    private _speed: number = 0;
     /**地表Y坐标 */
-    private surfaceY: number = 0;
+    private _surfaceY: number = 0;
     /**是否跳起 */
-    private isJump: boolean = false;
+    private _isJump: boolean = false;
     /**跳起次数 */
-    private jumpCount: number = 0;
+    private _jumpCount: number = 0;
     /**当前相对于水平面的角度 */
     relativeAngle: number;
     /**主游戏上下文 */
@@ -39,7 +39,7 @@ export default class Player extends cc.Component {
     selfSkeleton: sp.Skeleton;
 
     init = () => {
-        this.surfaceY = this.node.y;
+        this._surfaceY = this.node.y;
         this.selfSkeleton = this.node.getChildByName('spine').getComponent(sp.Skeleton);
         this.selfSkeleton.setCompleteListener((trackEntry) => {
             if (trackEntry.animation.name === 'death') {
@@ -96,13 +96,13 @@ export default class Player extends cc.Component {
     // update (dt) {}
 
     jump = () => {
-        if (this.isJump && this.jumpCount === Constants.JUMP_COUNT) return;
+        if (this._isJump && this._jumpCount === Constants.JUMP_COUNT) return;
         
         
-        this.isJump && this.node.stopAllActions();
+        this._isJump && this.node.stopAllActions();
         
-        this.isJump = true;
-        this.jumpCount++;
+        this._isJump = true;
+        this._jumpCount++;
 
         this.node.runAction(cc.sequence(
                 this.jumpUp(),
@@ -116,14 +116,14 @@ export default class Player extends cc.Component {
      * @method 跳起
      */
     jumpUp = () => {
-        return cc.moveBy(this.jumpDuration, cc.v2(0, this.jumpHeight)).easing(cc.easeCubicActionOut());
+        return cc.moveBy(this._jumpDuration, cc.v2(0, this._jumpHeight)).easing(cc.easeCubicActionOut());
     }
 
     /**
      * @method 下落
      */
     jumpDown = () => {
-        return cc.moveTo(this.jumpDuration, cc.v2(this.node.x, this.surfaceY)).easing(cc.easeCubicActionIn());
+        return cc.moveTo(this._jumpDuration, cc.v2(this.node.x, this._surfaceY)).easing(cc.easeCubicActionIn());
     }
 
     /**
@@ -163,8 +163,8 @@ export default class Player extends cc.Component {
      * @method 重置数据
      */
     resetData = () => {
-        this.isJump = false;
-        this.jumpCount = 0;
+        this._isJump = false;
+        this._jumpCount = 0;
     }
     
 }

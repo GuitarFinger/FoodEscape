@@ -15,43 +15,27 @@ const {ccclass, property} = cc._decorator;
 // ============================ 类定义
 @ccclass
 export default class Enemy extends cc.Component {
-    /**
-     * 速度 米/秒 | 度/秒
-     */
+    /**速度 米/秒 | 度/秒 */
     speed: number = 3;
-    /**
-     * 当前相对于水平面的角度
-     */
-    relativeAngle: number;
-    /**
-     * 上一次时间
-     */
-    lastTime: number = 0;
-    /**
-     * X方向
-     */
-    directionX: 'left' | 'right' = 'left';
-    /**
-     * 主游戏上下文
-     */
+    /**当前相对于水平面的角度 */
+    private _relativeAngle: number;
+    /**上一次时间 */
+    private _lastTime: number = 0;
+    /**X方向 */
+    private _directionX: 'left' | 'right' = 'left';
+    /**主游戏上下文 */
     mainGame: any = null;
-    /**
-     * 类型
-     */
+    /**类型 */
     selfType: string = 'enemy';
-    /**
-     * 是否正在手动移动
-     */
-    isHandMove: boolean = false;
-    /**
-     * 骨骼
-     */
-    selfSkeleton: sp.Skeleton;
+    /**是否正在手动移动 */
+    private _isHandMove: boolean = false;
+    /**骨骼 */
+    private _selfSkeleton: sp.Skeleton;
 
     // LIFE-CYCLE CALLBACKS:
 
     init() {
-        this.selfSkeleton = this.node.getChildByName('spine').getComponent(sp.Skeleton);
+        this._selfSkeleton = this.node.getChildByName('spine').getComponent(sp.Skeleton);
         Global.emitter.register({
             'msgSpeedChange': this.setTimeScale
         });
@@ -69,7 +53,7 @@ export default class Enemy extends cc.Component {
         // console.log(dt);
         if (this.mainGame.isPaused === true) return;
         
-        if (!this.isHandMove) {
+        if (!this._isHandMove) {
             this.move(dt);
         }
     }
@@ -97,11 +81,11 @@ export default class Enemy extends cc.Component {
     move = (dt: number) => {
         const nowTime = Date.now();
         const meterPreAngle = Global.meterPerAngle || 0.2;
-        const timeSpace = (nowTime - (this.lastTime || nowTime)) / 1000;
+        const timeSpace = (nowTime - (this._lastTime || nowTime)) / 1000;
 
-        const finalAngle = (this.relativeAngle + (this.directionX === 'left' ? -1 : 1) * meterPreAngle * timeSpace * this.speed) % 360;
+        const finalAngle = (this._relativeAngle + (this._directionX === 'left' ? -1 : 1) * meterPreAngle * timeSpace * this.speed) % 360;
 
-        this.lastTime = nowTime;
+        this._lastTime = nowTime;
 
         this.roleRotate(finalAngle);
     }
@@ -119,7 +103,7 @@ export default class Enemy extends cc.Component {
         this.node.setPosition(this.mainGame.node.convertToNodeSpaceAR(cc.v2(nowWorldX, nowWorldY)));
         this.node.angle = rotateToAngle;
 
-        this.relativeAngle = angle;
+        this._relativeAngle = angle;
     }
 
     /**
@@ -128,7 +112,7 @@ export default class Enemy extends cc.Component {
     roleMove = (angle: number) => {
         if (angle === 0) return;
 
-        let finalAngle = this.relativeAngle + angle;
+        let finalAngle = this._relativeAngle + angle;
         let tempAngle = null;
         let timer = null;
 
@@ -136,18 +120,18 @@ export default class Enemy extends cc.Component {
         let fun = () => {
             timer && clearTimeout(timer);
 
-            this.isHandMove = true;
+            this._isHandMove = true;
 
-            if (angle > 0 && this.relativeAngle < finalAngle) {
-                tempAngle = this.relativeAngle + Global.meterPerAngle;
+            if (angle > 0 && this._relativeAngle < finalAngle) {
+                tempAngle = this._relativeAngle + Global.meterPerAngle;
                 tempAngle = tempAngle > finalAngle ? finalAngle : tempAngle;
 
                 this.roleRotate(tempAngle);
 
                 timer = setTimeout(fun, 10);
             }
-            else if (angle < 0 && this.relativeAngle > finalAngle) {
-                tempAngle = this.relativeAngle - Global.meterPerAngle;
+            else if (angle < 0 && this._relativeAngle > finalAngle) {
+                tempAngle = this._relativeAngle - Global.meterPerAngle;
                 tempAngle = tempAngle < finalAngle ? finalAngle : tempAngle;
 
                 this.roleRotate(tempAngle);
@@ -155,7 +139,7 @@ export default class Enemy extends cc.Component {
                 timer = setTimeout(fun, 10);
             }
             else {
-                this.isHandMove = false;
+                this._isHandMove = false;
                 fun = null;
             }
         }
@@ -180,7 +164,7 @@ export default class Enemy extends cc.Component {
      * 设置时间缩放
      */
     setTimeScale = (scale: number = 1) => {
-        this.selfSkeleton.timeScale = Global.speedRatio;
+        this._selfSkeleton.timeScale = Global.speedRatio;
         this.speed *= Global.speedRatio;
     }    
 }
