@@ -82,5 +82,13 @@ export class Utils {
         return duadrant;
     }
 
-    
+    /**
+     * 获取旋转角度
+     * @returns 旋转角度
+     */
+    public static getRotateAngle = (angle: number):number => {
+        angle = Utils.convertAngle(angle);
+
+        return (Math.floor(angle / 90) - 1) * 90 + angle % 90;
+    }
 }

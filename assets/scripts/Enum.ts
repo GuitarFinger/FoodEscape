@@ -47,22 +47,17 @@ export class Constants {
     
     /**最大距离 */
     static MAX_DISTANCE = 120;
-    
+    // ======================= 生成物体
     /**主游戏场景扇形角 */
-    static SECTOR_ANGLE = 120;
+    static SECTOR_ANGLE = 60;
 
     /**主游戏场景扇形角与水平面夹角(PS: 这个扇形角小于180°) [(180-Constants.SECTOR_ANGLE) / 2] */
-    static SECTOR_LEVLE_ANGLE = 30;
+    static SECTOR_LEVLE_ANGLE = 60;
 
-    /**道具最小半径 */
-    static PROP_RADIUS_MIN = 500;
-
-    /**道具最大半径 */
-    static PROP_RADIUS_MAX = 900;
-
-    /**障碍物最小半径 */
-    static OBSTACLE_RADIUS_MIN = 650;
-
-    /**障碍物最大半径 */
-    static OBSTACLE_RADIUS_MAX = 650;
+    /**第一半径 */
+    static FIRST_RADIUS = 687;
+    /**第二半径 */
+    static SECOND_RADIUS = 950;
+    /**第三半径 */
+    static THIRD_RADIUS = 1150;
 }

@@ -1,3 +1,5 @@
+import { Utils } from "./Utils";
+
 /**
  * @module 障碍物
  */
@@ -31,9 +33,11 @@ export default class Obstacle extends cc.Component {
     // onLoad () {}
 
     start () {
-        this.node.setPosition(cc.v2(this.initX, this.initY));
-        this.node.angle = this.initAngle;
-        this.node.opacity = 255;
+        setTimeout(() => {
+            this.node.setPosition(cc.v2(this.initX, this.initY));
+            this.node.angle = Utils.getRotateAngle(this.initAngle);
+            this.node.opacity = 255;
+        }, 1);
     }
 
     // update (dt) {}

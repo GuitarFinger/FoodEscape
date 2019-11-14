@@ -54,11 +54,11 @@ export default class MainGame extends cc.Component {
     onLoad () {
         this.createPlayer();
         this.createEnemey();
-        // this.createProp();
+        this.createProp();
         // this.createObstacle();
 
         this.schedule(this.createProp, 2);
-        // this.schedule(this.createObstacle, 4);
+        this.schedule(this.createObstacle, 4);
 
         this.bindListener();
 
@@ -168,12 +168,12 @@ export default class MainGame extends cc.Component {
         // TODO 这里应该用缓冲池
         const prop: cc.Node = cc.instantiate(this.propFab);
 
-        const parentAngle = Utils.convertAngle(-this.surface.angle + Constants.SECTOR_LEVLE_ANGLE);
-        const x = Math.cos(parentAngle * Math.PI / 180) * Constants.PROP_RADIUS_MAX;
-        const y = Math.sin(parentAngle * Math.PI / 180) * Constants.PROP_RADIUS_MAX;
+        const ownAngle = Utils.convertAngle(Constants.SECTOR_LEVLE_ANGLE- this.surface.angle);
+        const x = Math.cos(ownAngle * Math.PI / 180) * Constants.SECOND_RADIUS;
+        const y = Math.sin(ownAngle * Math.PI / 180) * Constants.SECOND_RADIUS;
 
         // surface的中心点就在中间 而且原点与圆点与中心点重合故可以这样计算坐标
-        prop.getComponent('Prop').init(x, y, 0, 'coin');
+        prop.getComponent('Prop').init(x, y, ownAngle, 'coin');
 
         this.surface.addChild(prop);
     }
@@ -185,12 +185,12 @@ export default class MainGame extends cc.Component {
         // TODO 这里应该用缓冲池
         const obstacle: cc.Node = cc.instantiate(this.obstacleFab);
 
-        const parentAngle = Utils.convertAngle(-this.surface.angle + Constants.SECTOR_LEVLE_ANGLE);
-        const x = Math.cos(parentAngle * Math.PI / 180) * Constants.OBSTACLE_RADIUS_MIN;
-        const y = Math.sin(parentAngle * Math.PI / 180) * Constants.OBSTACLE_RADIUS_MIN;
+        const ownAngle = Utils.convertAngle(Constants.SECTOR_LEVLE_ANGLE-this.surface.angle);
+        const x = Math.cos(ownAngle * Math.PI / 180) * Constants.FIRST_RADIUS;
+        const y = Math.sin(ownAngle * Math.PI / 180) * Constants.FIRST_RADIUS;
 
         // surface的中心点就在中间 而且原点与圆点与中心点重合故可以这样计算坐标
-        obstacle.getComponent('Obstacle').init(x, y, 0, 'obstacle');
+        obstacle.getComponent('Obstacle').init(x, y, ownAngle, 'obstacle');
 
         this.surface.addChild(obstacle);
     }

@@ -45,9 +45,9 @@ export default class Enemy extends cc.Component {
         this.init();
     }
 
-    start () {
+    // start () {
 
-    }
+    // }
 
     update (dt) {
         // console.log(dt);

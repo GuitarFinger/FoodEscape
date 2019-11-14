@@ -1,4 +1,5 @@
 import { Global } from "./Global";
+import { Utils } from "./Utils";
 
 /**
  * @module 道具
@@ -34,9 +35,11 @@ export default class Prop extends cc.Component {
     // onLoad () {}
 
     start () {
-        this.node.setPosition(cc.v2(this.initX, this.initY));
-        this.node.angle = this.initAngle;
-        this.node.opacity = 255;
+        setTimeout(() => {
+            this.node.setPosition(cc.v2(this.initX, this.initY));
+            this.node.angle = this.initAngle;
+            this.node.opacity = 255;
+        }, 1)
     }
 
     // update (dt) {}
@@ -47,7 +50,7 @@ export default class Prop extends cc.Component {
     init = (x: number, y: number, angle: number, selfType: TProp) => {
         this.initX = x;
         this.initY = y;
-        this.initAngle = angle;
+        this.initAngle = Utils.getRotateAngle(angle);
         this.selfType = selfType;
     }
 
