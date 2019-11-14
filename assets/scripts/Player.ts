@@ -15,49 +15,27 @@ const {ccclass, property} = cc._decorator;
 // ============================ 类定义
 @ccclass
 export default class Player extends cc.Component {
-    /**
-     * 跳跃高度
-     */
-    jumpHeight: number = 200;
-    /**
-     * 跳跃持续时间
-     */
-    jumpDuration: number = 0.3;
-    /**
-     * 速度 米/秒 | 度/秒
-     */
-    speed: number = 0;
-    /**
-     * 地表Y坐标
-     */
-    surfaceY: number = 0;
-    /**
-     * 是否跳起
-     */
-    isJump: boolean = false;
-    /**
-     * 跳起次数
-     */
-    jumpCount: number = 0;
-    /**
-     * 当前相对于水平面的角度
-     */
+    /**跳跃高度 */
+    private jumpHeight: number = 200;
+    /**跳跃持续时间 */
+    private jumpDuration: number = 0.3;
+    /**速度 米/秒 | 度/秒 */
+    private speed: number = 0;
+    /**地表Y坐标 */
+    private surfaceY: number = 0;
+    /**是否跳起 */
+    private isJump: boolean = false;
+    /**跳起次数 */
+    private jumpCount: number = 0;
+    /**当前相对于水平面的角度 */
     relativeAngle: number;
-    /**
-     * 主游戏上下文
-     */
+    /**主游戏上下文 */
     mainGame: any = null;
-    /**
-     * 类型
-     */
+    /**类型 */
     selfType: string = 'player';
-    /**
-     * 是否死亡
-     */
+    /**是否死亡 */
     isDead: boolean = false;
-    /**
-     * 骨骼
-     */
+    /**骨骼 */
     selfSkeleton: sp.Skeleton;
 
     init = () => {
