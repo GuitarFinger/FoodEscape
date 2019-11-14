@@ -36,12 +36,12 @@ export default class Player extends cc.Component {
     /**是否死亡 */
     isDead: boolean = false;
     /**骨骼 */
-    selfSkeleton: sp.Skeleton;
+    private _selfSkeleton: sp.Skeleton;
 
     init = () => {
         this._surfaceY = this.node.y;
-        this.selfSkeleton = this.node.getChildByName('spine').getComponent(sp.Skeleton);
-        this.selfSkeleton.setCompleteListener((trackEntry) => {
+        this._selfSkeleton = this.node.getChildByName('spine').getComponent(sp.Skeleton);
+        this._selfSkeleton.setCompleteListener((trackEntry) => {
             if (trackEntry.animation.name === 'death') {
                 this.node.destroy();
             }
@@ -149,14 +149,14 @@ export default class Player extends cc.Component {
      */
     collsionEnemy = () => {
         this.isDead = true;
-        this.selfSkeleton.setAnimation(0, 'death', false);
+        this._selfSkeleton.setAnimation(0, 'death', false);
     }
 
     /**
      * 设置时间缩放
      */
     setTimeScale = (scale: number = 1) => {
-        this.selfSkeleton.timeScale = Global.speedRatio;
+        this._selfSkeleton.timeScale = Global.speedRatio;
     }
 
     /**

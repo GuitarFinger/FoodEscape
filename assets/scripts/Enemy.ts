@@ -18,7 +18,7 @@ export default class Enemy extends cc.Component {
     /**速度 米/秒 | 度/秒 */
     speed: number = 3;
     /**当前相对于水平面的角度 */
-    private _relativeAngle: number;
+    relativeAngle: number;
     /**上一次时间 */
     private _lastTime: number = 0;
     /**X方向 */
@@ -83,7 +83,7 @@ export default class Enemy extends cc.Component {
         const meterPreAngle = Global.meterPerAngle || 0.2;
         const timeSpace = (nowTime - (this._lastTime || nowTime)) / 1000;
 
-        const finalAngle = (this._relativeAngle + (this._directionX === 'left' ? -1 : 1) * meterPreAngle * timeSpace * this.speed) % 360;
+        const finalAngle = (this.relativeAngle + (this._directionX === 'left' ? -1 : 1) * meterPreAngle * timeSpace * this.speed) % 360;
 
         this._lastTime = nowTime;
 
@@ -103,7 +103,7 @@ export default class Enemy extends cc.Component {
         this.node.setPosition(this.mainGame.node.convertToNodeSpaceAR(cc.v2(nowWorldX, nowWorldY)));
         this.node.angle = rotateToAngle;
 
-        this._relativeAngle = angle;
+        this.relativeAngle = angle;
     }
 
     /**
@@ -112,7 +112,7 @@ export default class Enemy extends cc.Component {
     roleMove = (angle: number) => {
         if (angle === 0) return;
 
-        let finalAngle = this._relativeAngle + angle;
+        let finalAngle = this.relativeAngle + angle;
         let tempAngle = null;
         let timer = null;
 
@@ -122,16 +122,16 @@ export default class Enemy extends cc.Component {
 
             this._isHandMove = true;
 
-            if (angle > 0 && this._relativeAngle < finalAngle) {
-                tempAngle = this._relativeAngle + Global.meterPerAngle;
+            if (angle > 0 && this.relativeAngle < finalAngle) {
+                tempAngle = this.relativeAngle + Global.meterPerAngle;
                 tempAngle = tempAngle > finalAngle ? finalAngle : tempAngle;
 
                 this.roleRotate(tempAngle);
 
                 timer = setTimeout(fun, 10);
             }
-            else if (angle < 0 && this._relativeAngle > finalAngle) {
-                tempAngle = this._relativeAngle - Global.meterPerAngle;
+            else if (angle < 0 && this.relativeAngle > finalAngle) {
+                tempAngle = this.relativeAngle - Global.meterPerAngle;
                 tempAngle = tempAngle < finalAngle ? finalAngle : tempAngle;
 
                 this.roleRotate(tempAngle);
