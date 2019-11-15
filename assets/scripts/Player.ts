@@ -57,36 +57,36 @@ export default class Player extends cc.Component {
         this.init();
     }
 
-    start () {
+    // start () {
         
-    }
+    // }
 
     onDestroy() {
         Global.emitter.remove('msgSpeedChange', this.setTimeScale);
     }
 
     onCollisionEnter (other: cc.BoxCollider, self: cc.BoxCollider) {
-        console.log("oh  is collision");
-
-        const oComponent = other.getComponent('Prop') || other.getComponent('Enemy') || other.getComponent('Obstacle');
+        const oComponent = other.getComponent('Prop') || 
+                           other.getComponent('Enemy') || 
+                           other.getComponent('Obstacle');
 
         if (oComponent === null || this.isDead) return;
 
         switch (oComponent.selfType) {
-            case 'coin':
-                this.collisonProp();
+            case 'addDist':
+                this.enemyMoveBack();
                 break;
-
+            case 'magnet':
+                this.adsorbProp();
+                break;
             case 'diamond': 
-                this.collisonProp();
+                this.enemyMoveBack();
                 break;
-
             case 'obstacle': 
-                this.collsionObstacle();
+                this.enemyMoveForward();
                 break;
-            
             case 'enemy': 
-                this.collsionEnemy();
+                this.ownDead();
                 break;
         }
 
@@ -96,6 +96,7 @@ export default class Player extends cc.Component {
     // update (dt) {}
 
     jump = () => {
+        if (this.isDead) return;
         if (this._isJump && this._jumpCount === Constants.JUMP_COUNT) return;
         
         
@@ -127,27 +128,30 @@ export default class Player extends cc.Component {
     }
 
     /**
-     * 碰撞道具
+     * 敌人后退
      */
-    collisonProp = () => {
-        const enemy = (this.mainGame.enemy as cc.Node).getComponent('Enemy');
-
-        enemy.roleMove(Global.meterPerAngle * 25);
+    enemyMoveBack = () => {
+        (Global.mainGame.enemy as cc.Node).getComponent('Enemy').roleMove(Global.meterPerAngle * 25);
     }
 
     /**
-     * 碰撞障碍
+     * 敌人前进
      */
-    collsionObstacle = () => {
-        const enemy = (this.mainGame.enemy as cc.Node).getComponent('Enemy');
-
-        enemy.roleMove(-Global.meterPerAngle * 25);
+    enemyMoveForward = () => {
+        (Global.mainGame.enemy as cc.Node).getComponent('Enemy').roleMove(-Global.meterPerAngle*25);
     }
     
     /**
-     * 碰撞敌人
+     * 吸附道具
      */
-    collsionEnemy = () => {
+    adsorbProp = () => {
+        
+    }
+
+    /**
+     * 自己死亡
+     */
+    ownDead = () => {
         this.isDead = true;
         this._selfSkeleton.setAnimation(0, 'death', false);
     }

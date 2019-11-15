@@ -27,6 +27,22 @@ export enum ESceneName {
 }
 
 /**
+ * @desc 道具类型
+ */
+export enum EPropType {
+    /**添加距离 */
+    ADD_DIST = 'addDist',
+    /**磁铁 */
+    MAGNET = 'magnet',
+    /**钻石 */
+    DIAMOND = 'diamond',
+}
+
+export type TProp = 'coin' | 'diamond' | 'magnet' | 'addDist';
+export type TPoint = { x: number, y: number };
+export type TDuadrant = 0 | 1 | 2 | 3 | 4;
+
+/**
  * @desc 游戏常量
  */
 export class Constants {
@@ -62,5 +78,8 @@ export class Constants {
     static THIRD_RADIUS = 1150;
 
     /**每x米范围 EVERY_GAP_RANGE*/
-    static EVERY_GAP_RANGE = 75;
+    static EVERY_GAP_RANGE = 100;
+
+    /**每x秒范围 */
+    static EVERY_TIME_RANGE = 5;
 }

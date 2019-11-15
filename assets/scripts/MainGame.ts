@@ -64,6 +64,7 @@ export default class MainGame extends cc.Component {
 
         this.bindListener();
 
+        Global.mainGame = this;
         Global.initSpeed = CFG_TIME_SPEED[0].speed;
         Global.speedRatio = 1; 
         Global.meterPerAngle = Utils.divideAngle(
@@ -82,7 +83,9 @@ export default class MainGame extends cc.Component {
         if (this.isPaused) return;
 
         // 生产拉近距离道具
-        Factory.produceProp(this.propFab, this.surface);
+        Factory.produceAddDistProp(this.propFab, this.surface);
+        // 生产其它道具
+        Factory.produceOtherProp(this.propFab, this.surface);
 
         this.updateRotate();
     }

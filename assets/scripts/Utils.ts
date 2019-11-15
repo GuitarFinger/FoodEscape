@@ -1,12 +1,9 @@
-import { Constants } from "./Enum";
+import { Constants, TProp, TPoint, TDuadrant } from "./Enum";
 import { Global } from "./Global";
 
 /**
  * @module 通用工具
  */
-
-type TPoint = { x: number, y: number };
-type TDuadrant = 0 | 1 | 2 | 3 | 4;
 
 export class Utils {
     /**
@@ -137,25 +134,94 @@ export class Utils {
  * @TODO 对象池 后面没有变动可以把这几个方法合成一个
  */
 export class Factory {
-    static createPropAngle: number = null;
+    /**创建距离道具角度 */
+    static createDistPropAngle: number = null;
+    /**创建其它道具时间 */
+    static createOtherPropTime: number = null;
 
-    static judgeProduceProp = (nowAngle: number) => {
+    /**
+     * 判断加大距离道具
+     */
+    static judgeAddDistProp = (nowAngle: number) => {
         const gapAngle = Global.meterPerAngle * Constants.EVERY_GAP_RANGE;
+        const multiple = Math.floor(nowAngle/gapAngle);
 
-        if (!Factory.createPropAngle) {
-            const times = Math.floor(nowAngle/gapAngle);
-            Factory.createPropAngle = Utils.getRangeRandom(times*gapAngle, (times+1)*gapAngle);
+        if (!Factory.createDistPropAngle) {
+            Factory.createDistPropAngle = Utils.getRangeRandom(multiple*gapAngle, (multiple+1)*gapAngle);
 
             return false;
         }
 
-        if (Factory.createPropAngle && nowAngle < Factory.createPropAngle) return false;
+        if (Factory.createDistPropAngle && nowAngle < Factory.createDistPropAngle) {
+            return false;
+        }
 
-        const times = Math.ceil(nowAngle/gapAngle);
-        Factory.createPropAngle = Utils.getRangeRandom((times+1)*gapAngle, (times+2)*gapAngle);
+        Factory.createDistPropAngle = Utils.getRangeRandom((multiple+1)*gapAngle, (multiple+2)*gapAngle);
 
         return true;
     }
+
+    /**
+     * 判断其它道具
+     */
+    static judgeOtherProp = (startTime: number) => {
+        const timeLength = (Date.now()-startTime) / 1000;
+        const multiple = Math.floor(timeLength/Constants.EVERY_TIME_RANGE);
+
+        if (!Factory.createOtherPropTime) {
+            Factory.createOtherPropTime = Utils.getRangeRandom(multiple*Constants.EVERY_TIME_RANGE, (multiple+1)*Constants.EVERY_TIME_RANGE);
+            console.log(`%c time:: ${Factory.createOtherPropTime}`, 'background: pink;');
+            return false;
+        }
+
+        if (Factory.createOtherPropTime && timeLength < Factory.createOtherPropTime) {
+            return false;
+        }
+
+        Factory.createOtherPropTime = Utils.getRangeRandom((multiple+1)*Constants.EVERY_TIME_RANGE, (multiple+2)*Constants.EVERY_TIME_RANGE);
+
+        console.log(`%c time:: ${Factory.createOtherPropTime}`, 'background: pink;');
+
+        return true;
+    }
+
+    /**
+     * 生产道具
+     */
+    static produceProp = (preFab: cc.Prefab, parent: cc.Node, propType: TProp, radius: number) => {
+        // TODO 这里应该用缓冲池
+        const prop: cc.Node = cc.instantiate(preFab);
+
+        const ownAngle = Utils.convertAngle(Constants.SECTOR_LEVLE_ANGLE- parent.angle);
+        const x = Math.cos(ownAngle * Math.PI / 180) * radius;
+        const y = Math.sin(ownAngle * Math.PI / 180) * radius;
+
+        // surface的中心点就在中间 而且原点与圆点与中心点重合故可以这样计算坐标
+        prop.getComponent('Prop').init(x, y, ownAngle, propType);
+
+        parent.addChild(prop);
+
+        return prop;
+    }
+
+    /**
+     * 生产加大距离道具
+     */
+    static produceAddDistProp = (preFab: cc.Prefab, parent: cc.Node): cc.Node => {
+        if (!Factory.judgeAddDistProp(parent.angle)) return;
+
+        return Factory.produceProp(preFab, parent, 'addDist', Constants.SECOND_RADIUS);
+    }
+
+    /**
+     * 生产其它道具
+     */
+    static produceOtherProp = (preFab: cc.Prefab, parent: cc.Node): cc.Node => {
+        if (!Factory.judgeOtherProp(Global.mainGame.startRotateTime)) return;
+
+        return Factory.produceProp(preFab, parent, 'magnet', Constants.THIRD_RADIUS);
+    }
+    
 
     /**
      * 生产玩家
@@ -184,28 +250,7 @@ export class Factory {
     }
 
     /**
-     * 生产道具
-     */
-    static produceProp = (preFab: cc.Prefab, parent: cc.Node): cc.Node => {
-        if (!Factory.judgeProduceProp(parent.angle)) return;
-
-        // TODO 这里应该用缓冲池
-        const prop: cc.Node = cc.instantiate(preFab);
-
-        const ownAngle = Utils.convertAngle(Constants.SECTOR_LEVLE_ANGLE- parent.angle);
-        const x = Math.cos(ownAngle * Math.PI / 180) * Constants.SECOND_RADIUS;
-        const y = Math.sin(ownAngle * Math.PI / 180) * Constants.SECOND_RADIUS;
-
-        // surface的中心点就在中间 而且原点与圆点与中心点重合故可以这样计算坐标
-        prop.getComponent('Prop').init(x, y, ownAngle, 'coin');
-
-        parent.addChild(prop);
-
-        return prop;
-    }
-
-    /**
-     * 生产道具
+     * 生产障碍
      */
     static produceObstacle = (preFab: cc.Prefab, parent: cc.Node): cc.Node => {
         // TODO 这里应该用缓冲池

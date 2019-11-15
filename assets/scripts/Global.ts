@@ -1,6 +1,3 @@
-// /**
-//  * 方法列表
-//  */
 /**
  * @class 发射器
  */
@@ -110,6 +107,9 @@ class Cache<T> {
  * 全局变量
  */
 export const Global = {
+
+    /**主游戏上下文 */
+    mainGame: null,
     /**发射器 */
     emitter: new Emitter(),
     /**

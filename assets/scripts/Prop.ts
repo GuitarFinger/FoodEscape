@@ -1,5 +1,6 @@
 import { Global } from "./Global";
 import { Utils } from "./Utils";
+import { TProp } from "./Enum";
 
 /**
  * @module 道具
@@ -7,7 +8,7 @@ import { Utils } from "./Utils";
 // ============================ 导入
 
 // ============================ 类型定义
-type TProp = 'coin' | 'diamond';
+
 
 // ============================ 常量定义
 const {ccclass, property} = cc._decorator;
@@ -32,15 +33,15 @@ export default class Prop extends cc.Component {
 
     // LIFE-CYCLE CALLBACKS:
 
-    // onLoad () {}
-
-    start () {
-        setTimeout(() => {
-            this.node.setPosition(cc.v2(this.initX, this.initY));
-            this.node.angle = this.initAngle;
-            this.node.opacity = 255;
-        }, 1)
+    onLoad () {
+        this.node.setPosition(cc.v2(this.initX, this.initY));
+        this.node.angle = this.initAngle;
+        this.node.opacity = 255;
     }
+
+    // start () {
+
+    // }
 
     // update (dt) {}
 
@@ -55,6 +56,10 @@ export default class Prop extends cc.Component {
     }
 
     onCollisionEnter (other: cc.BoxCollider, self: cc.BoxCollider) {
+        const oComponent = other.getComponent('Enemy') || other.getComponent('Prop')
+
+        if (oComponent) return;
+
         this.node.destroy();
     }
 }
