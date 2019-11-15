@@ -33,11 +33,11 @@ export class Constants {
     /**中景转动倍率 */
     static P_ROTATE_MULTIPLE = 1/4;
     
-    /**地表转动360度的时间 */
-    static ROTATE_DURATION_S = 10;
+    // /**地表转动360度的时间 */
+    // static ROTATE_DURATION_S = 10;
     
-    /**中景转动360度的时间 */
-    static ROTATE_DURATION_P = 40;
+    // /**中景转动360度的时间 */
+    // static ROTATE_DURATION_P = 40;
     
     /**连跳次数 */
     static JUMP_COUNT = 2;
@@ -45,8 +45,8 @@ export class Constants {
     /**初始距离 */
     static INIT_DISTANCE = 100;
     
-    /**最大距离 */
-    static MAX_DISTANCE = 120;
+    /**敌人和玩家之间的最大距离 ENEMY_PLAYER_DISTANCE */
+    static E_P_MAX_DISTANCE = 120;
     // ======================= 生成物体
     /**主游戏场景扇形角 */
     static SECTOR_ANGLE = 60;
@@ -60,4 +60,7 @@ export class Constants {
     static SECOND_RADIUS = 950;
     /**第三半径 */
     static THIRD_RADIUS = 1150;
+
+    /**每x米范围 EVERY_GAP_RANGE*/
+    static EVERY_GAP_RANGE = 75;
 }

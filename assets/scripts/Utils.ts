@@ -1,4 +1,5 @@
 import { Constants } from "./Enum";
+import { Global } from "./Global";
 
 /**
  * @module 通用工具
@@ -117,8 +118,18 @@ export class Utils {
     * @param 角度2
     * @returns 每份角度
     */
-   public static divideAngle = (angle1: number, angle2: number, partNum: number): number => {
+    public static divideAngle = (angle1: number, angle2: number, partNum: number): number => {
         return Math.abs(Math.abs(angle1) - Math.abs(angle2)) / Constants.INIT_DISTANCE;
+    }
+
+    /**
+     * 获取一定范围内的随机整数
+     * @param min
+     * @param max
+     * @returns {number}
+     */
+    public static getRangeRandom = (min: number, max: number): number => {
+        return Math.floor(min + Math.random() * (max - min))
     }
 }
 
@@ -126,6 +137,26 @@ export class Utils {
  * @TODO 对象池 后面没有变动可以把这几个方法合成一个
  */
 export class Factory {
+    static createPropAngle: number = null;
+
+    static judgeProduceProp = (nowAngle: number) => {
+        const gapAngle = Global.meterPerAngle * Constants.EVERY_GAP_RANGE;
+
+        if (!Factory.createPropAngle) {
+            const times = Math.floor(nowAngle/gapAngle);
+            Factory.createPropAngle = Utils.getRangeRandom(times*gapAngle, (times+1)*gapAngle);
+
+            return false;
+        }
+
+        if (Factory.createPropAngle && nowAngle < Factory.createPropAngle) return false;
+
+        const times = Math.ceil(nowAngle/gapAngle);
+        Factory.createPropAngle = Utils.getRangeRandom((times+1)*gapAngle, (times+2)*gapAngle);
+
+        return true;
+    }
+
     /**
      * 生产玩家
      * @param 预制体
@@ -156,6 +187,8 @@ export class Factory {
      * 生产道具
      */
     static produceProp = (preFab: cc.Prefab, parent: cc.Node): cc.Node => {
+        if (!Factory.judgeProduceProp(parent.angle)) return;
+
         // TODO 这里应该用缓冲池
         const prop: cc.Node = cc.instantiate(preFab);
 

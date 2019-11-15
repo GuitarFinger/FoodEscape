@@ -69,9 +69,9 @@ export default class Enemy extends cc.Component {
 
         if (oComponent === null) return;
 
-        // if (oComponent.selfType === 'player') {
-        //     this.mainGame.pauseGame();
-        // }
+        if (oComponent.selfType === 'player') {
+            this.mainGame.pauseGame();
+        }
 
     }
 
@@ -94,7 +94,7 @@ export default class Enemy extends cc.Component {
      * 人物旋转
      */
     roleRotate = (angle: number) => {
-        const rotateToAngle = this.getRoleRotateAngle(angle);
+        const rotateToAngle = Utils.getRotateAngle(angle);
 
         const nowWorldX = 375 + Math.cos(angle * Math.PI / 180) * 667;
         const nowWorldY = Math.sin(angle * Math.PI / 180) * 667;
@@ -145,19 +145,6 @@ export default class Enemy extends cc.Component {
         }
 
         fun();
-    }
-
-    /**
-     * 获取人物旋转角度
-     */
-    getRoleRotateAngle = (angle: number) => {
-        angle = Utils.convertAngle(angle);
-
-        let roleRotateAngle = 0;
-
-        roleRotateAngle = (Math.floor(angle / 90) - 1) * 90 + angle % 90;
-
-        return roleRotateAngle;
     }
 
     /**

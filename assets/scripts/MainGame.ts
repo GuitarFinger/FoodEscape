@@ -55,9 +55,9 @@ export default class MainGame extends cc.Component {
         this.player = Factory.producePlayer(this.playerFab, this.node);
         this.enemy = Factory.produceEnemy(this.enemyFab, this.node);
         
-        this.schedule(() => {
-            Factory.produceProp(this.propFab, this.surface);
-        }, 2);
+        // this.schedule(() => {
+        //     Factory.produceProp(this.propFab, this.surface);
+        // }, 2);
         this.schedule(() => {
             Factory.produceObstacle(this.obstacleFab, this.surface);
         }, 4);
@@ -79,6 +79,11 @@ export default class MainGame extends cc.Component {
     }
 
     update (dt) {
+        if (this.isPaused) return;
+
+        // 生产拉近距离道具
+        Factory.produceProp(this.propFab, this.surface);
+
         this.updateRotate();
     }
 
@@ -136,20 +141,28 @@ export default class MainGame extends cc.Component {
      * 更新转动
      */
     updateRotate = () => {
-        let nowTime: number, timeInterval: number, timeLength: number, sectionIdx: number, nowSpeed: number;
+        let nowTime: number, // 当前时间
+            timeInterval: number, // 时间间隔
+            timeLength: number, // 时间长度
+            sectionIdx: number, // 时间速度区间
+            nowSpeed: number, // 当前速度
+            angleIncrement: number; // 角度增量
 
         nowTime = Date.now();
         timeInterval = (nowTime-this.lastRotateTime) / 1000;
         timeLength = (nowTime-this.startRotateTime) / 1000;
         sectionIdx = Utils.judgeSection(timeLength, CFG_TIME_SPEED, 'time');
         nowSpeed = CFG_TIME_SPEED[sectionIdx].speed;
+        angleIncrement = (nowSpeed * Global.meterPerAngle) * timeInterval;
 
-        this.surface.angle += nowSpeed * timeInterval;
-        this.prospect.angle += nowSpeed * timeInterval * Constants.P_ROTATE_MULTIPLE;
+        this.surface.angle += angleIncrement;
+        this.prospect.angle += angleIncrement * Constants.P_ROTATE_MULTIPLE;
         this.lastRotateTime = nowTime;
 
         Global.speedRatio = nowSpeed / Global.initSpeed;
+        Global.distance += (angleIncrement / Global.meterPerAngle);
     }
+    
 }
 
 

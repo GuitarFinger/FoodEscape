@@ -160,4 +160,7 @@ export const Global = {
     /**障碍池 */
     obstaclePool: new Cache<cc.Node>(),
 
+    /**距离 */
+    distance: 0,
+
 };
