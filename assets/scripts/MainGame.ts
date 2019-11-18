@@ -52,15 +52,15 @@ export default class MainGame extends cc.Component {
 
     // // LIFE-CYCLE CALLBACKS:
     onLoad () {
-        this.player = Factory.producePlayer(this.playerFab, this.node);
-        this.enemy = Factory.produceEnemy(this.enemyFab, this.node);
+        this.player = Factory.createPlayer(this.playerFab, this.node);
+        this.enemy = Factory.createEnemy(this.enemyFab, this.node);
         
         // this.schedule(() => {
         //     Factory.produceProp(this.propFab, this.surface);
         // }, 2);
-        this.schedule(() => {
-            Factory.produceObstacle(this.obstacleFab, this.surface);
-        }, 4);
+        // this.schedule(() => {
+        //     Factory.createObstacle(this.obstacleFab, this.surface);
+        // }, 4);
 
         this.bindListener();
 
@@ -82,11 +82,9 @@ export default class MainGame extends cc.Component {
     update (dt) {
         if (this.isPaused) return;
 
-        // 生产拉近距离道具
-        Factory.produceAddDistProp(this.propFab, this.surface);
-        // 生产其它道具
-        Factory.produceOtherProp(this.propFab, this.surface);
-
+        // 创建游戏道具
+        this.createGameProp();
+        // 更新旋转
         this.updateRotate();
     }
 
@@ -122,7 +120,7 @@ export default class MainGame extends cc.Component {
         this.node.on(cc.Node.EventType.TOUCH_START, () => {
 
             if (!this.isPaused) {
-                player.jump();
+                !player.isDead && player.jump();
             }
         });
     }
@@ -140,6 +138,20 @@ export default class MainGame extends cc.Component {
         return angle;
     };
     
+    /**
+     * 创建游戏道具
+     */
+    createGameProp = () => {
+        // 创建拉近距离道具
+        Factory.createAddDistProp(this.propFab, this.surface);
+        // 创建其它道具
+        Factory.createOtherProp(this.propFab, this.surface);
+        // 创建钻石
+        Factory.createDiamond(this.propFab, this.surface);
+        // 创建障碍物
+        Factory.createObstacle(this.obstacleFab, this.surface);
+    }
+
     /**
      * 更新转动
      */

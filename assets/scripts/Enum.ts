@@ -77,9 +77,17 @@ export class Constants {
     /**第三半径 */
     static THIRD_RADIUS = 1150;
 
-    /**每x米范围 EVERY_GAP_RANGE*/
-    static EVERY_GAP_RANGE = 100;
+    /**添加距离道具的间隔*/
+    static ADDDIST_GAP_RANGE = 100;
+    /**钻石的间隔 */
+    static DIAMOND_GAP_RANGE = 50;
+    /**障碍物间隔 */
+    static OBSTACLE_GAP_RANGE = 300;
 
-    /**每x秒范围 */
-    static EVERY_TIME_RANGE = 5;
+    /**时间间隔范围 */
+    static TIME_GAP_RANGE = 5;
+
+    /**生成钻石的概率 */
+    static DIAMOND_ODDS = 0.5;
+
 }

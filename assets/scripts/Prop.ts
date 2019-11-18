@@ -8,6 +8,11 @@ import { TProp } from "./Enum";
 // ============================ 导入
 
 // ============================ 类型定义
+const typeIcon = {
+    'diamond': 'icon_first',
+    'magnet': 'icon_second',
+    'addDist': 'icon_third'
+};
 
 
 // ============================ 常量定义
@@ -41,7 +46,7 @@ export default class Prop extends cc.Component {
         cc.loader.loadRes('textures/ui_rank', cc.SpriteAtlas, (err:any, atlas: cc.SpriteAtlas) => {
             if (err) return;
 
-            this.getComponent(cc.Sprite).spriteFrame = atlas.getSpriteFrame('icon_third');
+            this.getComponent(cc.Sprite).spriteFrame = atlas.getSpriteFrame(typeIcon[this.selfType]);
             this.node.opacity = 255;
         });
     }

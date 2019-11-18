@@ -148,9 +148,9 @@ export const Global = {
     },
     set speedRatio(val: number) {
         if (this._speedRatio !== val) {
-            // this._speedRatio = val;
+            this._speedRatio = val;
 
-            // (this.emitter as Emitter).dispatch('msgSpeedChange');
+            (this.emitter as Emitter).dispatch('msgSpeedChange');
         }
     },
 

@@ -135,60 +135,88 @@ export class Utils {
  */
 export class Factory {
     /**创建距离道具角度 */
-    static createDistPropAngle: number = null;
+    static createAngle: any = {
+        addDist: null,
+        diamond: null
+    };
     /**创建其它道具时间 */
     static createOtherPropTime: number = null;
 
     /**
-     * 判断加大距离道具
+     * 生成玩家
+     * @param 预制体
+     * @parent 父节点
      */
-    static judgeAddDistProp = (nowAngle: number) => {
-        const gapAngle = Global.meterPerAngle * Constants.EVERY_GAP_RANGE;
+    static createPlayer = (preFab: cc.Prefab, parent: cc.Node): cc.Node => {
+        const player = cc.instantiate(preFab);
+
+        parent.addChild(player);
+
+        return player;
+    }
+
+    /**
+     * 生成敌人
+     * @param 预制体
+     * @parent 父节点
+     */
+    static createEnemy = (preFab: cc.Prefab, parent: cc.Node): cc.Node => {
+        const enemy = cc.instantiate(preFab);
+
+        parent.addChild(enemy);
+
+        return enemy;
+    }
+
+    /**
+     * 判断范围距离[TODO: 判断重合, 自己宽度]
+     */
+    private static judgeRangeDistance = (nowAngle: number, gap: number, propType: string): boolean => {
+        const gapAngle = Global.meterPerAngle * gap;
         const multiple = Math.floor(nowAngle/gapAngle);
 
-        if (!Factory.createDistPropAngle) {
-            Factory.createDistPropAngle = Utils.getRangeRandom(multiple*gapAngle, (multiple+1)*gapAngle);
+        if (!Factory.createAngle[propType]) {
+            Factory.createAngle[propType] = Utils.getRangeRandom(multiple*gapAngle, (multiple+1)*gapAngle);
 
             return false;
         }
 
-        if (Factory.createDistPropAngle && nowAngle < Factory.createDistPropAngle) {
+        if (Factory.createAngle[propType] && nowAngle < Factory.createAngle[propType]) {
             return false;
         }
 
-        Factory.createDistPropAngle = Utils.getRangeRandom((multiple+1)*gapAngle, (multiple+2)*gapAngle);
+        Factory.createAngle[propType] = Utils.getRangeRandom((multiple+1)*gapAngle, (multiple+2)*gapAngle);
+        // console.log(`%c ${propType}::${Factory.createAngle[propType]}`, 'background: pink;');
 
         return true;
     }
 
-    /**
-     * 判断其它道具
-     */
-    static judgeOtherProp = (startTime: number) => {
-        const timeLength = (Date.now()-startTime) / 1000;
-        const multiple = Math.floor(timeLength/Constants.EVERY_TIME_RANGE);
+    // /**
+    //  * 判断加大距离道具
+    //  */
+    // static judgeAddDistProp = (nowAngle: number) => {
+    //     const gapAngle = Global.meterPerAngle * Constants.EVERY_GAP_RANGE;
+    //     const multiple = Math.floor(nowAngle/gapAngle);
 
-        if (!Factory.createOtherPropTime) {
-            Factory.createOtherPropTime = Utils.getRangeRandom(multiple*Constants.EVERY_TIME_RANGE, (multiple+1)*Constants.EVERY_TIME_RANGE);
-            // console.log(`%c time:: ${Factory.createOtherPropTime}`, 'background: pink;');
-            return false;
-        }
+    //     if (!Factory.createDistPropAngle) {
+    //         Factory.createDistPropAngle = Utils.getRangeRandom(multiple*gapAngle, (multiple+1)*gapAngle);
 
-        if (Factory.createOtherPropTime && timeLength < Factory.createOtherPropTime) {
-            return false;
-        }
+    //         return false;
+    //     }
 
-        Factory.createOtherPropTime = Utils.getRangeRandom((multiple+1)*Constants.EVERY_TIME_RANGE, (multiple+2)*Constants.EVERY_TIME_RANGE);
+    //     if (Factory.createDistPropAngle && nowAngle < Factory.createDistPropAngle) {
+    //         return false;
+    //     }
 
-        // console.log(`%c time:: ${Factory.createOtherPropTime}`, 'background: pink;');
+    //     Factory.createDistPropAngle = Utils.getRangeRandom((multiple+1)*gapAngle, (multiple+2)*gapAngle);
 
-        return true;
-    }
+    //     return true;
+    // }
 
     /**
-     * 生产道具
+     * 生成道具 [TODO: 判断重合, 自己宽度]
      */
-    static produceProp = (preFab: cc.Prefab, parent: cc.Node, propType: TProp, radius: number) => {
+    static createProp = (preFab: cc.Prefab, parent: cc.Node, propType: TProp, radius: number) => {
         // TODO 这里应该用缓冲池
         const prop: cc.Node = cc.instantiate(preFab);
 
@@ -205,54 +233,89 @@ export class Factory {
     }
 
     /**
-     * 生产加大距离道具
+     * 生成加大距离道具 [TODO: 判断重合, 自己宽度]
      */
-    static produceAddDistProp = (preFab: cc.Prefab, parent: cc.Node): cc.Node => {
-        if (!Factory.judgeAddDistProp(parent.angle)) return;
+    static createAddDistProp = (preFab: cc.Prefab, parent: cc.Node): cc.Node => {
+        if (!Factory.judgeRangeDistance(parent.angle, Constants.ADDDIST_GAP_RANGE, 'addDist')) return;
 
-        return Factory.produceProp(preFab, parent, 'addDist', Constants.SECOND_RADIUS);
+        return Factory.createProp(preFab, parent, 'addDist', Constants.SECOND_RADIUS);
     }
 
     /**
-     * 生产其它道具
+     * 判断其它道具 [TODO: 判断重合, 自己宽度]
      */
-    static produceOtherProp = (preFab: cc.Prefab, parent: cc.Node): cc.Node => {
+    private static judgeOtherProp = (startTime: number) => {
+        const timeLength = (Date.now()-startTime) / 1000;
+        const multiple = Math.floor(timeLength/Constants.TIME_GAP_RANGE);
+
+        if (!Factory.createOtherPropTime) {
+            Factory.createOtherPropTime = Utils.getRangeRandom(multiple*Constants.TIME_GAP_RANGE, (multiple+1)*Constants.TIME_GAP_RANGE);
+            // console.log(`%c time:: ${Factory.createOtherPropTime}`, 'background: pink;');
+            return false;
+        }
+
+        if (Factory.createOtherPropTime && timeLength < Factory.createOtherPropTime) {
+            return false;
+        }
+
+        Factory.createOtherPropTime = Utils.getRangeRandom((multiple+1)*Constants.TIME_GAP_RANGE, (multiple+2)*Constants.TIME_GAP_RANGE);
+
+        // console.log(`%c time:: ${Factory.createOtherPropTime}`, 'background: pink;');
+
+        return true;
+    }
+
+    /**
+     * 生成其它道具 [TODO: 判断重合, 自己宽度]
+     */
+    static createOtherProp = (preFab: cc.Prefab, parent: cc.Node): cc.Node => {
         if (!Factory.judgeOtherProp(Global.mainGame.startRotateTime)) return;
 
-        return Factory.produceProp(preFab, parent, 'magnet', Constants.THIRD_RADIUS);
-    }
-    
-
-    /**
-     * 生产玩家
-     * @param 预制体
-     * @parent 父节点
-     */
-    static producePlayer = (preFab: cc.Prefab, parent: cc.Node): cc.Node => {
-        const player = cc.instantiate(preFab);
-
-        parent.addChild(player);
-
-        return player;
+        return Factory.createProp(preFab, parent, 'magnet', Constants.THIRD_RADIUS);
     }
 
     /**
-     * 生产敌人
-     * @param 预制体
-     * @parent 父节点
-     */
-    static produceEnemy = (preFab: cc.Prefab, parent: cc.Node): cc.Node => {
-        const enemy = cc.instantiate(preFab);
+     * 生成钻石 [TODO: 判断重合, 自己宽度]
+     */ 
+    static createDiamond = (preFab: cc.Prefab, parent: cc.Node): cc.Node => {
+        const randomNum = Math.random();
+        // const tempBoolean = Factory.judgeDistance(parent.angle, Constants.DIAMOND_GAP_RANGE, 'diamond');
+        // console.log('boolean: ', tempBoolean)
+        if (randomNum > Constants.DIAMOND_ODDS || !Factory.judgeRangeDistance(parent.angle, Constants.DIAMOND_GAP_RANGE, 'diamond')) return;
 
-        parent.addChild(enemy);
-
-        return enemy;
+        return Factory.createProp(preFab, parent, 'diamond', Constants.FIRST_RADIUS);
     }
 
     /**
-     * 生产障碍
+     * 判断距离上一次间隔距离 [TODO: 判断重合, 自己宽度]
      */
-    static produceObstacle = (preFab: cc.Prefab, parent: cc.Node): cc.Node => {
+    static judgeLastGapDistance = (nowAngle: number, gap: number, propType: string): boolean => {
+        const gapAngle = Global.meterPerAngle * gap;
+        const multiple = Math.floor(nowAngle/gapAngle);
+
+        if (!Factory.createAngle[propType]) {
+            Factory.createAngle[propType] = 0;
+            Factory.createAngle[propType] = Utils.getRangeRandom(Factory.createAngle[propType], Factory.createAngle[propType] + gapAngle);
+
+            return false;
+        }
+
+        if (Factory.createAngle[propType] && nowAngle < Factory.createAngle[propType]) {
+            return false;
+        }
+
+        Factory.createAngle[propType] = Utils.getRangeRandom(Factory.createAngle[propType], Factory.createAngle[propType] + gapAngle);
+        console.log(`%c ${propType}::${Factory.createAngle[propType]}`, 'background: pink;');
+
+        return true;
+    }
+
+    /**
+     * 生成障碍 [TODO: 判断重合, 自己宽度]
+     */
+    static createObstacle = (preFab: cc.Prefab, parent: cc.Node): cc.Node => {
+        if (!Factory.judgeRangeDistance(parent.angle, Constants.OBSTACLE_GAP_RANGE, 'obstacle')) return;
+
         // TODO 这里应该用缓冲池
         const obstacle: cc.Node = cc.instantiate(preFab);
 

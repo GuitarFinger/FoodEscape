@@ -4,6 +4,7 @@
 // ============================ 导入
 import { Global } from "./Global";
 import { Utils } from "./Utils";
+import { Constants } from "./Enum";
 
 // ============================ 常量定义
 const {ccclass, property} = cc._decorator;
@@ -51,7 +52,7 @@ export default class Enemy extends cc.Component {
 
     update (dt) {
         // console.log(dt);
-        if (this.mainGame.isPaused === true) return;
+        if (Global.mainGame.isPaused === true) return;
         
         if (!this._isHandMove) {
             this.move(dt);
@@ -69,9 +70,9 @@ export default class Enemy extends cc.Component {
 
         if (oComponent === null) return;
 
-        // if (oComponent.selfType === 'player') {
-        //     this.mainGame.pauseGame();
-        // }
+        if (oComponent.selfType === 'player') {
+            this.mainGame.pauseGame();
+        }
 
     }
 
@@ -115,14 +116,16 @@ export default class Enemy extends cc.Component {
         let finalAngle = this.relativeAngle + angle;
         let tempAngle = null;
         let timer = null;
+        let maxAngleGap = Constants.E_P_MAX_DISTANCE* Global.meterPerAngle;
 
         // 平滑过渡
         let fun = () => {
             timer && clearTimeout(timer);
 
             this._isHandMove = true;
-
-            if (angle > 0 && this.relativeAngle < finalAngle) {
+            let angleGap = Math.abs(Math.abs(Global.mainGame.player.angle) - Math.abs(this.node.angle));
+        
+            if (angle > 0 && this.relativeAngle < finalAngle && angleGap < maxAngleGap) {
                 tempAngle = this.relativeAngle + Global.meterPerAngle;
                 tempAngle = tempAngle > finalAngle ? finalAngle : tempAngle;
 
@@ -130,7 +133,7 @@ export default class Enemy extends cc.Component {
 
                 timer = setTimeout(fun, 10);
             }
-            else if (angle < 0 && this.relativeAngle > finalAngle) {
+            else if (angle < 0 && this.relativeAngle > finalAngle && angleGap < maxAngleGap) {
                 tempAngle = this.relativeAngle - Global.meterPerAngle;
                 tempAngle = tempAngle < finalAngle ? finalAngle : tempAngle;
 
