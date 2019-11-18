@@ -79,7 +79,7 @@ export default class Player extends cc.Component {
             case 'magnet':
                 this.adsorbProp();
                 break;
-            case 'diamond': 
+            case 'magnet': 
                 this.enemyMoveBack();
                 break;
             case 'obstacle': 

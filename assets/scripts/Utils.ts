@@ -170,7 +170,7 @@ export class Factory {
 
         if (!Factory.createOtherPropTime) {
             Factory.createOtherPropTime = Utils.getRangeRandom(multiple*Constants.EVERY_TIME_RANGE, (multiple+1)*Constants.EVERY_TIME_RANGE);
-            console.log(`%c time:: ${Factory.createOtherPropTime}`, 'background: pink;');
+            // console.log(`%c time:: ${Factory.createOtherPropTime}`, 'background: pink;');
             return false;
         }
 
@@ -180,7 +180,7 @@ export class Factory {
 
         Factory.createOtherPropTime = Utils.getRangeRandom((multiple+1)*Constants.EVERY_TIME_RANGE, (multiple+2)*Constants.EVERY_TIME_RANGE);
 
-        console.log(`%c time:: ${Factory.createOtherPropTime}`, 'background: pink;');
+        // console.log(`%c time:: ${Factory.createOtherPropTime}`, 'background: pink;');
 
         return true;
     }

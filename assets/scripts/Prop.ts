@@ -29,6 +29,8 @@ export default class Prop extends cc.Component {
     initY: number = 0;
     /**初始角度 */
     initAngle: number = 0;
+    /**图片路径 */
+    imgSprite: cc.SpriteFrame;
 
 
     // LIFE-CYCLE CALLBACKS:
@@ -36,7 +38,12 @@ export default class Prop extends cc.Component {
     onLoad () {
         this.node.setPosition(cc.v2(this.initX, this.initY));
         this.node.angle = this.initAngle;
-        this.node.opacity = 255;
+        cc.loader.loadRes('textures/ui_rank', cc.SpriteAtlas, (err:any, atlas: cc.SpriteAtlas) => {
+            if (err) return;
+
+            this.getComponent(cc.Sprite).spriteFrame = atlas.getSpriteFrame('icon_third');
+            this.node.opacity = 255;
+        });
     }
 
     // start () {
@@ -52,7 +59,7 @@ export default class Prop extends cc.Component {
         this.initX = x;
         this.initY = y;
         this.initAngle = Utils.getRotateAngle(angle);
-        this.selfType = selfType;
+        this.selfType = selfType;        
     }
 
     onCollisionEnter (other: cc.BoxCollider, self: cc.BoxCollider) {

@@ -30,15 +30,15 @@ export default class Obstacle extends cc.Component {
 
     // LIFE-CYCLE CALLBACKS:
 
-    // onLoad () {}
-
-    start () {
-        setTimeout(() => {
-            this.node.setPosition(cc.v2(this.initX, this.initY));
-            this.node.angle = Utils.getRotateAngle(this.initAngle);
-            this.node.opacity = 255;
-        }, 1);
+    onLoad () {
+        this.node.setPosition(cc.v2(this.initX, this.initY));
+        this.node.angle = Utils.getRotateAngle(this.initAngle);
+        this.node.opacity = 255;
     }
+
+    // start () {
+
+    // }
 
     // update (dt) {}
 
