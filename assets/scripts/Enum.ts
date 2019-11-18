@@ -49,12 +49,6 @@ export class Constants {
     /**中景转动倍率 */
     static P_ROTATE_MULTIPLE = 1/4;
     
-    // /**地表转动360度的时间 */
-    // static ROTATE_DURATION_S = 10;
-    
-    // /**中景转动360度的时间 */
-    // static ROTATE_DURATION_P = 40;
-    
     /**连跳次数 */
     static JUMP_COUNT = 2;
     

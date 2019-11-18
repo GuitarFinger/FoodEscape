@@ -191,28 +191,6 @@ export class Factory {
         return true;
     }
 
-    // /**
-    //  * 判断加大距离道具
-    //  */
-    // static judgeAddDistProp = (nowAngle: number) => {
-    //     const gapAngle = Global.meterPerAngle * Constants.EVERY_GAP_RANGE;
-    //     const multiple = Math.floor(nowAngle/gapAngle);
-
-    //     if (!Factory.createDistPropAngle) {
-    //         Factory.createDistPropAngle = Utils.getRangeRandom(multiple*gapAngle, (multiple+1)*gapAngle);
-
-    //         return false;
-    //     }
-
-    //     if (Factory.createDistPropAngle && nowAngle < Factory.createDistPropAngle) {
-    //         return false;
-    //     }
-
-    //     Factory.createDistPropAngle = Utils.getRangeRandom((multiple+1)*gapAngle, (multiple+2)*gapAngle);
-
-    //     return true;
-    // }
-
     /**
      * 生成道具 [TODO: 判断重合, 自己宽度]
      */
@@ -279,7 +257,6 @@ export class Factory {
      */ 
     static createDiamond = (preFab: cc.Prefab, parent: cc.Node): cc.Node => {
         const randomNum = Math.random();
-        // const tempBoolean = Factory.judgeDistance(parent.angle, Constants.DIAMOND_GAP_RANGE, 'diamond');
         // console.log('boolean: ', tempBoolean)
         if (randomNum > Constants.DIAMOND_ODDS || !Factory.judgeRangeDistance(parent.angle, Constants.DIAMOND_GAP_RANGE, 'diamond')) return;
 
