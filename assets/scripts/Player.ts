@@ -152,8 +152,8 @@ export default class Player extends cc.Component {
      * 自己死亡
      */
     ownDead = () => {
-        this.isDead = true;
-        this._selfSkeleton.setAnimation(0, 'death', false);
+        // this.isDead = true;
+        // this._selfSkeleton.setAnimation(0, 'death', false);
     }
 
     /**

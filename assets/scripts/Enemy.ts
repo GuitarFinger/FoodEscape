@@ -70,9 +70,9 @@ export default class Enemy extends cc.Component {
 
         if (oComponent === null) return;
 
-        if (oComponent.selfType === 'player') {
-            this.mainGame.pauseGame();
-        }
+        // if (oComponent.selfType === 'player') {
+        //     this.mainGame.pauseGame();
+        // }
 
     }
 
