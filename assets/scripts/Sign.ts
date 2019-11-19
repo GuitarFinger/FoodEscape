@@ -1,7 +1,14 @@
+// ============================ 导入
 import { ESceneName } from "./Enum";
 
+// ============================ 常量定义
 const {ccclass, property} = cc._decorator;
 
+
+// ============================ 变量定义
+
+
+// ============================ 类定义
 @ccclass
 export default class SignIn extends cc.Component {
 
@@ -12,18 +19,21 @@ export default class SignIn extends cc.Component {
     text: string = 'hello';
 
     // =====LIFE-CYCLE CALLBACKS:
-
     onLoad () {
         this.bindListener();
+        this.init();
     }
 
     start () {
-
+        
     }
 
     // update (dt) {}
     // =====LIFE-CYCLE CALLBACKS:
 
+    init = () => {
+
+    }
     /**
      * 绑定监听
      */
@@ -38,10 +48,18 @@ export default class SignIn extends cc.Component {
     closePage = () => {
         this.node.destroy();
     }
-
-    getDoubleSignAward () {
-        cc.director.preloadScene(ESceneName.MAIN_GAME, () => {
-            cc.director.loadScene(ESceneName.MAIN_GAME);
-        });
-    }
 }
+
+
+// ============================ 组件定义
+
+
+// ============================ 方法定义
+
+
+// ============================ 导出
+
+
+// ============================ 立即执行
+
+

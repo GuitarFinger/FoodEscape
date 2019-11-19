@@ -154,13 +154,18 @@ export const Global = {
         }
     },
 
+    /**所有图片集列表 */
+    spriteAtlasMap: new Map(),
+
+    /**距离 */
+    distance: 0,
+
     /**道具池 */
     propPool: new Cache<cc.Node>(),
 
     /**障碍池 */
     obstaclePool: new Cache<cc.Node>(),
 
-    /**距离 */
-    distance: 0,
+    
 
 };

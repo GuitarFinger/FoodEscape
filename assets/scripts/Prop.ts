@@ -34,6 +34,8 @@ export default class Prop extends cc.Component {
     initY: number = 0;
     /**初始角度 */
     initAngle: number = 0;
+    /**池节点 */
+    poolNode: cc.Node;
     /**图片路径 */
     imgSprite: cc.SpriteFrame;
 
@@ -43,12 +45,8 @@ export default class Prop extends cc.Component {
     onLoad () {
         this.node.setPosition(cc.v2(this.initX, this.initY));
         this.node.angle = this.initAngle;
-        cc.loader.loadRes('textures/ui_rank', cc.SpriteAtlas, (err:any, atlas: cc.SpriteAtlas) => {
-            if (err) return;
-
-            this.getComponent(cc.Sprite).spriteFrame = atlas.getSpriteFrame(typeIcon[this.selfType]);
-            this.node.opacity = 255;
-        });
+        this.getComponent(cc.Sprite).spriteFrame = Global.spriteAtlasMap.get('ui_rank').getSpriteFrame(typeIcon[this.selfType]);
+        this.node.opacity = 255;
     }
 
     // start () {

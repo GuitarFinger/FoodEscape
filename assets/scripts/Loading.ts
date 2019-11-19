@@ -4,6 +4,8 @@
 
 // ======================== 导入
 import { ESceneName } from "./Enum";
+import DB from "./mod/db";
+import { Global } from "./Global";
 
 // ============================ 常量定义
 const {ccclass, property} = cc._decorator;
@@ -34,6 +36,12 @@ export default class Loading extends cc.Component {
     handleLoading = () => {
         const progressCB = (completeCount: number, totalCount: number, item: any) => {
             const loadProgress = completeCount / totalCount;
+            const content = item.content;
+            
+            if (content && content instanceof cc.SpriteAtlas) {
+                Global.spriteAtlasMap.set(content.name.split('.')[0], content);
+            }
+
             this.loadBar.progress = loadProgress;
         };
 
@@ -42,8 +50,11 @@ export default class Loading extends cc.Component {
                 console.log(error);
                 return;
             }
-            cc.director.preloadScene(ESceneName.MAIN_MENU, () => {
-                cc.director.loadScene(ESceneName.MAIN_MENU);
+
+            LoadModel.getBaseData(() => {
+                cc.director.preloadScene(ESceneName.MAIN_MENU, () => {
+                    cc.director.loadScene(ESceneName.MAIN_MENU);
+                });
             });
         };
 
@@ -51,6 +62,31 @@ export default class Loading extends cc.Component {
     }
 }
 
+/**加载模块 */
+class LoadModel {
+    /**
+     * 初始化sign的前端字段
+     */
+    static initSignDB = () => {
+        DB.init('sign', {});
+    }
+
+    /**
+     * 获取基本数据
+     */
+    static getBaseData = (callback?: Function) => {
+        DB.data.sign = {
+            nowDay: 1,
+            signList: [
+                1, 0, 0, 0, 0, 0, 0
+            ]
+        }
+
+        callback && callback();
+    };
+}
+
 // ============================ 方法定义
 
 // ============================ 立即执行
+LoadModel.initSignDB();

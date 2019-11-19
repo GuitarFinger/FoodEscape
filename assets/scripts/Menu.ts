@@ -1,3 +1,5 @@
+import { ESceneName } from "./Enum";
+
 // ============================ 导入
 
 // ============================ 类型定义
@@ -55,6 +57,7 @@ export default class Menu extends cc.Component {
         const basePageNode = this.node.getChildByName('basePage');
         const leftMenuNode = basePageNode.getChildByName('leftMenu');
         const playerNode = basePageNode.getChildByName('player');
+        const btnStartGameNode = basePageNode.getChildByName('btnStartGame');
 
         pageTypes.forEach(type => {
             leftMenuNode.getChildByName(type).on(cc.Node.EventType.TOUCH_START, () => {
@@ -64,6 +67,8 @@ export default class Menu extends cc.Component {
         playerNode.on(cc.Node.EventType.TOUCH_START, () => {
             this.openPage('skin');
         });
+
+        btnStartGameNode.on(cc.Node.EventType.TOUCH_START, this.loadMainGameScene);
     }
 
     /**打开页面 */
@@ -81,6 +86,11 @@ export default class Menu extends cc.Component {
         this.node.addChild(this[pageName]);
     }
     
+    loadMainGameScene = () => {
+        cc.director.preloadScene(ESceneName.MAIN_GAME, () => {
+            cc.director.loadScene(ESceneName.MAIN_GAME);
+        });
+    }
 }
 
 
