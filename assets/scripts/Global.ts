@@ -155,7 +155,7 @@ export const Global = {
     },
 
     /**所有图片集列表 */
-    spriteAtlasMap: new Map(),
+    spriteAtlasMap: new Map<string, cc.SpriteAtlas>(),
 
     /**距离 */
     distance: 0,

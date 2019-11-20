@@ -76,9 +76,9 @@ class LoadModel {
      */
     static getBaseData = (callback?: Function) => {
         DB.data.sign = {
-            nowDay: 1,
-            signList: [
-                1, 0, 0, 0, 0, 0, 0
+            index: 1,
+            list: [
+                0, 0, 0, 0, 0, 0, 0
             ]
         }
 

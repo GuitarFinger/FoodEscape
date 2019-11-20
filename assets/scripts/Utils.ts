@@ -128,6 +128,13 @@ export class Utils {
     public static getRangeRandom = (min: number, max: number): number => {
         return Math.floor(min + Math.random() * (max - min))
     }
+
+    /**
+     * 修改图片(图片来自图集)
+     */
+    public static modifyImageFromAltas = (node: cc.Node, altasName: string, imgName: string) => {
+        node.getComponent(cc.Sprite).spriteFrame = Global.spriteAtlasMap.get(altasName).getSpriteFrame(imgName);
+    };
 }
 
 /**
