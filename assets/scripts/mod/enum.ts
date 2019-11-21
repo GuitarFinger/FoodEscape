@@ -1,8 +1,21 @@
+// ================== 数据
+export class DTip {
+    /**
+     * 父节点
+     */
+    parent: cc.Node;
+    /**
+     * 文本
+     */
+    text: string;
 
-/**
- * @module 通用常量
- */
+    constructor (parent: cc.Node, text: string) {
+        this.parent = parent;
+        this.text = text;
+    }
+}
 
+// ================== 枚举
 /**
  * @desc 场景名称
  */
@@ -26,6 +39,14 @@ export enum ESceneName {
     RANK = "rank"
 }
 
+export enum EMsg {
+    /**弹出提示 */
+    SCREEN_TIPS = 'screen_tips',
+
+    /**速度改变 */
+    SPEED_CHANGE = 'speed_change',
+}
+
 /**
  * @desc 道具类型
  */
@@ -38,14 +59,17 @@ export enum EPropType {
     DIAMOND = 'diamond',
 }
 
+// ================== 类型
+
 export type TProp = 'coin' | 'diamond' | 'magnet' | 'addDist';
 export type TPoint = { x: number, y: number };
 export type TDuadrant = 0 | 1 | 2 | 3 | 4;
 
+// ================== 常量
 /**
  * @desc 游戏常量
  */
-export class Constants {
+export class CGame {
     /**中景转动倍率 */
     static P_ROTATE_MULTIPLE = 1/4;
     
@@ -61,7 +85,7 @@ export class Constants {
     /**主游戏场景扇形角 */
     static SECTOR_ANGLE = 60;
 
-    /**主游戏场景扇形角与水平面夹角(PS: 这个扇形角小于180°) [(180-Constants.SECTOR_ANGLE) / 2] */
+    /**主游戏场景扇形角与水平面夹角(PS: 这个扇形角小于180°) [(180-CGame.SECTOR_ANGLE) / 2] */
     static SECTOR_LEVLE_ANGLE = 60;
 
     /**第一半径 */
@@ -83,5 +107,4 @@ export class Constants {
 
     /**生成钻石的概率 */
     static DIAMOND_ODDS = 0.5;
-
 }

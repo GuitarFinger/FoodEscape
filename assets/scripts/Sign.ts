@@ -1,8 +1,8 @@
 // ============================ 导入
-import { ESceneName } from "./Enum";
+import { ESceneName, EMsg, DTip } from "./mod/enum";
 import DB from "./mod/db";
-import { Global } from "./Global";
-import { Utils } from "./Utils";
+import { Global } from "./mod/global";
+import { Utils } from "./mod/utils";
 
 // ============================ 常量定义
 const {ccclass, property} = cc._decorator;
@@ -109,11 +109,13 @@ export default class Sign extends cc.Component {
 
 
         if (whichDay > dbSignIdx) {
+            Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip(this.node, `isn't reach to ${whichDay} day`));
             console.log(`isn't reach to ${whichDay} day`);
             return;
         }
         
         if (dbSignList[whichDay] !== 0) {
+            Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip(this.node, `${whichDay} day is signed`));
             console.log(`${whichDay} day is signed`);
             return;
         }

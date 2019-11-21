@@ -2,9 +2,9 @@
  * @module 敌人
  */
 // ============================ 导入
-import { Global } from "./Global";
-import { Utils } from "./Utils";
-import { Constants } from "./Enum";
+import { Global } from "./mod/global";
+import { Utils } from "./mod/utils";
+import { CGame, EMsg } from "./mod/enum";
 
 // ============================ 常量定义
 const {ccclass, property} = cc._decorator;
@@ -38,7 +38,7 @@ export default class Enemy extends cc.Component {
     init() {
         this._selfSkeleton = this.node.getChildByName('spine').getComponent(sp.Skeleton);
         Global.emitter.register({
-            'msgSpeedChange': this.setTimeScale
+            [EMsg.SPEED_CHANGE]: this.setTimeScale
         });
     }
     
@@ -61,7 +61,7 @@ export default class Enemy extends cc.Component {
 
     onDestroy () {
         this.mainGame = null;
-        Global.emitter.remove('msgSpeedChange', this.setTimeScale);
+        Global.emitter.remove(EMsg.SPEED_CHANGE, this.setTimeScale);
     }
 
     onCollisionEnter (other: cc.BoxCollider, self: cc.BoxCollider) {
@@ -116,7 +116,7 @@ export default class Enemy extends cc.Component {
         let finalAngle = this.relativeAngle + angle;
         let tempAngle = null;
         let timer = null;
-        let maxAngleGap = Constants.E_P_MAX_DISTANCE* Global.meterPerAngle;
+        let maxAngleGap = CGame.E_P_MAX_DISTANCE* Global.meterPerAngle;
 
         // 平滑过渡
         let fun = () => {

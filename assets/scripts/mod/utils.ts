@@ -1,5 +1,5 @@
-import { Constants, TProp, TPoint, TDuadrant } from "./Enum";
-import { Global } from "./Global";
+import { CGame, TProp, TPoint, TDuadrant } from "./enum";
+import { Global } from "./global";
 
 /**
  * @module 通用工具
@@ -116,7 +116,7 @@ export class Utils {
     * @returns 每份角度
     */
     public static divideAngle = (angle1: number, angle2: number, partNum: number): number => {
-        return Math.abs(Math.abs(angle1) - Math.abs(angle2)) / Constants.INIT_DISTANCE;
+        return Math.abs(Math.abs(angle1) - Math.abs(angle2)) / CGame.INIT_DISTANCE;
     }
 
     /**
@@ -205,7 +205,7 @@ export class Factory {
         // TODO 这里应该用缓冲池
         const prop: cc.Node = cc.instantiate(preFab);
 
-        const ownAngle = Utils.convertAngle(Constants.SECTOR_LEVLE_ANGLE- parent.angle);
+        const ownAngle = Utils.convertAngle(CGame.SECTOR_LEVLE_ANGLE- parent.angle);
         const x = Math.cos(ownAngle * Math.PI / 180) * radius;
         const y = Math.sin(ownAngle * Math.PI / 180) * radius;
 
@@ -221,9 +221,9 @@ export class Factory {
      * 生成加大距离道具 [TODO: 判断重合, 自己宽度]
      */
     static createAddDistProp = (preFab: cc.Prefab, parent: cc.Node): cc.Node => {
-        if (!Factory.judgeRangeDistance(parent.angle, Constants.ADDDIST_GAP_RANGE, 'addDist')) return;
+        if (!Factory.judgeRangeDistance(parent.angle, CGame.ADDDIST_GAP_RANGE, 'addDist')) return;
 
-        return Factory.createProp(preFab, parent, 'addDist', Constants.SECOND_RADIUS);
+        return Factory.createProp(preFab, parent, 'addDist', CGame.SECOND_RADIUS);
     }
 
     /**
@@ -231,10 +231,10 @@ export class Factory {
      */
     private static judgeOtherProp = (startTime: number) => {
         const timeLength = (Date.now()-startTime) / 1000;
-        const multiple = Math.floor(timeLength/Constants.TIME_GAP_RANGE);
+        const multiple = Math.floor(timeLength/CGame.TIME_GAP_RANGE);
 
         if (!Factory.createOtherPropTime) {
-            Factory.createOtherPropTime = Utils.getRangeRandom(multiple*Constants.TIME_GAP_RANGE, (multiple+1)*Constants.TIME_GAP_RANGE);
+            Factory.createOtherPropTime = Utils.getRangeRandom(multiple*CGame.TIME_GAP_RANGE, (multiple+1)*CGame.TIME_GAP_RANGE);
             // console.log(`%c time:: ${Factory.createOtherPropTime}`, 'background: pink;');
             return false;
         }
@@ -243,7 +243,7 @@ export class Factory {
             return false;
         }
 
-        Factory.createOtherPropTime = Utils.getRangeRandom((multiple+1)*Constants.TIME_GAP_RANGE, (multiple+2)*Constants.TIME_GAP_RANGE);
+        Factory.createOtherPropTime = Utils.getRangeRandom((multiple+1)*CGame.TIME_GAP_RANGE, (multiple+2)*CGame.TIME_GAP_RANGE);
 
         // console.log(`%c time:: ${Factory.createOtherPropTime}`, 'background: pink;');
 
@@ -256,7 +256,7 @@ export class Factory {
     static createOtherProp = (preFab: cc.Prefab, parent: cc.Node): cc.Node => {
         if (!Factory.judgeOtherProp(Global.mainGame.startRotateTime)) return;
 
-        return Factory.createProp(preFab, parent, 'magnet', Constants.THIRD_RADIUS);
+        return Factory.createProp(preFab, parent, 'magnet', CGame.THIRD_RADIUS);
     }
 
     /**
@@ -265,9 +265,9 @@ export class Factory {
     static createDiamond = (preFab: cc.Prefab, parent: cc.Node): cc.Node => {
         const randomNum = Math.random();
         // console.log('boolean: ', tempBoolean)
-        if (randomNum > Constants.DIAMOND_ODDS || !Factory.judgeRangeDistance(parent.angle, Constants.DIAMOND_GAP_RANGE, 'diamond')) return;
+        if (randomNum > CGame.DIAMOND_ODDS || !Factory.judgeRangeDistance(parent.angle, CGame.DIAMOND_GAP_RANGE, 'diamond')) return;
 
-        return Factory.createProp(preFab, parent, 'diamond', Constants.FIRST_RADIUS);
+        return Factory.createProp(preFab, parent, 'diamond', CGame.FIRST_RADIUS);
     }
 
     /**
@@ -298,14 +298,14 @@ export class Factory {
      * 生成障碍 [TODO: 判断重合, 自己宽度]
      */
     static createObstacle = (preFab: cc.Prefab, parent: cc.Node): cc.Node => {
-        if (!Factory.judgeRangeDistance(parent.angle, Constants.OBSTACLE_GAP_RANGE, 'obstacle')) return;
+        if (!Factory.judgeRangeDistance(parent.angle, CGame.OBSTACLE_GAP_RANGE, 'obstacle')) return;
 
         // TODO 这里应该用缓冲池
         const obstacle: cc.Node = cc.instantiate(preFab);
 
-        const ownAngle = Utils.convertAngle(Constants.SECTOR_LEVLE_ANGLE-parent.angle);
-        const x = Math.cos(ownAngle * Math.PI / 180) * Constants.FIRST_RADIUS;
-        const y = Math.sin(ownAngle * Math.PI / 180) * Constants.FIRST_RADIUS;
+        const ownAngle = Utils.convertAngle(CGame.SECTOR_LEVLE_ANGLE-parent.angle);
+        const x = Math.cos(ownAngle * Math.PI / 180) * CGame.FIRST_RADIUS;
+        const y = Math.sin(ownAngle * Math.PI / 180) * CGame.FIRST_RADIUS;
 
         // surface的中心点就在中间 而且原点与圆点与中心点重合故可以这样计算坐标
         obstacle.getComponent('Obstacle').init(x, y, ownAngle, 'obstacle');

@@ -1,3 +1,5 @@
+import { EMsg } from "./enum";
+
 /**
  * @class 发射器
  */
@@ -150,7 +152,7 @@ export const Global = {
         if (this._speedRatio !== val) {
             this._speedRatio = val;
 
-            (this.emitter as Emitter).dispatch('msgSpeedChange');
+            (this.emitter as Emitter).dispatch(EMsg.SPEED_CHANGE);
         }
     },
 
@@ -165,7 +167,4 @@ export const Global = {
 
     /**障碍池 */
     obstaclePool: new Cache<cc.Node>(),
-
-    
-
 };

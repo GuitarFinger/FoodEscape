@@ -2,8 +2,8 @@
  * @module 玩家
  */
 // ============================ 导入
-import { Constants } from "./Enum";
-import { Global } from "./Global";
+import { CGame, EMsg } from "./mod/enum";
+import { Global } from "./mod/global";
 
 // ============================ 常量定义
 const {ccclass, property} = cc._decorator;
@@ -48,7 +48,7 @@ export default class Player extends cc.Component {
         });
 
         Global.emitter.register({
-            "msgSpeedChange": this.setTimeScale
+            [EMsg.SPEED_CHANGE]: this.setTimeScale
         });
     }
     // LIFE-CYCLE CALLBACKS:
@@ -62,7 +62,7 @@ export default class Player extends cc.Component {
     // }
 
     onDestroy() {
-        Global.emitter.remove('msgSpeedChange', this.setTimeScale);
+        Global.emitter.remove(EMsg.SPEED_CHANGE, this.setTimeScale);
     }
 
     onCollisionEnter (other: cc.BoxCollider, self: cc.BoxCollider) {
@@ -97,7 +97,7 @@ export default class Player extends cc.Component {
 
     jump = () => {
         if (this.isDead) return;
-        if (this._isJump && this._jumpCount === Constants.JUMP_COUNT) return;
+        if (this._isJump && this._jumpCount === CGame.JUMP_COUNT) return;
         
         
         this._isJump && this.node.stopAllActions();

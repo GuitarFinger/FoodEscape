@@ -1,4 +1,5 @@
-import { ESceneName } from "./Enum";
+import { ESceneName } from "./mod/enum";
+import { ScreenTips } from "./mod/screentips";
 
 // ============================ 导入
 
@@ -28,6 +29,9 @@ export default class Menu extends cc.Component {
     @property({ type: cc.Prefab, displayName: '皮肤界面预制体' })
     skinPageFab: cc.Prefab = null;
 
+    @property({ type: cc.Prefab, displayName: '弹出提示预制体' })
+    screenTipsPreFab: cc.Prefab = null;
+
     /**任务界面 */
     taskPage: cc.Node = null;
     /**排行榜界面 */
@@ -44,6 +48,7 @@ export default class Menu extends cc.Component {
 
     onLoad () {
         this.bindListener();
+        ScreenTips.screenTipPreFab = this.screenTipsPreFab;
     }
 
     start () {

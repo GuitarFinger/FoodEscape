@@ -2,10 +2,10 @@
  * @module 游戏主逻辑
  */
 // ============================ 导入
-import { Utils, Factory } from "./Utils";
-import { Constants } from "./Enum";
+import { Utils, Factory } from "./mod/utils";
+import { CGame } from "./mod/enum";
 import { CFG_TIME_SPEED } from "./config/timeSpeedCfg";
-import { Global } from "./Global";
+import { Global } from "./mod/global";
 
 // ============================ 常量定义
 const {ccclass, property} = cc._decorator;
@@ -70,7 +70,7 @@ export default class MainGame extends cc.Component {
         Global.meterPerAngle = Utils.divideAngle(
             this.calcRelativeSurfaceAngle(this.player, 'Player'),
             this.calcRelativeSurfaceAngle(this.enemy, 'Enemy'),
-            Constants.INIT_DISTANCE
+            CGame.INIT_DISTANCE
         );
 
     }
@@ -171,7 +171,7 @@ export default class MainGame extends cc.Component {
         angleIncrement = (nowSpeed * Global.meterPerAngle) * timeInterval;
 
         this.surface.angle += angleIncrement;
-        this.prospect.angle += angleIncrement * Constants.P_ROTATE_MULTIPLE;
+        this.prospect.angle += angleIncrement * CGame.P_ROTATE_MULTIPLE;
         this.lastRotateTime = nowTime;
 
         Global.speedRatio = nowSpeed / Global.initSpeed;

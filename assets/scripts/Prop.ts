@@ -1,6 +1,6 @@
-import { Global } from "./Global";
-import { Utils } from "./Utils";
-import { TProp } from "./Enum";
+import { Global } from "./mod/global";
+import { Utils } from "./mod/utils";
+import { TProp } from "./mod/enum";
 
 /**
  * @module 道具

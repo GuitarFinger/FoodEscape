@@ -3,9 +3,9 @@
  */
 
 // ======================== 导入
-import { ESceneName } from "./Enum";
+import { ESceneName } from "./mod/enum";
 import DB from "./mod/db";
-import { Global } from "./Global";
+import { Global } from "./mod/global";
 
 // ============================ 常量定义
 const {ccclass, property} = cc._decorator;

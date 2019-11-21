@@ -1873,7 +1873,7 @@
     "asset": {
       "__uuid__": "8be11af2-2b4d-4a7e-9bf1-f8112a31c2c4"
     },
-    "fileId": "8ePyjUBPNJQpAuTVww0oXj",
+    "fileId": "dc+0lhCHNHp7HPcgHn/Tqv",
     "sync": false
   },
   {
@@ -2526,7 +2526,7 @@
     "asset": {
       "__uuid__": "8be11af2-2b4d-4a7e-9bf1-f8112a31c2c4"
     },
-    "fileId": "81q1YeSfFKko60qt93W0eA",
+    "fileId": "25+PlgB55NQLCrfHiiHcj5",
     "sync": false
   },
   {
@@ -3300,7 +3300,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "text_fq",
+    "_name": "text_sign",
     "_objFlags": 0,
     "_parent": {
       "__id__": 88
@@ -3322,7 +3322,7 @@
     "_prefab": {
       "__id__": 95
     },
-    "_opacity": 255,
+    "_opacity": 157,
     "_color": {
       "__type__": "cc.Color",
       "r": 234,
@@ -3332,7 +3332,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 102.23,
+      "width": 102.23000000000002,
       "height": 63
     },
     "_anchorPoint": {
@@ -3449,8 +3449,8 @@
       }
     ],
     "_useOriginalSize": true,
-    "_string": "放  弃",
-    "_N$string": "放  弃",
+    "_string": "签  到",
+    "_N$string": "签  到",
     "_fontSize": 40,
     "_lineHeight": 50,
     "_enableWrapText": true,
@@ -3473,7 +3473,7 @@
     "asset": {
       "__uuid__": "8be11af2-2b4d-4a7e-9bf1-f8112a31c2c4"
     },
-    "fileId": "400MTsJjVG0pTOy1Ya0b6D",
+    "fileId": "542/9FX8NEpa26QLUB73Vw",
     "sync": false
   },
   {
@@ -3486,7 +3486,7 @@
     "_enabled": true,
     "_fontFamily": "Arial",
     "_isSystemFontUsed": true,
-    "_N$string": "<color=#EAD899>放  弃</c>",
+    "_N$string": "<color=#EAD899>签  到</c>",
     "_N$horizontalAlign": 0,
     "_N$fontSize": 40,
     "_N$font": null,
@@ -3507,8 +3507,8 @@
     "alignMode": 1,
     "_target": null,
     "_alignFlags": 45,
-    "_left": 3.884999999999998,
-    "_right": 3.884999999999998,
+    "_left": 3.8849999999999945,
+    "_right": 3.8849999999999945,
     "_top": -6.5,
     "_bottom": -6.5,
     "_verticalCenter": 0,
