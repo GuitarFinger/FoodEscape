@@ -50,6 +50,10 @@
         this.run();
     }
 
+    start () {
+        this._isPaused = false;
+    }
+
     /**
      * 暂停
      */
@@ -74,9 +78,10 @@
      * 重新开始 去检查队列里面是否还有需要执行的函数
      */
     resume () {
-        this._isPaused = false;
+        this.pause();
 
         setTimeout(() => {
+            this.start();
             this.run();
         }, this._interval)
     }

@@ -2,7 +2,7 @@
  * @module 玩家
  */
 // ============================ 导入
-import { CGame, EMsg } from "./mod/enum";
+import { CGame, EMsg, DTip } from "./mod/enum";
 import { Global } from "./mod/global";
 
 // ============================ 常量定义
@@ -74,18 +74,19 @@ export default class Player extends cc.Component {
 
         switch (oComponent.selfType) {
             case 'addDist':
+                Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip((Global.mainGame.node as cc.Node), `collison ${oComponent.selfType}`));
                 this.enemyMoveBack();
                 break;
             case 'magnet':
+                Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip((Global.mainGame.node as cc.Node), `collison ${oComponent.selfType}`))
                 this.adsorbProp();
                 break;
-            case 'magnet': 
-                this.enemyMoveBack();
-                break;
-            case 'obstacle': 
+            case 'obstacle':
+                Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip((Global.mainGame.node as cc.Node), `collison ${oComponent.selfType}`))
                 this.enemyMoveForward();
                 break;
-            case 'enemy': 
+            case 'enemy':
+                Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip((Global.mainGame.node as cc.Node), `collison ${oComponent.selfType}`)) 
                 this.ownDead();
                 break;
         }

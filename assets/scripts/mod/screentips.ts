@@ -5,7 +5,6 @@ import { Global } from './global';
 import { EMsg, DTip } from './enum';
 
 // ========================================常量定义
-const {ccclass, property} = cc._decorator;
 
 // ========================================导出接口
 
@@ -15,7 +14,6 @@ const {ccclass, property} = cc._decorator;
 // ========================================变量声明
 
 // ========================================类定义
-@ccclass
 export class ScreenTips {
     /**
      * 弹窗预制体
