@@ -4,7 +4,7 @@ import { ScreenTips } from "./mod/screentips";
 // ============================ 导入
 
 // ============================ 类型定义
-type TPage = 'task' | 'rank' | 'sign' | 'skin';
+type TPage = 'task' | 'rank' | 'sign' | 'skin' | 'countdown';
 
 // ============================ 常量定义
 const {ccclass, property} = cc._decorator;
@@ -28,6 +28,9 @@ export default class Menu extends cc.Component {
 
     @property({ type: cc.Prefab, displayName: '皮肤界面预制体' })
     skinPageFab: cc.Prefab = null;
+
+    @property({ type: cc.Prefab, displayName: '倒计时界面预制体' })
+    countdownPageFab: cc.Prefab = null;
 
     @property({ type: cc.Prefab, displayName: '弹出提示预制体' })
     screenTipsPreFab: cc.Prefab = null;

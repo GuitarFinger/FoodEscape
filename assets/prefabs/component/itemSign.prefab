@@ -402,7 +402,7 @@
     "asset": {
       "__uuid__": "93fc04cc-76ba-436e-9601-8e36f5b2350d"
     },
-    "fileId": "9cbhHdev5PgoRP527HO00U",
+    "fileId": "10dr4hLEFDBaJoeZoHorxy",
     "sync": false
   },
   {
@@ -466,7 +466,7 @@
   {
     "__type__": "cc.Node",
     "_name": "icon_shadow",
-    "_objFlags": 512,
+    "_objFlags": 0,
     "_parent": {
       "__id__": 1
     },
@@ -1055,7 +1055,7 @@
     "asset": {
       "__uuid__": "93fc04cc-76ba-436e-9601-8e36f5b2350d"
     },
-    "fileId": "e16NTadCZAuouoV+lt2zTm",
+    "fileId": "50QqwLJR5GeKSFO6kAUC8u",
     "sync": false
   },
   {
