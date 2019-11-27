@@ -35,6 +35,12 @@ export default class Menu extends cc.Component {
     @property({ type: cc.Prefab, displayName: '弹出提示预制体' })
     screenTipsPreFab: cc.Prefab = null;
 
+    @property({ type: cc.Prefab, displayName: '升级泡泡预制体' })
+    bubbleUpgradePF: cc.Prefab = null;
+
+    @property({ type: cc.Prefab, displayName: '换肤泡泡预制体' })
+    bubbleChangeSkinPF: cc.Prefab = null;
+
     /**任务界面 */
     taskPage: cc.Node = null;
     /**排行榜界面 */
