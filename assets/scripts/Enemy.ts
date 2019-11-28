@@ -24,8 +24,6 @@ export default class Enemy extends cc.Component {
     private _lastTime: number = 0;
     /**X方向 */
     private _directionX: 'left' | 'right' = 'left';
-    /**主游戏上下文 */
-    mainGame: any = null;
     /**类型 */
     selfType: string = 'enemy';
     /**是否正在手动移动 */
@@ -60,7 +58,6 @@ export default class Enemy extends cc.Component {
     }
 
     onDestroy () {
-        this.mainGame = null;
         Global.emitter.remove(EMsg.SPEED_CHANGE, this.setTimeScale);
     }
 
@@ -71,7 +68,7 @@ export default class Enemy extends cc.Component {
         if (oComponent === null) return;
 
         // if (oComponent.selfType === 'player') {
-        //     this.mainGame.pauseGame();
+        //     Global.mainGame.pauseGame();
         // }
 
     }
@@ -101,7 +98,7 @@ export default class Enemy extends cc.Component {
         const nowWorldY = Math.sin(angle * Math.PI / 180) * 667;
 
         // 设置人物位置和旋转
-        this.node.setPosition(this.mainGame.node.convertToNodeSpaceAR(cc.v2(nowWorldX, nowWorldY)));
+        this.node.setPosition(Global.mainGame.node.convertToNodeSpaceAR(cc.v2(nowWorldX, nowWorldY)));
         this.node.angle = rotateToAngle;
 
         this.relativeAngle = angle;

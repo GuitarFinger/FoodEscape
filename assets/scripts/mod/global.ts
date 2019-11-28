@@ -1,4 +1,5 @@
 import { EMsg } from "./enum";
+import { AutoCounter } from "./counter";
 
 /**
  * @class 发射器
@@ -114,6 +115,8 @@ export const Global = {
     mainGame: null,
     /**发射器 */
     emitter: new Emitter(),
+    /**自动计数器 */
+    autoCounter: new AutoCounter(),
     /**
      * 米/度
      */
@@ -162,9 +165,15 @@ export const Global = {
     /**距离 */
     distance: 0,
 
-    /**道具池 */
-    propPool: new Cache<cc.Node>(),
+    /**磁铁生效 */
+    isMagnetic: false,
+    /**磁性持续时间 */
+    magneticDuration: 0,
+    /**护盾生效 */
+    isShield: false,
+    /**可吸引道具 */
+    attractProps: [],
 
-    /**障碍池 */
-    obstaclePool: new Cache<cc.Node>(),
+    /**拥有的所有道具 */
+    ownProps: []
 };

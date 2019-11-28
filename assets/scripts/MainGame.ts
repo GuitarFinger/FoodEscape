@@ -3,7 +3,7 @@
  */
 // ============================ 导入
 import { Utils, Factory } from "./mod/utils";
-import { CGame } from "./mod/enum";
+import { CGame, EPropType } from "./mod/enum";
 import { CFG_TIME_SPEED } from "./config/timeSpeedCfg";
 import { Global } from "./mod/global";
 
@@ -54,13 +54,7 @@ export default class MainGame extends cc.Component {
     onLoad () {
         this.player = Factory.createPlayer(this.playerFab, this.node);
         this.enemy = Factory.createEnemy(this.enemyFab, this.node);
-        
-        // this.schedule(() => {
-        //     Factory.produceProp(this.propFab, this.surface);
-        // }, 2);
-        // this.schedule(() => {
-        //     Factory.createObstacle(this.obstacleFab, this.surface);
-        // }, 4);
+
 
         this.bindListener();
 
@@ -72,7 +66,6 @@ export default class MainGame extends cc.Component {
             this.calcRelativeSurfaceAngle(this.enemy, 'Enemy'),
             CGame.INIT_DISTANCE
         );
-
     }
 
     start () {
@@ -86,6 +79,7 @@ export default class MainGame extends cc.Component {
         this.createGameProp();
         // 更新旋转
         this.updateRotate();
+
     }
 
     /**
@@ -112,11 +106,6 @@ export default class MainGame extends cc.Component {
      */
     bindListener = () => {
         const player = this.player.getComponent('Player');
-        const enemy = this.enemy.getComponent('Enemy');
-
-        player.mainGame = this;
-        enemy.mainGame = this;
-
         this.node.on(cc.Node.EventType.TOUCH_START, () => {
 
             if (!this.isPaused) {
@@ -143,13 +132,19 @@ export default class MainGame extends cc.Component {
      */
     createGameProp = () => {
         // 创建拉近距离道具
-        Factory.createAddDistProp(this.propFab, this.surface);
+        const addDistProp = Factory.createAddDistProp(this.propFab, this.surface);
         // 创建其它道具
-        Factory.createOtherProp(this.propFab, this.surface);
+        const otherProp = Factory.createOtherProp(this.propFab, this.surface);
         // 创建钻石
-        Factory.createDiamond(this.propFab, this.surface);
+        const diamond = Factory.createDiamond(this.propFab, this.surface);
         // 创建障碍物
         Factory.createObstacle(this.obstacleFab, this.surface);
+
+        addDistProp && Global.attractProps.push(addDistProp.getComponent('Prop'));
+
+        otherProp && Global.attractProps.push(otherProp.getComponent('Prop'));
+
+        diamond && Global.attractProps.push(diamond.getComponent('Prop'));
     }
 
     /**
@@ -168,8 +163,10 @@ export default class MainGame extends cc.Component {
         timeLength = (nowTime-this.startRotateTime) / 1000;
         sectionIdx = Utils.judgeSection(timeLength, CFG_TIME_SPEED, 'time');
         nowSpeed = CFG_TIME_SPEED[sectionIdx].speed;
-        angleIncrement = (nowSpeed * Global.meterPerAngle) * timeInterval;
+        angleIncrement = nowSpeed * Global.meterPerAngle * timeInterval;
 
+        // console.log(nowSpeed);
+        // console.log(angleIncrement);
         this.surface.angle += angleIncrement;
         this.prospect.angle += angleIncrement * CGame.P_ROTATE_MULTIPLE;
         this.lastRotateTime = nowTime;
@@ -177,7 +174,6 @@ export default class MainGame extends cc.Component {
         Global.speedRatio = nowSpeed / Global.initSpeed;
         Global.distance += (angleIncrement / Global.meterPerAngle);
     }
-    
 }
 
 

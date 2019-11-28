@@ -4,6 +4,8 @@
 // ============================ 导入
 import { CGame, EMsg, DTip } from "./mod/enum";
 import { Global } from "./mod/global";
+import { Utils } from "./mod/utils";
+import Prop from "./Prop";
 
 // ============================ 常量定义
 const {ccclass, property} = cc._decorator;
@@ -27,6 +29,8 @@ export default class Player extends cc.Component {
     private _isJump: boolean = false;
     /**跳起次数 */
     private _jumpCount: number = 0;
+    /**骨骼 */
+    private _selfSkeleton: sp.Skeleton;
     /**当前相对于水平面的角度 */
     relativeAngle: number;
     /**主游戏上下文 */
@@ -35,8 +39,15 @@ export default class Player extends cc.Component {
     selfType: string = 'player';
     /**是否死亡 */
     isDead: boolean = false;
-    /**骨骼 */
-    private _selfSkeleton: sp.Skeleton;
+    /**磁铁生效 */
+    isMagnetic: boolean = false;
+    // /**磁铁持续时间 */
+    // magneticDuration: number = 0;
+    // /**吸引的道具 */
+    // attractProps: any[] = [];
+    /**护盾生效 */
+    isShield: boolean = false;
+
 
     init = () => {
         this._surfaceY = this.node.y;
@@ -51,8 +62,7 @@ export default class Player extends cc.Component {
             [EMsg.SPEED_CHANGE]: this.setTimeScale
         });
     }
-    // LIFE-CYCLE CALLBACKS:
-
+    // LIFE-CYCLE CALLBACKS
     onLoad () {
         this.init();
     }
@@ -61,9 +71,14 @@ export default class Player extends cc.Component {
         
     // }
 
+    update (dt: number) {
+        this.handleMageticTime(dt);
+    }
+
     onDestroy() {
         Global.emitter.remove(EMsg.SPEED_CHANGE, this.setTimeScale);
     }
+    // LIFE-CYCLE CALLBACKS
 
     onCollisionEnter (other: cc.BoxCollider, self: cc.BoxCollider) {
         const oComponent = other.getComponent('Prop') || 
@@ -78,7 +93,7 @@ export default class Player extends cc.Component {
                 this.enemyMoveBack();
                 break;
             case 'magnet':
-                Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip((Global.mainGame.node as cc.Node), `collison ${oComponent.selfType}`))
+                // Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip((Global.mainGame.node as cc.Node), `collison ${oComponent.selfType}`))
                 this.adsorbProp();
                 break;
             case 'obstacle':
@@ -93,8 +108,6 @@ export default class Player extends cc.Component {
 
         
     }
-
-    // update (dt) {}
 
     jump = () => {
         if (this.isDead) return;
@@ -118,6 +131,7 @@ export default class Player extends cc.Component {
      * @method 跳起
      */
     jumpUp = () => {
+        this.moveProps();
         return cc.moveBy(this._jumpDuration, cc.v2(0, this._jumpHeight)).easing(cc.easeCubicActionOut());
     }
 
@@ -125,6 +139,7 @@ export default class Player extends cc.Component {
      * @method 下落
      */
     jumpDown = () => {
+        this.moveProps();
         return cc.moveTo(this._jumpDuration, cc.v2(this.node.x, this._surfaceY)).easing(cc.easeCubicActionIn());
     }
 
@@ -146,15 +161,19 @@ export default class Player extends cc.Component {
      * 吸附道具
      */
     adsorbProp = () => {
-        
+        if (this.isDead) return;
+
+        Global.magneticDuration += CGame.MAGNETIC_DURATOIN;
     }
 
     /**
      * 自己死亡
      */
     ownDead = () => {
-        // this.isDead = true;
-        // this._selfSkeleton.setAnimation(0, 'death', false);
+        this.isDead = true;
+        this.isMagnetic = false;
+        this._selfSkeleton.setAnimation(0, 'death', false);
+        Global.attractProps = [];
     }
 
     /**
@@ -165,7 +184,38 @@ export default class Player extends cc.Component {
     }
 
     /**
-     * @method 重置数据
+     * 处理磁性时间
+     */
+    handleMageticTime = (dt: number) => {
+        Global.magneticDuration -= (dt*1000);
+        Global.magneticDuration = Global.magneticDuration < 0 ? 0 : Global.magneticDuration;
+        
+        this.moveProps();
+    }
+
+    /**移动道具 */
+    moveProps = () => {
+        if (this.isDead || !Global.attractProps.length || Global.magneticDuration <= 0) return;
+
+        // TODO 会有偏移量
+        const angle = Utils.convertAngle(CGame.PLAYER_LEVEL_ANGLE - Global.mainGame.surface.angle);
+        const radius = CGame.PLAYER_RADIUS + (this.node.y - this._surfaceY);
+        const x = Math.cos(angle * Math.PI / 180) * radius;
+        const y = Math.sin(angle * Math.PI / 180) * radius;
+
+        for (let i = 0; i < Global.attractProps.length; i++) {
+            const prop = Global.attractProps[i];
+            if (prop.isDestory) {
+                Global.attractProps.splice(i, 1);
+                i--;
+            }
+
+            prop.actMoveTo(x, y);
+        }
+    }
+
+    /**
+     * 重置数据
      */
     resetData = () => {
         this._isJump = false;
