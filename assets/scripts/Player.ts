@@ -96,13 +96,15 @@ export default class Player extends cc.Component {
                 Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip((Global.mainGame.node as cc.Node), `collison ${oComponent.selfType}`));
                 this.enemyMoveBack();
                 break;
-            case 'magnet':
+            case ETProp.MAGNET:
                 // Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip((Global.mainGame.node as cc.Node), `collison ${oComponent.selfType}`))
                 this.adsorbProp();
                 break;
-            case 'obstacle':
+            case ETProp.TRAP:
                 Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip((Global.mainGame.node as cc.Node), `collison ${oComponent.selfType}`))
                 this.enemyMoveForward();
+                break;
+            case ETProp.PEPPER:
                 break;
             case 'enemy':
                 Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip((Global.mainGame.node as cc.Node), `collison ${oComponent.selfType}`)) 

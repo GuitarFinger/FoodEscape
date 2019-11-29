@@ -150,7 +150,7 @@ export default class MainGame extends cc.Component {
      */
     createGameProp = () => {
         let secondPtype: TProp, thirdPtype: TProp;
-        let diamondNode: cc.Node, secondNode: cc.Node, thirdNode: cc.Node;
+        let diamondNode: cc.Node, secondNode: cc.Node, thirdNode: cc.Node, trapNode: cc.Node;
 
         // 创建钻石
         diamondNode = Factory.prop(this.diamondPF, this.node, ETProp.DIAMOND, this.surface.angle);
@@ -165,6 +165,7 @@ export default class MainGame extends cc.Component {
         
         
         // 创建捕兽夹
+        trapNode = Factory.prop(this.trapPF, this.node, ETProp.TRAP, this.surface.angle);
 
 
         // 创建拉近距离道具

@@ -130,8 +130,8 @@ export class CGame {
     static THIRD_GAP_RANGE = 100;
     /**钻石距离间隔 */
     static DIAMOND_GAP_RANGE = 50;
-    /**障碍物距离间隔 */
-    static OBSTACLE_GAP_RANGE = 300;
+    /**捕兽夹距离间隔 */
+    static TRAP_GAP_RANGE = 300;
     // ================ 距离间隔
 
 

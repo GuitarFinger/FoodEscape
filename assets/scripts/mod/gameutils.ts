@@ -195,6 +195,7 @@ export class Factory {
                 node = Factory.shit(prefab, parent, ptype);
                 break;
             case ETProp.TRAP:
+                node = Factory.trap(prefab, parent, ptype, refAngle);
                 break;
         }
 
@@ -208,6 +209,15 @@ export class Factory {
         if (!FactoryUtils.calcOdds(CGame.DIAMOND_ODDS)) return;
 
         if (!FactoryUtils.calcDistanceGap(refAngle, CGame.DIAMOND_GAP_RANGE, ptype)) return;
+
+        return FactoryUtils.createProp(prefab, parent, ptype, CGame.FIRST_RADIUS);
+    }
+
+    /**
+     * 捕兽夹(第一层)
+     */
+    private static trap = (prefab: cc.Prefab, parent: cc.Node, ptype: TProp, refAngle: number) => {
+        if (!FactoryUtils.calcDistanceGap(refAngle, CGame.TRAP_GAP_RANGE, ptype)) return;
 
         return FactoryUtils.createProp(prefab, parent, ptype, CGame.FIRST_RADIUS);
     }
