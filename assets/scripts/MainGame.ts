@@ -3,10 +3,10 @@
  */
 // ============================ 导入
 import { Utils } from "./mod/utils";
-import { CGame, TProp } from "./mod/enum";
+import { CGame, TProp, ETProp } from "./mod/enum";
 import { CFG_TIME_SPEED } from "./config/timeSpeedCfg";
 import { Global } from "./mod/global";
-import { Factory } from "./mod/gameutils";
+import { Factory, FactoryUtils } from "./mod/gameutils";
 
 // ============================ 常量定义
 const {ccclass, property} = cc._decorator;
@@ -150,16 +150,19 @@ export default class MainGame extends cc.Component {
      */
     createGameProp = () => {
         let secondPtype: TProp, thirdPtype: TProp;
-        let secondNode: cc.Node, thirdNode: cc.Node;
+        let diamondNode: cc.Node, secondNode: cc.Node, thirdNode: cc.Node;
 
-        // 创建第三层道具
-
+        // 创建钻石
+        diamondNode = Factory.prop(this.diamondPF, this.node, ETProp.DIAMOND, this.surface.angle);
 
         // 创建第二层道具
         secondPtype = CGame.ODDS_BA_SH[Utils.judgeSection(Math.random(), CGame.ODDS_BA_SH, 'odds')].ptype;
         secondNode = Factory.prop(this[`${secondPtype}PF`], this.node, secondPtype);
 
-        // 创建钻石
+        // 创建第三层道具
+        thirdPtype = CGame.ODDS_PE_MA[Utils.judgeSection(Math.random(), CGame.ODDS_PE_MA, 'odds')].ptype;
+        thirdNode = Factory.prop(this[`${thirdPtype}PF`], this.node, thirdPtype, this.surface.angle);
+        
         
         // 创建捕兽夹
 

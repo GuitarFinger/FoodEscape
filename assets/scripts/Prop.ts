@@ -1,6 +1,7 @@
 import { Global } from "./mod/global";
 import { Utils } from "./mod/utils";
 import { TProp, CGame, ETProp } from "./mod/enum";
+import { Counter } from "./mod/counter";
 
 /**
  * @module 道具
@@ -15,6 +16,7 @@ const {ccclass, property} = cc._decorator;
 
 
 // ============================ 变量定义
+let IDCounter = new Counter();
 
 
 // ============================ 类定义
@@ -44,6 +46,8 @@ export default class Prop extends cc.Component {
     relativeAngle: number;
     /**半径 */
     radius: number = 0;
+    /**id */
+    id: number = 0;
 
     /**
      * 初始化
@@ -55,6 +59,7 @@ export default class Prop extends cc.Component {
         this.selfType = selfType || ETProp.GOLD;
         this.radius = radius;
         this.relativeAngle = angle;
+        this.id = IDCounter.increase();
     }
 
     // LIFE-CYCLE CALLBACKS

@@ -16,7 +16,7 @@ export class FactoryUtils {
     /**
      * 计算时间间隔
      */
-    public static calcTimeGap = (startTime: number,type: string): boolean => {
+    public static calcTimeGap = (startTime: number, type: string): boolean => {
         let timeLen: number, multiple: number, minTime: number, maxTime: number;
 
         timeLen = (Date.now() - startTime) / 1000;
@@ -37,6 +37,41 @@ export class FactoryUtils {
         FactoryUtils.time[type] = Utils.getRangeRandom(minTime, maxTime);
 
         return true;
+    }
+
+    /**
+     * 计算距离间隔
+     */
+    public static calcDistanceGap = (angle: number, gap: number, type: string): boolean => {
+        let gapAngle: number, multiple: number, minAngle: number, maxAngle: number;
+
+        gapAngle = Global.meterPerAngle * gap;
+        multiple = Math.floor(angle / gapAngle);
+
+        if (!FactoryUtils.angle[type]) {
+            minAngle = multiple * gapAngle;
+            maxAngle = (multiple + 1) * gapAngle;
+            FactoryUtils.angle[type] = Utils.getRangeRandom(minAngle, maxAngle);
+
+            return false;
+        }
+
+        if (FactoryUtils.angle[type] && angle < FactoryUtils.angle[type]) return false;
+
+        minAngle = (multiple + 1) * gapAngle;
+        maxAngle = (multiple + 2) * gapAngle;
+        FactoryUtils.angle[type] = Utils.getRangeRandom(minAngle, maxAngle);
+
+        return true;
+    }
+
+    /**
+     * 计算概率
+     */
+    public static calcOdds = (odds: number, flag: boolean = false): boolean => {
+        const random = Math.random();
+        
+        return flag ? odds >= random : odds <= random;
     }
 
     /**创建道具 */
@@ -137,7 +172,7 @@ export class Factory {
     /**
      * 道具
      */
-    public static prop = (prefab: cc.Prefab, parent: cc.Node, ptype: TProp): cc.Node => {
+    public static prop = (prefab: cc.Prefab, parent: cc.Node, ptype: TProp, refAngle?: number): cc.Node => {
         let node = null;
         switch (ptype) {
             case ETProp.BANANA:
@@ -146,12 +181,15 @@ export class Factory {
             case ETProp.BANANA_PEEL:
                 break;
             case ETProp.DIAMOND:
+                node = Factory.diamond(prefab, parent, ptype, refAngle);
                 break;
             case ETProp.GOLD:
                 break;
             case ETProp.MAGNET:
+                node = Factory.magnet(prefab, parent, ptype, refAngle);
                 break;
             case ETProp.PEPPER:
+                node = Factory.pepper(prefab, parent, ptype, refAngle);
                 break;
             case ETProp.SHIT:
                 node = Factory.shit(prefab, parent, ptype);
@@ -161,6 +199,17 @@ export class Factory {
         }
 
         return node;
+    }
+
+    /**
+     * 钻石(第一层)
+     */
+    private static diamond = (prefab: cc.Prefab, parent: cc.Node, ptype: TProp, refAngle: number) => {
+        if (!FactoryUtils.calcOdds(CGame.DIAMOND_ODDS)) return;
+
+        if (!FactoryUtils.calcDistanceGap(refAngle, CGame.DIAMOND_GAP_RANGE, ptype)) return;
+
+        return FactoryUtils.createProp(prefab, parent, ptype, CGame.FIRST_RADIUS);
     }
 
     /**
@@ -180,5 +229,23 @@ export class Factory {
         if (!FactoryUtils.calcTimeGap(Global.mainGame.startRotateTime, 'second')) return;
 
         return FactoryUtils.createProp(prefab, parent, ptype, CGame.SECOND_RADIUS);
+    }
+
+    /**
+     * 磁铁(第三层)
+     */
+    private static magnet = (prefab: cc.Prefab, parent: cc.Node, ptype: TProp, refAngle: number) => {
+        if (!FactoryUtils.calcDistanceGap(refAngle, CGame.THIRD_GAP_RANGE, 'third')) return;
+
+        return FactoryUtils.createProp(prefab, parent, ptype, CGame.THIRD_RADIUS);
+    }
+
+    /**
+     * 辣椒(第三层)
+     */
+    private static pepper = (prefab: cc.Prefab, parent: cc.Node, ptype: TProp, refAngle: number) => {
+        if (!FactoryUtils.calcDistanceGap(refAngle, CGame.THIRD_GAP_RANGE, 'third')) return;
+
+        return FactoryUtils.createProp(prefab, parent, ptype, CGame.THIRD_RADIUS);
     }
 }
