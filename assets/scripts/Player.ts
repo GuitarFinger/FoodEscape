@@ -2,7 +2,7 @@
  * @module 玩家
  */
 // ============================ 导入
-import { CGame, EMsg, DTip } from "./mod/enum";
+import { CGame, EMsg, DTip, ETProp } from "./mod/enum";
 import { Global } from "./mod/global";
 import { Utils } from "./mod/utils";
 import Prop from "./Prop";
@@ -88,7 +88,11 @@ export default class Player extends cc.Component {
         if (oComponent === null || this.isDead) return;
 
         switch (oComponent.selfType) {
-            case 'addDist':
+            case ETProp.BANANA:
+                Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip((Global.mainGame.node as cc.Node), `collison ${oComponent.selfType}`));
+                this.enemyMoveBack();
+                break;
+            case ETProp.SHIT:
                 Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip((Global.mainGame.node as cc.Node), `collison ${oComponent.selfType}`));
                 this.enemyMoveBack();
                 break;

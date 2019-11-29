@@ -83,9 +83,7 @@ export type TDuadrant = 0 | 1 | 2 | 3 | 4;
  * @desc 游戏常量
  */
 export class CGame {
-    /**中景转动倍率 */
-    static P_ROTATE_MULTIPLE = 1/4;
-    
+    // ================ 其它
     /**连跳次数 */
     static JUMP_COUNT = 2;
     
@@ -94,7 +92,16 @@ export class CGame {
     
     /**敌人和玩家之间的最大距离 ENEMY_PLAYER_DISTANCE */
     static E_P_MAX_DISTANCE = 120;
-    // ======================= 生成物体
+    // ================ 其它
+
+
+    // ================ 倍率
+    /**中景转动 */
+    static P_ROTATE_MULTIPLE = 1/4;
+    // ================ 倍率
+
+
+    // ================ 角度
     /**主游戏场景扇形角 */
     static SECTOR_ANGLE = 60;
 
@@ -103,7 +110,10 @@ export class CGame {
 
     /**玩家与水平面夹角 */
     static PLAYER_LEVEL_ANGLE = 85;
+    // ================ 角度    
 
+
+    // ================ 半径
     /**第一半径 */
     static FIRST_RADIUS = 687;
     /**第二半径 */
@@ -112,26 +122,67 @@ export class CGame {
     static THIRD_RADIUS = 1150;
     /**玩家半径 */
     static PLAYER_RADIUS = 700;
+    // ================ 半径
 
-    /**添加距离道具的间隔*/
+
+    // ================ 距离间隔
+    /**添加距离道具*/
     static ADDDIST_GAP_RANGE = 100;
-    /**钻石的间隔 */
+    /**钻石距离间隔 */
     static DIAMOND_GAP_RANGE = 50;
-    /**障碍物间隔 */
+    /**障碍物距离间隔 */
     static OBSTACLE_GAP_RANGE = 300;
+    // ================ 距离间隔
 
+
+    // ================ 时间间隔
     /**时间间隔范围 */
-    static TIME_GAP_RANGE = 5;
+    static TIME_GAP_RANGE = 3;
+    // ================ 时间间隔
 
-    /**生成钻石的概率 */
-    static DIAMOND_ODDS = 0.5;
 
+    
+
+    // ================ 持续时间
     /**磁性基本持续时间(单位毫秒) */
     static MAGNETIC_DURATOIN = 2000;
 
     /**护盾基本持续时间(单位毫秒) */
     static SHIELD_DURATION = 5000;
+    // ================ 持续时间
 
+
+    // ================ 速度
     /**道具吸引速度*/
     static PROP_ATTRACT_SPEED = 5;
+    // ================ 速度
+
+
+    // ================ 概率
+    /**生成钻石 */
+    static DIAMOND_ODDS = 0.5;
+
+    // 香蕉-便便概率
+    /**香蕉概率 */
+    static ODDS_BANANA = 0.4;
+    /**便便概率 */
+    static ODDS_SHIT = 0.6;
+    /**香蕉-便便概率 */
+    static ODDS_BA_SH = [
+        { ptype: ETProp.BANANA, odds: CGame.ODDS_BANANA },
+        { ptype: ETProp.SHIT,   odds: CGame.ODDS_BANANA + CGame.ODDS_SHIT },
+    ];
+
+    // 生成辣椒-磁铁概率
+    /**辣椒概率 */
+    static ODDS_PEPPER = 0.5;
+    /**磁铁概率 */
+    static ODDS_MAGNET = 0.5;
+    /**辣椒磁铁概率 */
+    static ODDS_PE_MA = [
+        { ptype: ETProp.PEPPER, odds: CGame.ODDS_PEPPER },
+        { ptype: ETProp.MAGNET, odds: CGame.ODDS_PEPPER + CGame.ODDS_MAGNET },
+    ];
+
+    // ================ 概率
 }

@@ -1883,7 +1883,7 @@
     "node": {
       "__id__": 5
     },
-    "_enabled": true,
+    "_enabled": false,
     "_materials": [
       {
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
@@ -1910,17 +1910,35 @@
     "prospect": {
       "__id__": 9
     },
-    "playerFab": {
+    "playerPF": {
       "__uuid__": "56e4683f-499b-4c2f-801d-b53fdaff4cc0"
     },
-    "enemyFab": {
+    "enemyPF": {
       "__uuid__": "94093887-82e2-4601-be4b-d40d14f64a60"
     },
-    "propFab": {
-      "__uuid__": "6be1411c-6f44-4ee8-8465-a893103311d1"
+    "bananaPF": {
+      "__uuid__": "dc4d7823-e946-4b17-a09d-866f3f69bb4e"
     },
-    "obstacleFab": {
-      "__uuid__": "a81e6b24-f348-4590-98ac-cc9d972d93de"
+    "banana_peelPF": {
+      "__uuid__": "24e5fdda-ba7e-48c5-addd-18542f1cd222"
+    },
+    "diamondPF": {
+      "__uuid__": "91c52c3e-c1a0-4f03-b030-6db51fb4609e"
+    },
+    "goldPF": {
+      "__uuid__": "a3412cd5-eda9-4feb-8c01-5adaec5aba19"
+    },
+    "magnetPF": {
+      "__uuid__": "c430b86e-9dbf-4b09-b845-01a0928286ad"
+    },
+    "pepperPF": {
+      "__uuid__": "7a45fa1e-233d-4139-86e8-cbfd3b84b70a"
+    },
+    "shitPF": {
+      "__uuid__": "9db4b562-e6d0-4a2c-884a-4a275ca34bf3"
+    },
+    "trapPF": {
+      "__uuid__": "9018dcbd-62e0-444b-81cd-62312a18e0cd"
     },
     "_id": "e22OgTwyhNJrEFeYFUhGHf"
   },

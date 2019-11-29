@@ -83,16 +83,6 @@
     "_id": ""
   },
   {
-    "__type__": "910eeSGt35H1aXTg+tB5V4e",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 1
-    },
-    "_enabled": true,
-    "_id": ""
-  },
-  {
     "__type__": "cc.Sprite",
     "_name": "",
     "_objFlags": 0,
@@ -199,6 +189,16 @@
         "y": 39
       }
     ],
+    "_id": ""
+  },
+  {
+    "__type__": "910eeSGt35H1aXTg+tB5V4e",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 1
+    },
+    "_enabled": true,
     "_id": ""
   },
   {

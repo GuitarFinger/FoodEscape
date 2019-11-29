@@ -36,25 +36,33 @@ export default class Prop extends cc.Component {
     moveToTime: number = 100;
     /**是否销毁 */
     isDestory: boolean = false;
+    /**上一次旋转时间 */
+    lastRotateTime: number = 0;
     /**上一次移动时间 */
     lastMoveTime: number = 0;
+    /**当前相对于水平面的角度 */
+    relativeAngle: number;
+    /**半径 */
+    radius: number = 0;
 
     /**
      * 初始化
      */
-    init = (x: number, y: number, angle: number, selfType: TProp) => {
+    init = (x: number, y: number, angle: number, selfType: TProp, radius: number) => {
         this.initX = x;
         this.initY = y;
         this.initAngle = Utils.getRotateAngle(angle);
-        this.selfType = selfType || ETProp.GOLD;        
+        this.selfType = selfType || ETProp.GOLD;
+        this.radius = radius;
+        this.relativeAngle = angle;
     }
 
     // LIFE-CYCLE CALLBACKS
 
     onLoad () {
         this.isDestory = false;
-        this.node.setPosition(cc.v2(this.initX, this.initY));
         this.node.angle = this.initAngle;
+        this.node.setPosition(cc.v2(this.initX, this.initY));
         this.getComponent(cc.Sprite).spriteFrame = Global.spriteAtlasMap.get('ui_props').getSpriteFrame(this.selfType);
         this.node.opacity = 255;
     }
@@ -63,7 +71,9 @@ export default class Prop extends cc.Component {
 
     // }
 
-    // update (dt) {}
+    update (dt) {
+        this.actRotateTo();
+    }
 
     onDestroy () {
         this.isDestory = true;
@@ -80,7 +90,32 @@ export default class Prop extends cc.Component {
         this.isDestory = true;
     }
 
-    actMoveTo (x: number, y: number) {
+    actRotateTo = () => {
+        let nowTime: number, timeSpace: number, finalAngle: number;
+
+        nowTime = Date.now();
+        timeSpace =(nowTime - (this.lastRotateTime || nowTime)) / 1000;
+        finalAngle = (this.relativeAngle + Global.meterPerAngle * timeSpace * Global.nowSpeed) % 360;
+
+        this.lastRotateTime = nowTime;
+
+        this.propRotate(finalAngle);
+    }
+
+    propRotate = (angle: number) => {
+        const rotateToAngle = Utils.getRotateAngle(angle);
+
+        const worldX = Math.cos(angle * Math.PI / 180) * this.radius + 375;
+        const worldY = Math.sin(angle * Math.PI / 180) * this.radius;
+
+        // 设置人物位置和旋转
+        this.node.setPosition(Global.mainGame.node.convertToNodeSpaceAR(cc.v2(worldX, worldY)));
+        this.node.angle = rotateToAngle;
+
+        this.relativeAngle = angle;
+    }
+
+    actMoveTo = (x: number, y: number) => {
         if (this.isDestory) return;
         
         let nowTime: number, timeDif: number;

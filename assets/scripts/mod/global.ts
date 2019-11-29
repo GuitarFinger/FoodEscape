@@ -144,6 +144,11 @@ export const Global = {
     },
 
     /**
+     * 当前速度
+     */
+    nowSpeed: 40,
+
+    /**
      * 速度比例
      */
     _speedRatio: 1,

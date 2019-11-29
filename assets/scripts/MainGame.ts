@@ -2,10 +2,11 @@
  * @module 游戏主逻辑
  */
 // ============================ 导入
-import { Utils, Factory } from "./mod/utils";
-import { CGame, EPropType } from "./mod/enum";
+import { Utils } from "./mod/utils";
+import { CGame, TProp } from "./mod/enum";
 import { CFG_TIME_SPEED } from "./config/timeSpeedCfg";
 import { Global } from "./mod/global";
+import { Factory } from "./mod/gameutils";
 
 // ============================ 常量定义
 const {ccclass, property} = cc._decorator;
@@ -17,27 +18,44 @@ const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class MainGame extends cc.Component {
-    // 界面可编辑节点
-    /**地表 */
-    @property(cc.Node)
+    /**地表节点 */
+    @property({ type: cc.Node, displayName: '地表' })
     surface: cc.Node = null;
-    /**中景 */
-    @property(cc.Node)
+    /**中景节点 */
+    @property({ type: cc.Node, displayName: '中景' })
     prospect: cc.Node = null;
 
     // 预制体
-    /**玩家 */
-    @property(cc.Prefab)
-    playerFab: cc.Prefab = null;
-    /**敌人 */
-    @property(cc.Prefab)
-    enemyFab: cc.Prefab = null;
-    /**道具 */
-    @property(cc.Prefab)
-    propFab: cc.Prefab = null;
-    /**障碍物 */
-    @property(cc.Prefab)
-    obstacleFab: cc.Prefab = null;
+    /**玩家预制体 */
+    @property({ type: cc.Prefab, displayName: '玩家预制体' })
+    playerPF: cc.Prefab = null;
+    /**敌人预制体 */
+    @property({ type: cc.Prefab, displayName: '敌人预制体' })
+    enemyPF: cc.Prefab = null;
+    /**香蕉预制体 */
+    @property({ type: cc.Prefab, displayName: '香蕉预制体' })
+    bananaPF: cc.Prefab = null;
+    /**香蕉皮预制体 */
+    @property({ type: cc.Prefab, displayName: '香蕉皮预制体' })
+    banana_peelPF: cc.Prefab = null;
+    /**钻石预制体 */
+    @property({ type: cc.Prefab, displayName: '钻石预制体' })
+    diamondPF: cc.Prefab = null;
+    /**金币预制体 */
+    @property({ type: cc.Prefab, displayName: '金币预制体' })
+    goldPF: cc.Prefab = null;
+    /**磁铁预制体 */
+    @property({ type: cc.Prefab, displayName: '磁铁预制体' })
+    magnetPF: cc.Prefab = null;
+    /**辣椒预制体 */
+    @property({ type: cc.Prefab, displayName: '辣椒预制体' })
+    pepperPF: cc.Prefab = null;
+    /**便便预制体 */
+    @property({ type: cc.Prefab, displayName: '便便预制体' })
+    shitPF: cc.Prefab = null;
+    /**捕兽夹预制体 */
+    @property({ type: cc.Prefab, displayName: '捕兽夹预制体' })
+    trapPF: cc.Prefab = null;
 
     /**玩家节点 */
     player: cc.Node;
@@ -52,8 +70,8 @@ export default class MainGame extends cc.Component {
 
     // // LIFE-CYCLE CALLBACKS:
     onLoad () {
-        this.player = Factory.createPlayer(this.playerFab, this.node);
-        this.enemy = Factory.createEnemy(this.enemyFab, this.node);
+        this.player = Factory.player(this.playerPF, this.node);
+        this.enemy = Factory.enemy(this.enemyPF, this.node);
 
 
         this.bindListener();
@@ -72,7 +90,7 @@ export default class MainGame extends cc.Component {
         this.startGame();
     }
 
-    update (dt) {
+    update (dt: number) {
         if (this.isPaused) return;
 
         // 创建游戏道具
@@ -131,20 +149,35 @@ export default class MainGame extends cc.Component {
      * 创建游戏道具
      */
     createGameProp = () => {
-        // 创建拉近距离道具
-        const addDistProp = Factory.createAddDistProp(this.propFab, this.surface);
-        // 创建其它道具
-        const otherProp = Factory.createOtherProp(this.propFab, this.surface);
+        let secondPtype: TProp, thirdPtype: TProp;
+        let secondNode: cc.Node, thirdNode: cc.Node;
+
+        // 创建第三层道具
+
+
+        // 创建第二层道具
+        secondPtype = CGame.ODDS_BA_SH[Utils.judgeSection(Math.random(), CGame.ODDS_BA_SH, 'odds')].ptype;
+        secondNode = Factory.prop(this[`${secondPtype}PF`], this.node, secondPtype);
+
         // 创建钻石
-        const diamond = Factory.createDiamond(this.propFab, this.surface);
-        // 创建障碍物
-        Factory.createObstacle(this.obstacleFab, this.surface);
+        
+        // 创建捕兽夹
 
-        addDistProp && Global.attractProps.push(addDistProp.getComponent('Prop'));
 
-        otherProp && Global.attractProps.push(otherProp.getComponent('Prop'));
+        // 创建拉近距离道具
+        // const addDistProp = Factory.createAddDistProp(this.propFab, this.surface);
+        // // 创建其它道具
+        // const otherProp = Factory.createOtherProp(this.propFab, this.surface);
+        // // 创建钻石
+        // const diamond = Factory.createDiamond(this.propFab, this.surface);
+        // // 创建障碍物
+        // Factory.createObstacle(this.obstacleFab, this.surface);
 
-        diamond && Global.attractProps.push(diamond.getComponent('Prop'));
+        // addDistProp && Global.attractProps.push(addDistProp.getComponent('Prop'));
+
+        // otherProp && Global.attractProps.push(otherProp.getComponent('Prop'));
+
+        // diamond && Global.attractProps.push(diamond.getComponent('Prop'));
     }
 
     /**
@@ -171,6 +204,7 @@ export default class MainGame extends cc.Component {
         this.prospect.angle += angleIncrement * CGame.P_ROTATE_MULTIPLE;
         this.lastRotateTime = nowTime;
 
+        Global.nowSpeed = nowSpeed;
         Global.speedRatio = nowSpeed / Global.initSpeed;
         Global.distance += (angleIncrement / Global.meterPerAngle);
     }
