@@ -92,54 +92,6 @@ export class FactoryUtils {
 
         return node;
     }
-    /**
-     * 判断范围距离
-     * @todo 判断重合, 自己宽度
-     */
-    private static judgeRangeDistance = (nowAngle: number, gap: number, propType: TProp): boolean => {
-        const gapAngle = Global.meterPerAngle * gap;
-        const multiple = Math.floor(nowAngle/gapAngle);
-
-        if (!FactoryUtils.angle[propType]) {
-            FactoryUtils.angle[propType] = Utils.getRangeRandom(multiple*gapAngle, (multiple+1)*gapAngle);
-
-            return false;
-        }
-
-        if (FactoryUtils.angle[propType] && nowAngle < FactoryUtils.angle[propType]) {
-            return false;
-        }
-
-        FactoryUtils.angle[propType] = Utils.getRangeRandom((multiple+1)*gapAngle, (multiple+2)*gapAngle);
-        // console.log(`%c ${propType}::${Factory.createAngle[propType]}`, 'background: pink;');
-
-        return true;
-    }
-
-    /**
-    //  * 判断其它道具
-    //  * @todo 判断重合, 自己宽度
-    //  */
-    // private static judgeOtherProp = (startTime: number) => {
-    //     const timeLength = (Date.now()-startTime) / 1000;
-    //     const multiple = Math.floor(timeLength/CGame.TIME_GAP_RANGE);
-
-    //     if (!FactoryUtils.createOtherPropTime) {
-    //         Factory.createOtherPropTime = Utils.getRangeRandom(multiple*CGame.TIME_GAP_RANGE, (multiple+1)*CGame.TIME_GAP_RANGE);
-    //         // console.log(`%c time:: ${Factory.createOtherPropTime}`, 'background: pink;');
-    //         return false;
-    //     }
-
-    //     if (Factory.createOtherPropTime && timeLength < Factory.createOtherPropTime) {
-    //         return false;
-    //     }
-
-    //     Factory.createOtherPropTime = Utils.getRangeRandom((multiple+1)*CGame.TIME_GAP_RANGE, (multiple+2)*CGame.TIME_GAP_RANGE);
-
-    //     // console.log(`%c time:: ${Factory.createOtherPropTime}`, 'background: pink;');
-
-    //     return true;
-    // }
 }
 
 export class Factory {
