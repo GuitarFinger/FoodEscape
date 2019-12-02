@@ -17,7 +17,8 @@ export default class DB {
     }
 };
 
-(window as any).db = DB;
+(window as any)._game = (window as any)._game || {};
+(window as any)._game.db = DB;
 
 /****************** 本地 ******************/
 /**

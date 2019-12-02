@@ -41,10 +41,12 @@ export default class Player extends cc.Component {
     isDead: boolean = false;
     /**磁铁生效 */
     isMagnetic: boolean = false;
-    // /**磁铁持续时间 */
+    /**磁铁持续时间 */
     // magneticDuration: number = 0;
-    // /**吸引的道具 */
-    // attractProps: any[] = [];
+    // 护盾持续时间
+    // shieldDuration: number = 0;
+    /**吸引的道具 */
+    attractProps: any[] = [];
     /**护盾生效 */
     isShield: boolean = false;
 
@@ -72,7 +74,7 @@ export default class Player extends cc.Component {
     // }
 
     update (dt: number) {
-        this.handleMageticTime(dt);
+        this.handleMagetic(dt);
     }
 
     onDestroy() {
@@ -89,25 +91,21 @@ export default class Player extends cc.Component {
 
         switch (oComponent.selfType) {
             case ETProp.BANANA:
-                Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip((Global.mainGame.node as cc.Node), `collison ${oComponent.selfType}`));
                 this.enemyMoveBack();
                 break;
             case ETProp.SHIT:
-                Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip((Global.mainGame.node as cc.Node), `collison ${oComponent.selfType}`));
                 this.enemyMoveBack();
                 break;
             case ETProp.MAGNET:
-                // Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip((Global.mainGame.node as cc.Node), `collison ${oComponent.selfType}`))
                 this.adsorbProp();
                 break;
             case ETProp.TRAP:
-                Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip((Global.mainGame.node as cc.Node), `collison ${oComponent.selfType}`))
                 this.enemyMoveForward();
                 break;
             case ETProp.PEPPER:
+                this.addShield();
                 break;
             case 'enemy':
-                Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip((Global.mainGame.node as cc.Node), `collison ${oComponent.selfType}`)) 
                 this.ownDead();
                 break;
         }
@@ -160,6 +158,8 @@ export default class Player extends cc.Component {
      * 敌人前进
      */
     enemyMoveForward = () => {
+        if (Global.shieldDuration > 0) return;
+
         (Global.mainGame.enemy as cc.Node).getComponent('Enemy').roleMove(-Global.meterPerAngle*25);
     }
     
@@ -173,13 +173,22 @@ export default class Player extends cc.Component {
     }
 
     /**
+     * 添加护盾
+     */
+    addShield = () => {
+        if (this.isDead) return;
+
+        Global.shieldDuration += CGame.SHIELD_DURATION;
+    }
+
+    /**
      * 自己死亡
      */
     ownDead = () => {
+        
         this.isDead = true;
         this.isMagnetic = false;
         this._selfSkeleton.setAnimation(0, 'death', false);
-        Global.attractProps = [];
     }
 
     /**
@@ -192,31 +201,52 @@ export default class Player extends cc.Component {
     /**
      * 处理磁性时间
      */
-    handleMageticTime = (dt: number) => {
+    handleMagetic = (dt: number) => {
         Global.magneticDuration -= (dt*1000);
         Global.magneticDuration = Global.magneticDuration < 0 ? 0 : Global.magneticDuration;
         
+        if (this.isDead) return;
+
+        const keys = Object.keys(Global.createProps);
+
+        if (Global.magneticDuration > 0 && keys.length) {
+            for (let i = 0; i < keys.length; i++) {
+                const prop:Prop = Global.createProps[keys[i]];
+    
+                if (prop.selfType !== ETProp.TRAP) {
+                    this.attractProps.push(prop);
+                }
+                
+                delete Global.createProps[keys[i]];
+                keys.splice(i, 1);
+                i--;
+            }
+        }
+
         this.moveProps();
+    }
+
+    handleShield = (dt: number) => {
+        if (Global.shieldDuration <= 0) return;
+
+        Global.shieldDuration -= (dt*1000);
+        Global.shieldDuration = Global.shieldDuration < 0 ? 0 : Global.shieldDuration;
     }
 
     /**移动道具 */
     moveProps = () => {
-        if (this.isDead || !Global.attractProps.length || Global.magneticDuration <= 0) return;
+        if (!this.attractProps.length) return;
+        
+        for (let i = 0; i < this.attractProps.length; i++) {
+            const prop: Prop = this.attractProps[i];
 
-        // TODO 会有偏移量
-        const angle = Utils.convertAngle(CGame.PLAYER_LEVEL_ANGLE - Global.mainGame.surface.angle);
-        const radius = CGame.PLAYER_RADIUS + (this.node.y - this._surfaceY);
-        const x = Math.cos(angle * Math.PI / 180) * radius;
-        const y = Math.sin(angle * Math.PI / 180) * radius;
-
-        for (let i = 0; i < Global.attractProps.length; i++) {
-            const prop = Global.attractProps[i];
             if (prop.isDestory) {
-                Global.attractProps.splice(i, 1);
+                this.attractProps.splice(i, 1);
                 i--;
+            } else {
+                prop.actMoveTo(this.node.x, this.node.y);
             }
 
-            prop.actMoveTo(x, y);
         }
     }
 

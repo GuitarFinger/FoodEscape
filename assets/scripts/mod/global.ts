@@ -160,7 +160,7 @@ export const Global = {
         if (this._speedRatio !== val) {
             this._speedRatio = val;
 
-            (this.emitter as Emitter).dispatch(EMsg.SPEED_CHANGE);
+            this.emitter.dispatch(EMsg.SPEED_CHANGE);
         }
     },
 
@@ -170,15 +170,28 @@ export const Global = {
     /**距离 */
     distance: 0,
 
-    /**磁铁生效 */
-    isMagnetic: false,
     /**磁性持续时间 */
     magneticDuration: 0,
-    /**护盾生效 */
-    isShield: false,
-    /**可吸引道具 */
-    attractProps: [],
 
-    /**拥有的所有道具 */
-    ownProps: []
+    /**护盾持续时间 */
+    shieldDuration: 0,
+
+    /**创建的道具 */
+    createProps: ({} as Object),
 };
+
+Global.emitter.register({
+    [EMsg.GAME_START]: () => {
+        Global.mainGame = null;
+        Global.initSpeed = 40;
+        Global.nowSpeed = 40;
+        Global.speedRatio = 1;
+        Global.distance = 0;
+        Global.magneticDuration = 0;
+        Global.shieldDuration = 0;
+        Global.createProps = {};
+    }
+});
+
+(window as any)._game = (window as any)._game || {};
+(window as any)._game.global = Global;

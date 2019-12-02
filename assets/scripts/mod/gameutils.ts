@@ -1,6 +1,7 @@
-import { TProp, ETProp, CGame } from "./enum";
+import { TProp, ETProp, CGame, EMsg } from "./enum";
 import { Global } from "./global";
 import { Utils } from "./utils";
+import { Counter } from "./counter";
 
 export class FactoryUtils {
     /**
@@ -12,6 +13,10 @@ export class FactoryUtils {
      * 创建时间
      */
     private static time = {};
+    /**
+     * id计数器
+     */
+    private static IDCounter = new Counter();
 
     /**
      * 计算时间间隔
@@ -76,23 +81,36 @@ export class FactoryUtils {
 
     /**创建道具 */
     public static createProp = (prefab: cc.Prefab, parent: cc.Node, ptype: TProp, radius: number) => {
-        let node: cc.Node, angle: number, worldX: number, worldY: number, nodeXY: cc.Vec2;
+        let node: cc.Node, angle: number, worldX: number, worldY: number, nodeXY: cc.Vec2, id: number;
 
         node = cc.instantiate(prefab);
         angle = Utils.convertAngle(CGame.SECTOR_LEVLE_ANGLE);
         worldX = Math.cos(angle * Math.PI / 180) * radius + 375;
         worldY = Math.sin(angle * Math.PI / 180) * radius;
         nodeXY = Global.mainGame.node.convertToNodeSpaceAR(cc.v2(worldX, worldY));
+        id = FactoryUtils.IDCounter.increase();
 
         node.getComponent('Prop').init(
-            nodeXY.x, nodeXY.y, angle, ptype, radius
+            nodeXY.x, nodeXY.y, angle, ptype, radius, id
         );
+
+        
+        Global.createProps[id] = node.getComponent('Prop');
 
         parent.addChild(node);
 
         return node;
     }
+
+    public static resetData = () => {
+        FactoryUtils.angle = {};
+        FactoryUtils.time = {};
+    }
 }
+
+Global.emitter.register({
+    [EMsg.GAME_START]: FactoryUtils.resetData
+});
 
 export class Factory {
     /**

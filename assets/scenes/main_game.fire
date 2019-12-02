@@ -1883,7 +1883,7 @@
     "node": {
       "__id__": 5
     },
-    "_enabled": false,
+    "_enabled": true,
     "_materials": [
       {
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
@@ -1915,6 +1915,9 @@
     },
     "enemyPF": {
       "__uuid__": "94093887-82e2-4601-be4b-d40d14f64a60"
+    },
+    "countdownPF": {
+      "__uuid__": "b0af7fe8-31eb-48ce-b028-5d1bde430e13"
     },
     "bananaPF": {
       "__uuid__": "dc4d7823-e946-4b17-a09d-866f3f69bb4e"

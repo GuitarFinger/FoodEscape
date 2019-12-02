@@ -24,7 +24,7 @@ export default class Loading extends cc.Component {
         const collisionMgr = cc.director.getCollisionManager();
         
         collisionMgr.enabled = true;
-        collisionMgr.enabledDebugDraw = true;
+        // collisionMgr.enabledDebugDraw = true;
     }
 
     start () {

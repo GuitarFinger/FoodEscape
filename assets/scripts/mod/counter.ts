@@ -24,6 +24,11 @@ export class Counter {
     private _endFunc: Function = null;
 
     /**
+     * 自定义数据
+     */
+    public customData: any = null;
+
+    /**
      * 增量
      */
     private _step: number = 1;
@@ -38,27 +43,34 @@ export class Counter {
      * @param handleFunc 处理方法
      * @param maxCount 最大计数
      * @param endFunc 结束方法
+     * @param customData 自定义数据
      * @param step 间隔
      */
-    constructor (handleFunc?: Function, maxCount?: number, endFunc?: Function, step: number = 1) {
+    constructor (handleFunc?: Function, maxCount?: number, endFunc?: Function, customData?: any, step: number = 1) {
         this._handleFunc = handleFunc || null;
         this._maxCount = maxCount || 0;
         this._endFunc = endFunc || null;
+        this.customData = customData || null;
         this._step = step;
     }
 
     increase = () => {
         if (this.isInvalid) return;
 
-        this._count += this._step;
-        
-        this._handleFunc && this._handleFunc(this._count);
-
         if (this._maxCount && this._count >= this._maxCount) {
             this.isInvalid = true;
-            this._endFunc && this._endFunc(this._count);
+
+            this._handleFunc && this._handleFunc(this._count, this.customData);
+            this._endFunc && this._endFunc(this._count, this.customData);
+
             this.resetData();
         }
+        else {
+            this._handleFunc && this._handleFunc(this._count, this.customData);
+    
+            this._count += this._step;
+        }
+
 
         return this._count;
     }
@@ -88,6 +100,7 @@ export class Counter {
     private resetData () {
         this._handleFunc = null;
         this._endFunc = null;
+        this.customData = null;
         this._count = 0;
         this._maxCount = 0;
     }

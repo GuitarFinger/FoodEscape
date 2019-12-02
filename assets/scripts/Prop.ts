@@ -16,7 +16,6 @@ const {ccclass, property} = cc._decorator;
 
 
 // ============================ 变量定义
-let IDCounter = new Counter();
 
 
 // ============================ 类定义
@@ -24,16 +23,10 @@ let IDCounter = new Counter();
 export default class Prop extends cc.Component {
     /**道具类型 */
     selfType: TProp = null;
-    /**初始X */
-    initX: number = 0;
-    /**初始Y */
-    initY: number = 0;
+    /**初始位置 */
+    initPos: { x: number, y: number } = null;
     /**初始角度 */
     initAngle: number = 0;
-    /**池节点 */
-    poolNode: cc.Node;
-    /**图片路径 */
-    imgSprite: cc.SpriteFrame;
     /**移动时间 */
     moveToTime: number = 100;
     /**是否销毁 */
@@ -47,19 +40,21 @@ export default class Prop extends cc.Component {
     /**半径 */
     radius: number = 0;
     /**id */
-    id: number = 0;
+    id: number;
+    /**是否被吸引 */
+    isAttract: boolean = false;
 
     /**
      * 初始化
      */
-    init = (x: number, y: number, angle: number, selfType: TProp, radius: number) => {
-        this.initX = x;
-        this.initY = y;
+    init = (x: number, y: number, angle: number, selfType: TProp, radius: number, id: number) => {
+        this.initPos = { x, y };
         this.initAngle = Utils.getRotateAngle(angle);
         this.selfType = selfType || ETProp.GOLD;
         this.radius = radius;
         this.relativeAngle = angle;
-        this.id = IDCounter.increase();
+        this.isAttract = false;
+        this.id = id;
     }
 
     // LIFE-CYCLE CALLBACKS
@@ -67,7 +62,7 @@ export default class Prop extends cc.Component {
     onLoad () {
         this.isDestory = false;
         this.node.angle = this.initAngle;
-        this.node.setPosition(cc.v2(this.initX, this.initY));
+        this.node.setPosition(cc.v2(this.initPos.x, this.initPos.y));
         this.getComponent(cc.Sprite).spriteFrame = Global.spriteAtlasMap.get('ui_props').getSpriteFrame(this.selfType);
         this.node.opacity = 255;
     }
@@ -76,7 +71,7 @@ export default class Prop extends cc.Component {
 
     // }
 
-    update (dt) {
+    update (dt: number) {
         this.actRotateTo();
     }
 
@@ -93,9 +88,16 @@ export default class Prop extends cc.Component {
 
         this.node.destroy();
         this.isDestory = true;
+
+        Global.createProps[this.id] && delete Global.createProps[this.id];
     }
 
+    /**
+     * 自转和公转
+     */
     actRotateTo = () => {
+        if (this.isAttract || Global.mainGame.isPaused) return;
+        
         let nowTime: number, timeSpace: number, finalAngle: number;
 
         nowTime = Date.now();
@@ -107,6 +109,9 @@ export default class Prop extends cc.Component {
         this.propRotate(finalAngle);
     }
 
+    /**
+     * 旋转
+     */
     propRotate = (angle: number) => {
         const rotateToAngle = Utils.getRotateAngle(angle);
 
@@ -120,11 +125,15 @@ export default class Prop extends cc.Component {
         this.relativeAngle = angle;
     }
 
+    /**
+     * 移动道
+     */
     actMoveTo = (x: number, y: number) => {
         if (this.isDestory) return;
         
         let nowTime: number, timeDif: number;
 
+        this.isAttract = true;
         nowTime = Date.now();
         timeDif = (nowTime - (this.lastMoveTime || nowTime))/1000;
 

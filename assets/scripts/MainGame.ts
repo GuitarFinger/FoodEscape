@@ -3,10 +3,12 @@
  */
 // ============================ 导入
 import { Utils } from "./mod/utils";
-import { CGame, TProp, ETProp } from "./mod/enum";
+import { CGame, TProp, ETProp, ESceneName } from "./mod/enum";
 import { CFG_TIME_SPEED } from "./config/timeSpeedCfg";
 import { Global } from "./mod/global";
 import { Factory, FactoryUtils } from "./mod/gameutils";
+import Player from "./Player";
+import Countdown from "./Countdown";
 
 // ============================ 常量定义
 const {ccclass, property} = cc._decorator;
@@ -32,6 +34,9 @@ export default class MainGame extends cc.Component {
     /**敌人预制体 */
     @property({ type: cc.Prefab, displayName: '敌人预制体' })
     enemyPF: cc.Prefab = null;
+    /**敌人预制体 */
+    @property({ type: cc.Prefab, displayName: '倒计预制体' })
+    countdownPF: cc.Prefab = null;
     /**香蕉预制体 */
     @property({ type: cc.Prefab, displayName: '香蕉预制体' })
     bananaPF: cc.Prefab = null;
@@ -70,11 +75,12 @@ export default class MainGame extends cc.Component {
 
     // // LIFE-CYCLE CALLBACKS:
     onLoad () {
-        this.player = Factory.player(this.playerPF, this.node);
-        this.enemy = Factory.enemy(this.enemyPF, this.node);
+        this.createPlayer();
+        this.createEnemy();
+        // this.player = Factory.player(this.playerPF, this.node);
+        // this.enemy = Factory.enemy(this.enemyPF, this.node);
 
-
-        this.bindListener();
+        // this.bindListener();
 
         Global.mainGame = this;
         Global.initSpeed = CFG_TIME_SPEED[0].speed;
@@ -123,13 +129,49 @@ export default class MainGame extends cc.Component {
      * 绑定监听
      */
     bindListener = () => {
+        // const player = this.player.getComponent('Player');
+        // this.node.on(cc.Node.EventType.TOUCH_START, () => {
+
+        //     if (!this.isPaused) {
+        //         !player.isDead && player.jump();
+        //     }
+        // });
+    }
+
+    /**
+     * 处理监听开始
+     */
+    handleTouchstart = (player: Player) => {
+        if (this.isPaused) return;
+
+        !player.isDead && player.jump();
+    }
+
+    /**
+     * 创建玩家
+     */
+    createPlayer = () => {
+        this.player = null;
+
+        this.player = Factory.player(this.playerPF, this.node);
+
         const player = this.player.getComponent('Player');
+
+        this.node.off(cc.Node.EventType.TOUCH_START);
+
         this.node.on(cc.Node.EventType.TOUCH_START, () => {
 
             if (!this.isPaused) {
                 !player.isDead && player.jump();
             }
         });
+    }
+
+    /**
+     * 创建敌人
+     */
+    createEnemy = () => {
+        this.enemy = Factory.enemy(this.enemyPF, this.node);
     }
 
     /**
@@ -150,38 +192,21 @@ export default class MainGame extends cc.Component {
      */
     createGameProp = () => {
         let secondPtype: TProp, thirdPtype: TProp;
-        let diamondNode: cc.Node, secondNode: cc.Node, thirdNode: cc.Node, trapNode: cc.Node;
 
         // 创建钻石
-        diamondNode = Factory.prop(this.diamondPF, this.node, ETProp.DIAMOND, this.surface.angle);
+        Factory.prop(this.diamondPF, this.node, ETProp.DIAMOND, this.surface.angle);
 
         // 创建第二层道具
         secondPtype = CGame.ODDS_BA_SH[Utils.judgeSection(Math.random(), CGame.ODDS_BA_SH, 'odds')].ptype;
-        secondNode = Factory.prop(this[`${secondPtype}PF`], this.node, secondPtype);
+        Factory.prop(this[`${secondPtype}PF`], this.node, secondPtype);
 
         // 创建第三层道具
         thirdPtype = CGame.ODDS_PE_MA[Utils.judgeSection(Math.random(), CGame.ODDS_PE_MA, 'odds')].ptype;
-        thirdNode = Factory.prop(this[`${thirdPtype}PF`], this.node, thirdPtype, this.surface.angle);
+        Factory.prop(this[`${thirdPtype}PF`], this.node, thirdPtype, this.surface.angle);
         
         
         // 创建捕兽夹
-        trapNode = Factory.prop(this.trapPF, this.node, ETProp.TRAP, this.surface.angle);
-
-
-        // 创建拉近距离道具
-        // const addDistProp = Factory.createAddDistProp(this.propFab, this.surface);
-        // // 创建其它道具
-        // const otherProp = Factory.createOtherProp(this.propFab, this.surface);
-        // // 创建钻石
-        // const diamond = Factory.createDiamond(this.propFab, this.surface);
-        // // 创建障碍物
-        // Factory.createObstacle(this.obstacleFab, this.surface);
-
-        // addDistProp && Global.attractProps.push(addDistProp.getComponent('Prop'));
-
-        // otherProp && Global.attractProps.push(otherProp.getComponent('Prop'));
-
-        // diamond && Global.attractProps.push(diamond.getComponent('Prop'));
+        Factory.prop(this.trapPF, this.node, ETProp.TRAP, this.surface.angle);
     }
 
     /**
@@ -211,6 +236,36 @@ export default class MainGame extends cc.Component {
         Global.nowSpeed = nowSpeed;
         Global.speedRatio = nowSpeed / Global.initSpeed;
         Global.distance += (angleIncrement / Global.meterPerAngle);
+    }
+
+    /**
+     * 创建复活倒计时弹窗弹窗
+     */
+    createCountdownPage = () => {
+        const countdownPage = cc.instantiate(this.countdownPF);
+        const countdown:Countdown = countdownPage.getComponent('Countdown');
+        const textNode = (countdown.node as cc.Node).getChildByName('box_countdown').getChildByName('box_circle').getChildByName('text_time').getComponent(cc.Label);
+
+        this.node.addChild(countdownPage);
+
+        countdown.init(this.updateCountdown, CGame.COUNTDOWN_DURATION, this.countdownEnd, textNode);
+    }
+
+    /**
+     * 更新倒计时
+     */
+    updateCountdown = (countdownNum: number, textNode: cc.Label) => {
+        textNode.string = `${CGame.COUNTDOWN_DURATION - countdownNum}`;
+    }
+
+    /**
+     * 倒计时结束
+     */
+    countdownEnd = (countdownNum: number, textNode: cc.Label) => {
+        const countdownPage = this.node.getChildByName('countdownPage');
+        countdownPage.destroy();
+
+        cc.director.loadScene(ESceneName.MAIN_MENU);
     }
 }
 

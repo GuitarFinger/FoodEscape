@@ -48,6 +48,9 @@ export enum EMsg {
 
     /**速度改变 */
     SPEED_CHANGE = 'speed_change',
+
+    /**游戏开始 */
+    GAME_START = 'game_start',
 }
 
 /**
@@ -149,6 +152,9 @@ export class CGame {
 
     /**护盾基本持续时间(单位毫秒) */
     static SHIELD_DURATION = 5000;
+
+    /**倒计时持续时间 */
+    static COUNTDOWN_DURATION = 15;
     // ================ 持续时间
 
 

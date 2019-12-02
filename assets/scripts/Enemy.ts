@@ -20,16 +20,18 @@ export default class Enemy extends cc.Component {
     speed: number = 3;
     /**当前相对于水平面的角度 */
     relativeAngle: number;
+    /**初始角度 */
+    initAngle: number;
     /**上一次时间 */
     private _lastTime: number = 0;
     /**X方向 */
     private _directionX: 'left' | 'right' = 'left';
-    /**类型 */
-    selfType: string = 'enemy';
     /**是否正在手动移动 */
     private _isHandMove: boolean = false;
     /**骨骼 */
     private _selfSkeleton: sp.Skeleton;
+    /**类型 */
+    selfType: string = 'enemy';
 
     // LIFE-CYCLE CALLBACKS:
 
@@ -38,6 +40,7 @@ export default class Enemy extends cc.Component {
         Global.emitter.register({
             [EMsg.SPEED_CHANGE]: this.setTimeScale
         });
+        this.initAngle = this.relativeAngle;
     }
     
     onLoad () {
@@ -58,7 +61,7 @@ export default class Enemy extends cc.Component {
     }
 
     onDestroy () {
-        Global.emitter.remove(EMsg.SPEED_CHANGE, this.setTimeScale);
+        Global.emitter.remove(EMsg.SPEED_CHANGE);
     }
 
     onCollisionEnter (other: cc.BoxCollider, self: cc.BoxCollider) {
@@ -67,9 +70,10 @@ export default class Enemy extends cc.Component {
 
         if (oComponent === null) return;
 
-        // if (oComponent.selfType === 'player') {
-        //     Global.mainGame.pauseGame();
-        // }
+        if (oComponent.selfType === 'player') {
+            Global.mainGame.pauseGame();
+            Global.mainGame.createCountdownPage();
+        }
 
     }
 
@@ -107,8 +111,8 @@ export default class Enemy extends cc.Component {
     /**
      * 人物移动
      */
-    roleMove = (angle: number) => {
-        if (angle === 0) return;
+    roleMove = (angle: number, callback?: Function) => {
+        if (angle === 0 || Global.mainGame.isPaused) return;
 
         let finalAngle = this.relativeAngle + angle;
         let tempAngle = null;
@@ -118,6 +122,14 @@ export default class Enemy extends cc.Component {
         // 平滑过渡
         let fun = () => {
             timer && clearTimeout(timer);
+
+            let gameIsPause = Global.mainGame.isPaused;
+            if (gameIsPause) {
+                this._isHandMove = false;
+                fun = null;
+                callback && callback();
+                return;
+            }
 
             this._isHandMove = true;
             let angleGap = Math.abs(Math.abs(Global.mainGame.player.angle) - Math.abs(this.node.angle));
@@ -140,6 +152,8 @@ export default class Enemy extends cc.Component {
             }
             else {
                 this._isHandMove = false;
+                callback && callback();
+                callback = null;
                 fun = null;
             }
         }

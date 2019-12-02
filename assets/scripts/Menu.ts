@@ -1,5 +1,6 @@
-import { ESceneName } from "./mod/enum";
+import { ESceneName, EMsg } from "./mod/enum";
 import { ScreenTips } from "./mod/screentips";
+import { Global } from "./mod/global";
 
 // ============================ 导入
 
@@ -58,6 +59,8 @@ export default class Menu extends cc.Component {
     onLoad () {
         this.bindListener();
         ScreenTips.screenTipPreFab = this.screenTipsPreFab;
+        
+        Global.emitter.dispatch(EMsg.GAME_START)
     }
 
     start () {
