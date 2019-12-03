@@ -271,8 +271,8 @@ export default class MainGame extends cc.Component {
         const countdownPage = this.node.getChildByName('countdownPage');
         countdownPage.destroy();
 
-        // cc.director.loadScene(ESceneName.MAIN_MENU);
-        Global.emitter.dispatch(EMsg.PLAYER_REVIVE);
+        cc.director.loadScene(ESceneName.MAIN_MENU);
+        // Global.emitter.dispatch(EMsg.PLAYER_REVIVE);
     }
 }
 
