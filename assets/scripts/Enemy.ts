@@ -38,7 +38,8 @@ export default class Enemy extends cc.Component {
     init() {
         this._selfSkeleton = this.node.getChildByName('spine').getComponent(sp.Skeleton);
         Global.emitter.register({
-            [EMsg.SPEED_CHANGE]: this.setTimeScale
+            [EMsg.SPEED_CHANGE]: this.setTimeScale,
+            [EMsg.PLAYER_REVIVE]: this.resetToInitPos
         });
         this.initAngle = this.relativeAngle;
     }
@@ -61,7 +62,8 @@ export default class Enemy extends cc.Component {
     }
 
     onDestroy () {
-        Global.emitter.remove(EMsg.SPEED_CHANGE);
+        Global.emitter.remove(EMsg.SPEED_CHANGE, this.setTimeScale);
+        Global.emitter.remove(EMsg.PLAYER_REVIVE, this.resetToInitPos);
     }
 
     onCollisionEnter (other: cc.BoxCollider, self: cc.BoxCollider) {
@@ -159,6 +161,11 @@ export default class Enemy extends cc.Component {
         }
 
         fun();
+    }
+
+    /**重置到初始位置 */
+    resetToInitPos = () => {
+        this.roleRotate(this.initAngle);
     }
 
     /**

@@ -51,6 +51,9 @@ export enum EMsg {
 
     /**游戏开始 */
     GAME_START = 'game_start',
+
+    /**玩家复活 */
+    PLAYER_REVIVE = 'player_revive',
 }
 
 /**
@@ -95,6 +98,9 @@ export class CGame {
     
     /**敌人和玩家之间的最大距离 ENEMY_PLAYER_DISTANCE */
     static E_P_MAX_DISTANCE = 120;
+
+    /**可复活次数 */
+    static REVIVE_TIMES = 1;
     // ================ 其它
 
 

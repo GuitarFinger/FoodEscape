@@ -3,7 +3,7 @@
  */
 // ============================ 导入
 import { Utils } from "./mod/utils";
-import { CGame, TProp, ETProp, ESceneName } from "./mod/enum";
+import { CGame, TProp, ETProp, ESceneName, EMsg } from "./mod/enum";
 import { CFG_TIME_SPEED } from "./config/timeSpeedCfg";
 import { Global } from "./mod/global";
 import { Factory, FactoryUtils } from "./mod/gameutils";
@@ -84,12 +84,16 @@ export default class MainGame extends cc.Component {
 
         Global.mainGame = this;
         Global.initSpeed = CFG_TIME_SPEED[0].speed;
-        Global.speedRatio = 1; 
+        Global.speedRatio = 1;
         Global.meterPerAngle = Utils.divideAngle(
             this.calcRelativeSurfaceAngle(this.player, 'Player'),
             this.calcRelativeSurfaceAngle(this.enemy, 'Enemy'),
             CGame.INIT_DISTANCE
         );
+
+        Global.emitter.register({
+            [EMsg.PLAYER_REVIVE]: this.createPlayer
+        });
     }
 
     start () {
@@ -123,6 +127,8 @@ export default class MainGame extends cc.Component {
 
         this.surface.stopAllActions();
         this.prospect.stopAllActions();
+        
+        Global.emitter.remove(EMsg.PLAYER_REVIVE, this.createPlayer);
     }
 
     /**
@@ -265,7 +271,8 @@ export default class MainGame extends cc.Component {
         const countdownPage = this.node.getChildByName('countdownPage');
         countdownPage.destroy();
 
-        cc.director.loadScene(ESceneName.MAIN_MENU);
+        // cc.director.loadScene(ESceneName.MAIN_MENU);
+        Global.emitter.dispatch(EMsg.PLAYER_REVIVE);
     }
 }
 

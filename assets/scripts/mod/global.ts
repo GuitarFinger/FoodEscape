@@ -178,6 +178,9 @@ export const Global = {
 
     /**创建的道具 */
     createProps: ({} as Object),
+
+    /**已复活次数 */
+    revivedTimes: 0,
 };
 
 Global.emitter.register({
@@ -190,6 +193,7 @@ Global.emitter.register({
         Global.magneticDuration = 0;
         Global.shieldDuration = 0;
         Global.createProps = {};
+        Global.revivedTimes = 0;
     }
 });
 
