@@ -3,12 +3,11 @@
  */
 // ============================ 导入
 import { Utils } from "./mod/utils";
-import { CGame, TProp, ETProp, ESceneName, EMsg } from "./mod/enum";
+import { CGame, TProp, ETProp, EMsg } from "./mod/enum";
 import { CFG_TIME_SPEED } from "./config/timeSpeedCfg";
 import { Global } from "./mod/global";
-import { Factory, FactoryUtils } from "./mod/gameutils";
+import { Factory } from "./mod/gameutils";
 import Player from "./Player";
-import Countdown from "./Countdown";
 
 // ============================ 常量定义
 const {ccclass, property} = cc._decorator;
@@ -36,7 +35,7 @@ export default class MainGame extends cc.Component {
     enemyPF: cc.Prefab = null;
     /**敌人预制体 */
     @property({ type: cc.Prefab, displayName: '倒计预制体' })
-    countdownPF: cc.Prefab = null;
+    reviveCDPF: cc.Prefab = null;
     /**香蕉预制体 */
     @property({ type: cc.Prefab, displayName: '香蕉预制体' })
     bananaPF: cc.Prefab = null;
@@ -120,15 +119,26 @@ export default class MainGame extends cc.Component {
     }
 
     /**
+     * 继续游戏
+     */
+    resumeGame = () => {
+        
+    }
+
+    /**
      * 暂停游戏
      */
     pauseGame = () => {
         this.isPaused = true;
+    }
 
-        this.surface.stopAllActions();
-        this.prospect.stopAllActions();
-        
+    /**
+     * 结束游戏
+     */
+    stopGame = () => {
+        this.isPaused = true;
         Global.emitter.remove(EMsg.PLAYER_REVIVE, this.createPlayer);
+
     }
 
     /**
@@ -188,7 +198,7 @@ export default class MainGame extends cc.Component {
         const pos = (this.node as cc.Node).convertToWorldSpaceAR(node.getPosition());
         const angle = 180 + Utils.getTowPointerAngle({ x: pos.x, y: pos.y }, { x: 375, y: 1334 });
 
-        component.relativeAngle = angle;
+        component.initAngle = component.relativeAngle = angle;
 
         return angle;
     };
@@ -247,32 +257,26 @@ export default class MainGame extends cc.Component {
     /**
      * 创建复活倒计时弹窗弹窗
      */
-    createCountdownPage = () => {
-        const countdownPage = cc.instantiate(this.countdownPF);
-        const countdown:Countdown = countdownPage.getComponent('Countdown');
-        const textNode = (countdown.node as cc.Node).getChildByName('box_countdown').getChildByName('box_circle').getChildByName('text_time').getComponent(cc.Label);
-
-        this.node.addChild(countdownPage);
-
-        countdown.init(this.updateCountdown, CGame.COUNTDOWN_DURATION, this.countdownEnd, textNode);
+    createReviveCD = () => {
+        this.node.addChild(cc.instantiate(this.reviveCDPF));
     }
 
-    /**
-     * 更新倒计时
-     */
-    updateCountdown = (countdownNum: number, textNode: cc.Label) => {
-        textNode.string = `${CGame.COUNTDOWN_DURATION - countdownNum}`;
-    }
-
-    /**
-     * 倒计时结束
-     */
-    countdownEnd = (countdownNum: number, textNode: cc.Label) => {
-        const countdownPage = this.node.getChildByName('countdownPage');
-        countdownPage.destroy();
-
-        cc.director.loadScene(ESceneName.MAIN_MENU);
-        // Global.emitter.dispatch(EMsg.PLAYER_REVIVE);
+    /**重置数据 */
+    resetData = () => {
+        this.surface = null;
+        this.prospect = null;
+        this.playerPF = null;
+        this.enemyPF = null;
+        this.reviveCDPF = null;
+        this.bananaPF = null;
+        this.banana_peelPF = null;
+        this.diamondPF = null;
+        this.goldPF = null;
+        this.pepperPF = null;
+        this.shitPF = null;
+        this.trapPF = null;
+        this.player = null;
+        this.enemyPF = null;
     }
 }
 

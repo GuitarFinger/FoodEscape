@@ -39,6 +39,8 @@ export default class Player extends cc.Component {
     selfType: string = 'player';
     /**是否死亡 */
     isDead: boolean = false;
+    /**初始角度 */
+    initAngle: number = 0;
     /**磁铁生效 */
     isMagnetic: boolean = false;
     /**磁铁持续时间 */

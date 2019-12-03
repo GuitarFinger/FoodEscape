@@ -37,11 +37,11 @@ export default class Enemy extends cc.Component {
 
     init() {
         this._selfSkeleton = this.node.getChildByName('spine').getComponent(sp.Skeleton);
+
         Global.emitter.register({
             [EMsg.SPEED_CHANGE]: this.setTimeScale,
             [EMsg.PLAYER_REVIVE]: this.resetToInitPos
         });
-        this.initAngle = this.relativeAngle;
     }
     
     onLoad () {
@@ -49,7 +49,7 @@ export default class Enemy extends cc.Component {
     }
 
     // start () {
-
+        // this.initAngle = this.relativeAngle;
     // }
 
     update (dt) {
@@ -73,8 +73,10 @@ export default class Enemy extends cc.Component {
         if (oComponent === null) return;
 
         if (oComponent.selfType === 'player') {
+            // 暂停游戏
             Global.mainGame.pauseGame();
-            Global.mainGame.createCountdownPage();
+            // 创建倒计时窗口
+            Global.mainGame.createReviveCD();
         }
 
     }
