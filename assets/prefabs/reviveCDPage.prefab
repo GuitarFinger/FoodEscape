@@ -13,7 +13,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "countdownPage",
+    "_name": "ReviveCDPage",
     "_objFlags": 0,
     "_parent": null,
     "_children": [
@@ -2310,7 +2310,7 @@
     "_id": ""
   },
   {
-    "__type__": "1c1eebsb5dOlL17p8VWDCun",
+    "__type__": "7e0fcuHDqRAL42/HTJzZx+9",
     "_name": "",
     "_objFlags": 0,
     "node": {

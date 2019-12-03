@@ -1,8 +1,9 @@
 // ============================ 导入
-import { ESceneName, EMsg, DTip } from "./mod/enum";
+import { EMsg, DTip } from "./mod/enum";
 import DB from "./mod/db";
 import { Global } from "./mod/global";
 import { Utils } from "./mod/utils";
+import { SignModel } from "./GameModel";
 
 // ============================ 常量定义
 const {ccclass, property} = cc._decorator;
@@ -107,16 +108,19 @@ export default class Sign extends cc.Component {
         const dbSignList: number[] = DB.data.sign.list;
         const dbSignIdx: number = DB.data.sign.index;
 
-
         if (whichDay > dbSignIdx) {
-            Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip(this.node, `isn't reach to ${whichDay} day`));
-            console.log(`isn't reach to ${whichDay} day`);
+            Global.emitter.dispatch(
+                EMsg.SCREEN_TIPS,
+                new DTip(this.node, `isn't reach to ${whichDay} day`)
+            );
             return;
         }
         
         if (dbSignList[whichDay] !== 0) {
-            Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip(this.node, `${whichDay} day is signed`));
-            console.log(`${whichDay} day is signed`);
+            Global.emitter.dispatch(
+                EMsg.SCREEN_TIPS,
+                new DTip(this.node, `${whichDay} day is signed`)
+            );
             return;
         }
 
@@ -124,15 +128,6 @@ export default class Sign extends cc.Component {
             this.initSignItem(item, whichDay, true, isLast);
         });
         
-    }
-}
-
-
-class SignModel {
-    public static signIn = (whichDay: number, callback?: Function) => {
-
-        DB.data.sign.list[whichDay] = 1;
-        callback && callback();
     }
 }
 
