@@ -159,8 +159,11 @@ export class CGame {
     /**护盾基本持续时间(单位毫秒) */
     static SHIELD_DURATION = 5000;
 
-    /**倒计时持续时间 */
+    /**倒计时持续时间(单位秒) */
     static COUNTDOWN_DURATION = 15;
+
+    /**广告持续时间 */
+    static ADS_DURATION = 15;
     // ================ 持续时间
 
 

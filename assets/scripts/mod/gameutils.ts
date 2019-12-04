@@ -17,15 +17,19 @@ export class FactoryUtils {
      * id计数器
      */
     private static IDCounter = new Counter();
+    /**
+     * 时间长度
+     */
+    private static timelen: number = 0;
 
     /**
      * 计算时间间隔
      */
-    public static calcTimeGap = (startTime: number, type: string): boolean => {
+    public static calcTimeGap = (timeInterval: number, type: string): boolean => {
         let timeLen: number, multiple: number, minTime: number, maxTime: number;
 
-        timeLen = (Date.now() - startTime) / 1000;
-        multiple = Math.floor(timeLen / CGame.TIME_GAP_RANGE);
+        FactoryUtils.timelen += timeInterval;
+        multiple = Math.floor(FactoryUtils.timelen / CGame.TIME_GAP_RANGE);
 
         if (!FactoryUtils.time[type]) {
             minTime = multiple * CGame.TIME_GAP_RANGE;
@@ -35,7 +39,7 @@ export class FactoryUtils {
             return false;
         }
 
-        if (FactoryUtils.time[type] && timeLen < FactoryUtils.time[type]) return false;
+        if (FactoryUtils.time[type] && FactoryUtils.timelen < FactoryUtils.time[type]) return false;
 
         minTime = (multiple+1) * CGame.TIME_GAP_RANGE;
         maxTime = (multiple+2) * CGame.TIME_GAP_RANGE;
@@ -142,11 +146,11 @@ export class Factory {
     /**
      * 道具
      */
-    public static prop = (prefab: cc.Prefab, parent: cc.Node, ptype: TProp, refAngle?: number): cc.Node => {
+    public static prop = (prefab: cc.Prefab, parent: cc.Node, ptype: TProp, refAngle?: number, timeInterval?: number): cc.Node => {
         let node = null;
         switch (ptype) {
             case ETProp.BANANA:
-                node = Factory.banana(prefab, parent, ptype);
+                node = Factory.banana(prefab, parent, ptype, timeInterval);
                 break;
             case ETProp.BANANA_PEEL:
                 break;
@@ -162,7 +166,7 @@ export class Factory {
                 node = Factory.pepper(prefab, parent, ptype, refAngle);
                 break;
             case ETProp.SHIT:
-                node = Factory.shit(prefab, parent, ptype);
+                node = Factory.shit(prefab, parent, ptype, timeInterval);
                 break;
             case ETProp.TRAP:
                 node = Factory.trap(prefab, parent, ptype, refAngle);
@@ -195,8 +199,8 @@ export class Factory {
     /**
      * 香蕉(第二层)
      */
-    private static banana = (prefab: cc.Prefab, parent: cc.Node, ptype: TProp) => {
-        if (!FactoryUtils.calcTimeGap(Global.mainGame.startRotateTime, 'second')) return;
+    private static banana = (prefab: cc.Prefab, parent: cc.Node, ptype: TProp, timeInterval: number) => {
+        if (!FactoryUtils.calcTimeGap(timeInterval, 'second')) return;
 
         return FactoryUtils.createProp(prefab, parent, ptype, CGame.SECOND_RADIUS);
 
@@ -205,8 +209,8 @@ export class Factory {
     /**
      * 便便(第二层)
      */
-    private static shit = (prefab: cc.Prefab, parent: cc.Node, ptype: TProp) => {
-        if (!FactoryUtils.calcTimeGap(Global.mainGame.startRotateTime, 'second')) return;
+    private static shit = (prefab: cc.Prefab, parent: cc.Node, ptype: TProp, timeInterval: number) => {
+        if (!FactoryUtils.calcTimeGap(timeInterval, 'second')) return;
 
         return FactoryUtils.createProp(prefab, parent, ptype, CGame.SECOND_RADIUS);
     }

@@ -71,8 +71,8 @@ export default class Prop extends cc.Component {
 
     // }
 
-    update (dt: number) {
-        this.actRotateTo();
+    update (timeInterval: number) {
+        this.actRotateTo(timeInterval);
     }
 
     onDestroy () {
@@ -95,16 +95,16 @@ export default class Prop extends cc.Component {
     /**
      * 自转和公转
      */
-    actRotateTo = () => {
+    actRotateTo = (timeInterval: number) => {
         if (this.isAttract || Global.mainGame.isPaused) return;
         
         let nowTime: number, timeSpace: number, finalAngle: number;
 
-        nowTime = Date.now();
-        timeSpace =(nowTime - (this.lastRotateTime || nowTime)) / 1000;
-        finalAngle = (this.relativeAngle + Global.meterPerAngle * timeSpace * Global.nowSpeed) % 360;
+        // nowTime = Date.now();
+        // timeSpace =(nowTime - (this.lastRotateTime || nowTime)) / 1000;
+        finalAngle = (this.relativeAngle + Global.meterPerAngle * timeInterval * Global.nowSpeed) % 360;
 
-        this.lastRotateTime = nowTime;
+        this.lastRotateTime += (timeInterval * 1000);
 
         this.propRotate(finalAngle);
     }

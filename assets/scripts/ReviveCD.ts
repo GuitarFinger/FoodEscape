@@ -18,8 +18,8 @@ export default class ReviveCD extends cc.Component {
 
     /**计数器 */
     private _counter: Counter = null;
+    /**最大数 */
     private _maxCount: number = 15;
-    private _step: number = 1;
 
     // LIFE-CYCLE CALLBACKS
 
@@ -36,6 +36,7 @@ export default class ReviveCD extends cc.Component {
         this._counter = new Counter(this.updateCountdown, this._maxCount, this.endCountdown, textNode);
 
         Global.autoCounter.add(this._counter);
+        this.bindListener();
     }
 
 
@@ -48,6 +49,29 @@ export default class ReviveCD extends cc.Component {
     }
     // LIFE-CYCLE CALLBACKS
 
+    bindListener = () => {
+        const btnRevive = this.node.getChildByName('box_countdown')
+                                   .getChildByName('btn_revive');
+        const boxGiveUp = this.node.getChildByName('box_countdown')
+                                   .getChildByName('box_giveup');
+
+        btnRevive.on(cc.Node.EventType.TOUCH_START, () => {
+            this.closePage();
+            Global.mainGame.createAds();
+
+        });
+
+        boxGiveUp.on(cc.Node.EventType.TOUCH_START, () => {
+            this.closePage();
+            cc.director.loadScene(ESceneName.MAIN_MENU);
+        });
+    }
+
+    closePage = () => {
+        this._counter.setInvalid();
+        this.node.destroy();
+    }
+
     updateCountdown = (num: number, node: cc.Label) => {
         node.string = `${CGame.COUNTDOWN_DURATION - num}`;
     }
@@ -56,7 +80,7 @@ export default class ReviveCD extends cc.Component {
      * 结束倒计时
      */
     endCountdown = (num: number, node: cc.Label) => {
-        this.node.destroy();
+        this.closePage();
 
         cc.director.loadScene(ESceneName.MAIN_MENU);
     } 

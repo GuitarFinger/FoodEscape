@@ -17,14 +17,19 @@ const {ccclass, property} = cc._decorator;
 export default class Loading extends cc.Component {
 
     // LIFE-CYCLE CALLBACKS:
-    @property(cc.ProgressBar)
+    @property({type: cc.ProgressBar, displayName: '进度条'})
     loadBar: cc.ProgressBar = null;
+    /**广告倒计时 */
+    @property({ type: cc.Prefab, displayName: '广告倒计时' })
+    adsPF: cc.Prefab = null;
 
     onLoad () {
         const collisionMgr = cc.director.getCollisionManager();
         
         collisionMgr.enabled = true;
         // collisionMgr.enabledDebugDraw = true;
+        
+        Global.adsPF = this.adsPF;
     }
 
     start () {

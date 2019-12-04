@@ -52,12 +52,12 @@ export default class Enemy extends cc.Component {
         // this.initAngle = this.relativeAngle;
     // }
 
-    update (dt) {
+    update (timeInterval: number) {
         // console.log(dt);
         if (Global.mainGame.isPaused === true) return;
         
         if (!this._isHandMove) {
-            this.move(dt);
+            this.move(timeInterval);
         }
     }
 
@@ -84,14 +84,14 @@ export default class Enemy extends cc.Component {
     /**
      * 移动
      */
-    move = (dt: number) => {
-        const nowTime = Date.now();
+    move = (timeInterval: number) => {
+        // const nowTime = Date.now();
         const meterPreAngle = Global.meterPerAngle || 0.2;
-        const timeSpace = (nowTime - (this._lastTime || nowTime)) / 1000;
+        // const timeSpace = (nowTime - (this._lastTime || nowTime)) / 1000;
 
-        const finalAngle = (this.relativeAngle + (this._directionX === 'left' ? -1 : 1) * meterPreAngle * timeSpace * this.speed) % 360;
+        const finalAngle = (this.relativeAngle + (this._directionX === 'left' ? -1 : 1) * meterPreAngle * timeInterval * this.speed) % 360;
 
-        this._lastTime = nowTime;
+        this._lastTime += (timeInterval * 1000);
 
         this.roleRotate(finalAngle);
     }
@@ -144,7 +144,7 @@ export default class Enemy extends cc.Component {
 
                 this.roleRotate(tempAngle);
 
-                timer = setTimeout(fun, 10);
+                timer = setTimeout(fun, 1);
             }
             else if (angle < 0 && this.relativeAngle > finalAngle && angleGap < maxAngleGap) {
                 tempAngle = this.relativeAngle - Global.meterPerAngle;
@@ -152,7 +152,7 @@ export default class Enemy extends cc.Component {
 
                 this.roleRotate(tempAngle);
 
-                timer = setTimeout(fun, 10);
+                timer = setTimeout(fun, 1);
             }
             else {
                 this._isHandMove = false;

@@ -33,7 +33,7 @@ export default class MainGame extends cc.Component {
     /**敌人预制体 */
     @property({ type: cc.Prefab, displayName: '敌人预制体' })
     enemyPF: cc.Prefab = null;
-    /**敌人预制体 */
+    /**倒计预制体 */
     @property({ type: cc.Prefab, displayName: '倒计预制体' })
     reviveCDPF: cc.Prefab = null;
     /**香蕉预制体 */
@@ -65,6 +65,8 @@ export default class MainGame extends cc.Component {
     player: cc.Node;
     /**敌人节点 */
     enemy: cc.Node;
+    /**复活倒计时节点 */
+    reviveCD: cc.Node;
     /**游戏是否暂停 */
     isPaused: boolean = false;
     /**转动开始时间 */
@@ -89,23 +91,19 @@ export default class MainGame extends cc.Component {
             this.calcRelativeSurfaceAngle(this.enemy, 'Enemy'),
             CGame.INIT_DISTANCE
         );
-
-        Global.emitter.register({
-            [EMsg.PLAYER_REVIVE]: this.createPlayer
-        });
     }
 
     start () {
         this.startGame();
     }
 
-    update (dt: number) {
+    update (timeInterval: number) {
         if (this.isPaused) return;
 
         // 创建游戏道具
-        this.createGameProp();
+        this.createGameProp(timeInterval);
         // 更新旋转
-        this.updateRotate();
+        this.updateRotate(timeInterval);
 
     }
 
@@ -122,7 +120,7 @@ export default class MainGame extends cc.Component {
      * 继续游戏
      */
     resumeGame = () => {
-        
+        this.isPaused = false;
     }
 
     /**
@@ -206,7 +204,7 @@ export default class MainGame extends cc.Component {
     /**
      * 创建游戏道具
      */
-    createGameProp = () => {
+    createGameProp = (timeInterval: number) => {
         let secondPtype: TProp, thirdPtype: TProp;
 
         // 创建钻石
@@ -214,7 +212,7 @@ export default class MainGame extends cc.Component {
 
         // 创建第二层道具
         secondPtype = CGame.ODDS_BA_SH[Utils.judgeSection(Math.random(), CGame.ODDS_BA_SH, 'odds')].ptype;
-        Factory.prop(this[`${secondPtype}PF`], this.node, secondPtype);
+        Factory.prop(this[`${secondPtype}PF`], this.node, secondPtype, null, timeInterval);
 
         // 创建第三层道具
         thirdPtype = CGame.ODDS_PE_MA[Utils.judgeSection(Math.random(), CGame.ODDS_PE_MA, 'odds')].ptype;
@@ -228,17 +226,18 @@ export default class MainGame extends cc.Component {
     /**
      * 更新转动
      */
-    updateRotate = () => {
+    updateRotate = (timeInterval: number) => {
         let nowTime: number, // 当前时间
-            timeInterval: number, // 时间间隔
+            // timeInterval: number, // 时间间隔
             timeLength: number, // 时间长度
             sectionIdx: number, // 时间速度区间
             nowSpeed: number, // 当前速度
             angleIncrement: number; // 角度增量
 
-        nowTime = Date.now();
-        timeInterval = (nowTime-this.lastRotateTime) / 1000;
-        timeLength = (nowTime-this.startRotateTime) / 1000;
+        // nowTime = Date.now();
+        // timeInterval = (nowTime-this.lastRotateTime) / 1000;
+        this.lastRotateTime += (timeInterval * 1000);
+        timeLength = (this.lastRotateTime-this.startRotateTime) / 1000;
         sectionIdx = Utils.judgeSection(timeLength, CFG_TIME_SPEED, 'time');
         nowSpeed = CFG_TIME_SPEED[sectionIdx].speed;
         angleIncrement = nowSpeed * Global.meterPerAngle * timeInterval;
@@ -247,7 +246,7 @@ export default class MainGame extends cc.Component {
         // console.log(angleIncrement);
         this.surface.angle += angleIncrement;
         this.prospect.angle += angleIncrement * CGame.P_ROTATE_MULTIPLE;
-        this.lastRotateTime = nowTime;
+        
 
         Global.nowSpeed = nowSpeed;
         Global.speedRatio = nowSpeed / Global.initSpeed;
@@ -258,13 +257,30 @@ export default class MainGame extends cc.Component {
      * 创建复活倒计时弹窗弹窗
      */
     createReviveCD = () => {
-        this.node.addChild(cc.instantiate(this.reviveCDPF));
+        this.reviveCD = cc.instantiate(this.reviveCDPF);
+        this.node.addChild(this.reviveCD);
+    }
+
+    /**
+     * 创建广告弹窗
+     */
+    createAds = () => {
+        const node = cc.instantiate(Global.adsPF);
+        
+        node.getComponent('Ads').init(() => {
+            this.createPlayer();
+            Global.emitter.dispatch(EMsg.PLAYER_REVIVE);
+            this.resumeGame();
+        });
+
+        this.node.addChild(node);
     }
 
     /**重置数据 */
     resetData = () => {
         this.surface = null;
         this.prospect = null;
+
         this.playerPF = null;
         this.enemyPF = null;
         this.reviveCDPF = null;
@@ -277,6 +293,9 @@ export default class MainGame extends cc.Component {
         this.trapPF = null;
         this.player = null;
         this.enemyPF = null;
+
+        this.player = null;
+        this.reviveCD = null;
     }
 }
 

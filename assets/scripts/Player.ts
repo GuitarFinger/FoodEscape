@@ -75,8 +75,8 @@ export default class Player extends cc.Component {
         
     // }
 
-    update (dt: number) {
-        this.handleMagetic(dt);
+    update (timeInterval: number) {
+        this.handleMagetic(timeInterval);
     }
 
     onDestroy() {
@@ -203,11 +203,14 @@ export default class Player extends cc.Component {
     /**
      * 处理磁性时间
      */
-    handleMagetic = (dt: number) => {
-        Global.magneticDuration -= (dt*1000);
+    handleMagetic = (timeInterval: number) => {
+        Global.magneticDuration -= (timeInterval*1000);
         Global.magneticDuration = Global.magneticDuration < 0 ? 0 : Global.magneticDuration;
         
-        if (this.isDead) return;
+        if (this.isDead) {
+            this.clearProps();
+            return;
+        }
 
         const keys = Object.keys(Global.createProps);
 
@@ -250,6 +253,18 @@ export default class Player extends cc.Component {
             }
 
         }
+    }
+
+    clearProps = () => {
+        if (!this.attractProps.length) return;
+
+        this.attractProps.forEach((prop: Prop) => {
+            if (!prop.isDestory) {
+                prop.node.destroy();
+            }
+        });
+
+        this.attractProps = [];
     }
 
     /**

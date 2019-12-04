@@ -110,7 +110,10 @@ class Cache<T> {
  * 全局变量
  */
 export const Global = {
-
+    // ============== 预制体
+    adsPF: (null as cc.Prefab),
+    // ============== 预制体
+    
     /**主游戏上下文 */
     mainGame: null,
     /**发射器 */
