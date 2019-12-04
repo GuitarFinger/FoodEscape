@@ -2,9 +2,8 @@
  * @module 玩家
  */
 // ============================ 导入
-import { CGame, EMsg, DTip, ETProp } from "./mod/enum";
+import { CGame, EMsg, ETProp } from "./mod/enum";
 import { Global } from "./mod/global";
-import { Utils } from "./mod/utils";
 import Prop from "./Prop";
 
 // ============================ 常量定义
@@ -107,6 +106,9 @@ export default class Player extends cc.Component {
             case ETProp.PEPPER:
                 this.addShield();
                 break;
+            case ETProp.DIAMOND:
+                this.getScore();
+                break;
             case 'enemy':
                 this.ownDead();
                 break;
@@ -181,6 +183,14 @@ export default class Player extends cc.Component {
         if (this.isDead) return;
 
         Global.shieldDuration += CGame.SHIELD_DURATION;
+    }
+
+    /**
+     * 获取分数
+     */
+    getScore = () => {
+        Global.score += CGame.DIAMOND_SCORE;
+        Global.mainGame.modifyScore();
     }
 
     /**

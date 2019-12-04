@@ -54,6 +54,9 @@ export enum EMsg {
 
     /**玩家复活 */
     PLAYER_REVIVE = 'player_revive',
+
+    /**分数改变 */
+    SCORE_CHANGE = 'score_change',
 }
 
 /**
@@ -101,6 +104,9 @@ export class CGame {
 
     /**可复活次数 */
     static REVIVE_TIMES = 1;
+
+    /**钻石分数 */
+    static DIAMOND_SCORE = 1;
     // ================ 其它
 
 

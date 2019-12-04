@@ -20,11 +20,14 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class MainGame extends cc.Component {
     /**地表节点 */
-    @property({ type: cc.Node, displayName: '地表' })
+    @property({ type: cc.Node, displayName: '地表节点' })
     surface: cc.Node = null;
     /**中景节点 */
-    @property({ type: cc.Node, displayName: '中景' })
+    @property({ type: cc.Node, displayName: '中景节点' })
     prospect: cc.Node = null;
+    /**分数节点 */
+    @property({ type: cc.Node, displayName: '分数节点' })
+    score: cc.Node = null;
 
     // 预制体
     /**玩家预制体 */
@@ -67,6 +70,7 @@ export default class MainGame extends cc.Component {
     enemy: cc.Node;
     /**复活倒计时节点 */
     reviveCD: cc.Node;
+
     /**游戏是否暂停 */
     isPaused: boolean = false;
     /**转动开始时间 */
@@ -74,7 +78,7 @@ export default class MainGame extends cc.Component {
     /**上次转动时间 */
     lastRotateTime: number = 0;
 
-    // // LIFE-CYCLE CALLBACKS:
+    // LIFE-CYCLE CALLBACKS:
     onLoad () {
         this.createPlayer();
         this.createEnemy();
@@ -106,6 +110,12 @@ export default class MainGame extends cc.Component {
         this.updateRotate(timeInterval);
 
     }
+
+    onDestroy () {
+        this.resetData();
+    }
+
+    // LIFE-CYCLE CALLBACKS
 
     /**
      * 开始游戏
@@ -279,6 +289,10 @@ export default class MainGame extends cc.Component {
         );
 
         this.node.addChild(node);
+    }
+
+    modifyScore = () => {
+        this.score.getComponent(cc.Label).string = `${Global.score}`;
     }
 
     /**重置数据 */

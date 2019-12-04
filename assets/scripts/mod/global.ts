@@ -167,6 +167,22 @@ export const Global = {
         }
     },
 
+
+    /**
+     * 分数
+     */
+    score: 0,
+
+    // get score(): number {
+    //     return this._score;
+    // },
+
+    // set score(val: number) {
+    //     this._score = val;
+    //     this.emitter.dispatch(EMsg.SCORE_CHANGE);
+    // },
+
+
     /**所有图片集列表 */
     spriteAtlasMap: new Map<string, cc.SpriteAtlas>(),
 
@@ -197,6 +213,7 @@ Global.emitter.register({
         Global.shieldDuration = 0;
         Global.createProps = {};
         Global.revivedTimes = 0;
+        Global.score = 0;
     }
 });
 
