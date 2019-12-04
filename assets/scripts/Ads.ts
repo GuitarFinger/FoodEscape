@@ -87,6 +87,7 @@ export default class Ads extends cc.Component {
     closePage = () => {
         this._counter.setInvalid();
         this.node.destroy();
+        this._closeCallback && this._closeCallback();
     }
 
     resetData = () => {

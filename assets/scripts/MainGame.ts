@@ -3,7 +3,7 @@
  */
 // ============================ 导入
 import { Utils } from "./mod/utils";
-import { CGame, TProp, ETProp, EMsg } from "./mod/enum";
+import { CGame, TProp, ETProp, EMsg, ESceneName } from "./mod/enum";
 import { CFG_TIME_SPEED } from "./config/timeSpeedCfg";
 import { Global } from "./mod/global";
 import { Factory } from "./mod/gameutils";
@@ -267,11 +267,16 @@ export default class MainGame extends cc.Component {
     createAds = () => {
         const node = cc.instantiate(Global.adsPF);
         
-        node.getComponent('Ads').init(() => {
-            this.createPlayer();
-            Global.emitter.dispatch(EMsg.PLAYER_REVIVE);
-            this.resumeGame();
-        });
+        node.getComponent('Ads').init(
+            () => {
+                this.createPlayer();
+                Global.emitter.dispatch(EMsg.PLAYER_REVIVE);
+                this.resumeGame();
+            },
+            () => {
+                cc.director.loadScene(ESceneName.ACCOUNT);
+            }
+        );
 
         this.node.addChild(node);
     }

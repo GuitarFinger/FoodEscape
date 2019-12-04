@@ -63,7 +63,7 @@ export default class ReviveCD extends cc.Component {
 
         boxGiveUp.on(cc.Node.EventType.TOUCH_START, () => {
             this.closePage();
-            cc.director.loadScene(ESceneName.MAIN_MENU);
+            cc.director.loadScene(ESceneName.ACCOUNT);
         });
     }
 
@@ -82,7 +82,7 @@ export default class ReviveCD extends cc.Component {
     endCountdown = (num: number, node: cc.Label) => {
         this.closePage();
 
-        cc.director.loadScene(ESceneName.MAIN_MENU);
+        cc.director.loadScene(ESceneName.ACCOUNT);
     } 
 }
 
