@@ -200,6 +200,10 @@ export const Global = {
 
     /**已复活次数 */
     revivedTimes: 0,
+
+    /**金币产出机器 */
+    goldMachine: null,
+
 };
 
 Global.emitter.register({

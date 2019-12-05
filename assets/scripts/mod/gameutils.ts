@@ -2,6 +2,7 @@ import { TProp, ETProp, CGame, EMsg } from "./enum";
 import { Global } from "./global";
 import { Utils } from "./utils";
 import { Counter } from "./counter";
+import Frame from "./frame";
 
 export class FactoryUtils {
     /**
@@ -231,5 +232,179 @@ export class Factory {
         if (!FactoryUtils.calcDistanceGap(refAngle, CGame.THIRD_GAP_RANGE, 'third')) return;
 
         return FactoryUtils.createProp(prefab, parent, ptype, CGame.THIRD_RADIUS);
+    }
+}
+
+/**
+ * @classdesc 金币生产器
+ */
+export class GoldMachine {
+    /**
+     * 产出率
+     */
+    private _outputRate: number = CGame.GOLD_OUTPUT_RATE;
+    /**
+     * 累计时间
+     */
+    private _totalTime: number = 0;
+    /**
+     * 阶段时间
+     */
+    private _stageTime: number = 0;
+    /**
+     * 超出阶段时间
+     */
+    private _overStageTime: number = 0;
+    /**
+     * 产出百分比
+     */
+    private _precent: number = 0;
+    /**
+     * 是否暂停
+     */
+    private _isPaused: boolean = true;
+    /**
+     * 更新处理方法
+     */
+    private _handleFunc: Function = null;
+    /**
+     * 产出处理方法
+     */
+    private _createFunc: Function = null;
+    /**
+     * 更新处理消息
+     */
+    private _handleMsg: EMsg = null;
+    /**
+     * 产出处理消息
+     */
+    private _createMsg: EMsg = null;
+    /**
+     * 循环帧对象
+     */
+    private _frame: any = null;
+    /**
+     * 上一次更新时间
+     */
+    private _lastTime: number = 0;
+    /**
+     * 产出数
+     */
+    public createNum: number = 0;
+
+    constructor (handleFunc?: Function, createFunc?: Function, handleMsg?: EMsg, createMsg?: EMsg) {
+        this.init();
+
+        this._handleFunc = handleFunc;
+        this._createFunc = createFunc;
+        this._handleMsg = handleMsg;
+        this._createMsg = createMsg;
+
+        this.start();
+    }
+
+    init = () => {
+        this._outputRate = CGame.GOLD_OUTPUT_RATE * 1000;
+        this._totalTime = 0;
+        this._stageTime = 0;
+        this._overStageTime = 0;
+        this._precent = 0;
+        this._isPaused = true;
+        this._handleFunc = null;
+        this._createFunc = null;
+        this._handleMsg = null;
+        this._createMsg = null;
+        this._frame = null;
+        this.createNum = 0;
+    }
+
+    start = () => {
+        this._isPaused = false;
+        this.run();
+    }
+
+    run = () => {
+        if (this._frame) return;
+
+        this._lastTime = Date.now();
+
+        this._frame = Frame.add(() => {
+            const nowTime = Date.now();
+            const timeInterval = nowTime - this._lastTime;
+
+            this.update(timeInterval);
+
+            this._lastTime = nowTime;
+        });
+    }
+
+    update = (timeInterval: number) => {
+        if (this._isPaused) return;
+
+        this._totalTime += timeInterval;
+        this._stageTime += timeInterval;
+        this._stageTime += this._overStageTime;
+
+        if (this._stageTime >= this._outputRate) {
+            this._overStageTime = this._stageTime - this._outputRate;
+            this._stageTime = 0;
+            this._precent = 1;
+            this.createNum++;
+
+            if (this._createFunc) {
+                this._createFunc();
+            }
+            else if (this._createMsg) {
+                Global.emitter.dispatch(EMsg.CREATE_GOLD);
+            }
+
+        } else {
+            this._overStageTime = 0;
+            this._precent = this._stageTime / this._outputRate;
+        }
+
+
+        if (this._handleFunc) {
+            this._handleFunc(this._precent)
+        }
+        else if (this._handleMsg) {
+            Global.emitter.dispatch(EMsg.UPDATE_GOLD_PRECENT, this._precent);
+        }
+    }
+
+    pause = () => {
+        this._isPaused = true;
+    }
+
+    resume = () => {
+        this._isPaused = false;
+    }
+
+    /**
+     * @method 加速
+     * @param val 时间增量(毫秒)
+     */
+    accelerate = (val: number) => {
+        if (isNaN(val)) return;
+
+        this.update(val);
+    }
+
+    stop = () => {
+        this.pause();
+
+        this._frame && Frame.delete(this._frame);
+
+        this.init();
+    }
+
+    getPrecent = (): number => {
+        return this._precent;
+    }
+
+    collectGold = () => {
+        if (this.createNum <= 0) return;
+
+        this.createNum--;
     }
 }

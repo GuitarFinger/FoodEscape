@@ -171,7 +171,7 @@
       "array": [
         0,
         0,
-        291.8505554199219,
+        299.644775390625,
         0,
         0,
         0,
@@ -451,7 +451,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "glod",
+    "_name": "gold",
     "_objFlags": 0,
     "_parent": {
       "__id__": 5
@@ -726,8 +726,8 @@
       }
     ],
     "_useOriginalSize": false,
-    "_string": "99999999k",
-    "_N$string": "99999999k",
+    "_string": "0",
+    "_N$string": "0",
     "_fontSize": 36,
     "_lineHeight": 36,
     "_enableWrapText": true,
@@ -1107,8 +1107,8 @@
       }
     ],
     "_useOriginalSize": false,
-    "_string": "99999999k",
-    "_N$string": "99999999k",
+    "_string": "0",
+    "_N$string": "0",
     "_fontSize": 36,
     "_lineHeight": 36,
     "_enableWrapText": true,
@@ -1454,8 +1454,8 @@
       }
     ],
     "_useOriginalSize": false,
-    "_string": "1.2k/分",
-    "_N$string": "1.2k/分",
+    "_string": "0",
+    "_N$string": "0",
     "_fontSize": 26,
     "_lineHeight": 26,
     "_enableWrapText": true,
@@ -2716,7 +2716,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 32.9,
+      "width": 0,
       "height": 16
     },
     "_anchorPoint": {
@@ -2834,7 +2834,7 @@
       "__id__": 60
     },
     "_N$mode": 0,
-    "_N$progress": 0.1,
+    "_N$progress": 0,
     "_N$reverse": false,
     "_id": "20OS8QIcRDR6BoN6BNAlbk"
   },
@@ -4050,6 +4050,9 @@
     },
     "bubbleChangeSkinPF": {
       "__uuid__": "d87c9db0-b706-4d80-82b1-85f2f0630bf1"
+    },
+    "progressNode": {
+      "__id__": 62
     },
     "_id": "1792dpXDpIQYVqQkJggEK4"
   }

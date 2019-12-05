@@ -1,6 +1,7 @@
 import { ESceneName, EMsg } from "./mod/enum";
 import { ScreenTips } from "./mod/screentips";
 import { Global } from "./mod/global";
+import { GoldMachine } from "./mod/gameutils";
 
 // ============================ 导入
 
@@ -42,6 +43,9 @@ export default class Menu extends cc.Component {
     @property({ type: cc.Prefab, displayName: '换肤泡泡预制体' })
     bubbleChangeSkinPF: cc.Prefab = null;
 
+    @property({ type: cc.ProgressBar, displayName: '金币产出进度条节点' })
+    progressNode: cc.ProgressBar = null;
+
     /**任务界面 */
     taskPage: cc.Node = null;
     /**排行榜界面 */
@@ -50,17 +54,34 @@ export default class Menu extends cc.Component {
     signPage: cc.Node = null;
     /**皮肤界面 */
     skinPage: cc.Node = null;
+    /**金币数量文字 */
+    textGoldNum: cc.Label = null;
 
     /**当前打开的页面 */
-    nowPage: TPage = null; 
+    nowPage: TPage = null;
+
+    /**是否被销毁 */
+    isDestory: boolean = true;
 
     // ======LIFE-CYCLE CALLBACKS:
 
     onLoad () {
+        this.textGoldNum = this.node.getChildByName('basePage')
+                                    .getChildByName('gold')
+                                    .getChildByName('label').getComponent(cc.Label);
+        this.isDestory = false;
         this.bindListener();
+
         ScreenTips.screenTipPreFab = this.screenTipsPreFab;
         
-        Global.emitter.dispatch(EMsg.GAME_START)
+        Global.emitter.dispatch(EMsg.GAME_START);
+
+        Global.goldMachine = Global.goldMachine || new GoldMachine(null, null, EMsg.UPDATE_GOLD_PRECENT, EMsg.CREATE_GOLD);
+
+        Global.emitter.register({
+            [EMsg.UPDATE_GOLD_PRECENT]: this.updatePropgress,
+            [EMsg.CREATE_GOLD]: this.createGold
+        });
     }
 
     start () {
@@ -68,6 +89,13 @@ export default class Menu extends cc.Component {
     }
 
     // update (dt) {}
+
+    onDestroy () {
+        this.isDestory = true;
+
+        Global.emitter.remove(EMsg.UPDATE_GOLD_PRECENT);
+        Global.emitter.remove(EMsg.CREATE_GOLD);
+    }
     // ======LIFE-CYCLE CALLBACKS:
 
     bindListener = () => {
@@ -107,6 +135,20 @@ export default class Menu extends cc.Component {
         cc.director.preloadScene(ESceneName.MAIN_GAME, () => {
             cc.director.loadScene(ESceneName.MAIN_GAME);
         });
+    }
+
+    updatePropgress = (precent: number) => {
+        if (this.isDestory) return;
+
+        this.progressNode.progress = precent;
+        // console.log(precent);
+    }
+
+    createGold = () => {
+        if (this.isDestory) return;
+
+        this.textGoldNum.string = `${(Global.goldMachine as GoldMachine).createNum}`;
+        // console.log('create gold');
     }
 }
 

@@ -57,6 +57,12 @@ export enum EMsg {
 
     /**分数改变 */
     SCORE_CHANGE = 'score_change',
+
+    /**创建金币 */
+    CREATE_GOLD = 'create_gold',
+
+    /**更新金币进度百分比 */
+    UPDATE_GOLD_PRECENT = 'UPDATE_GOLD_PRECENT',
 }
 
 /**
@@ -107,6 +113,9 @@ export class CGame {
 
     /**钻石分数 */
     static DIAMOND_SCORE = 1;
+
+    /**金币产出率(单位秒) */
+    static GOLD_OUTPUT_RATE = 10;
     // ================ 其它
 
 
@@ -168,7 +177,7 @@ export class CGame {
     /**倒计时持续时间(单位秒) */
     static COUNTDOWN_DURATION = 15;
 
-    /**广告持续时间 */
+    /**广告持续时间(单位秒) */
     static ADS_DURATION = 15;
     // ================ 持续时间
 
