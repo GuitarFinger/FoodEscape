@@ -76,6 +76,7 @@ export default class Player extends cc.Component {
 
     update (timeInterval: number) {
         this.handleMagetic(timeInterval);
+        this.handleShield(timeInterval);
     }
 
     onDestroy() {

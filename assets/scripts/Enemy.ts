@@ -85,6 +85,8 @@ export default class Enemy extends cc.Component {
      * 移动
      */
     move = (timeInterval: number) => {
+        if (Global.shieldDuration > 0) return;
+
         // const nowTime = Date.now();
         const meterPreAngle = Global.meterPerAngle || 0.2;
         // const timeSpace = (nowTime - (this._lastTime || nowTime)) / 1000;

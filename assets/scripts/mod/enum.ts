@@ -175,10 +175,10 @@ export class CGame {
 
     // ================ 持续时间
     /**磁性基本持续时间(单位毫秒) */
-    static MAGNETIC_DURATOIN = 2000;
+    static MAGNETIC_DURATOIN = 1000;
 
     /**护盾基本持续时间(单位毫秒) */
-    static SHIELD_DURATION = 5000;
+    static SHIELD_DURATION = 1000;
 
     /**倒计时持续时间(单位秒) */
     static COUNTDOWN_DURATION = 15;
