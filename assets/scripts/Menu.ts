@@ -1,7 +1,8 @@
-import { ESceneName, EMsg, CGame } from "./mod/enum";
+import { ESceneName, EMsg, CGame, DTip } from "./mod/enum";
 import { ScreenTips } from "./mod/screentips";
 import { Global } from "./mod/global";
 import { GoldMachine } from "./mod/gameutils";
+import DB from "./mod/db";
 
 // ============================ 导入
 
@@ -83,7 +84,8 @@ export default class Menu extends cc.Component {
 
         Global.emitter.register({
             [EMsg.UPDATE_GOLD_PRECENT]: this.updatePropgress,
-            [EMsg.CREATE_GOLD]: this.createGold
+            [EMsg.CREATE_GOLD]: this.createGold,
+            [EMsg.COLLECT_GOLD]: this.collectGold
         });
     }
 
@@ -98,6 +100,7 @@ export default class Menu extends cc.Component {
 
         Global.emitter.remove(EMsg.UPDATE_GOLD_PRECENT);
         Global.emitter.remove(EMsg.CREATE_GOLD);
+        Global.emitter.remove(EMsg.COLLECT_GOLD);
     }
     // ======LIFE-CYCLE CALLBACKS:
 
@@ -154,8 +157,13 @@ export default class Menu extends cc.Component {
         if (this.isDestory) return;
 
         this.node.getChildByName('basePage').addChild(cc.instantiate(this.phyGoldPF));
-        this.textGoldNum.string = `${(Global.goldMachine as GoldMachine).createNum}`;
+        
         // console.log('create gold');
+    }
+
+    collectGold = () => {
+        this.textGoldNum.string = `${DB.data.player.gold}`;
+        Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip(this.node, `金币+${1}`));
     }
 
     goldAccelerate = () => {

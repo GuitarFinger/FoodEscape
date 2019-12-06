@@ -63,6 +63,9 @@ export enum EMsg {
 
     /**更新金币进度百分比 */
     UPDATE_GOLD_PRECENT = 'UPDATE_GOLD_PRECENT',
+
+    /**收获金币 */
+    COLLECT_GOLD = 'collect_gold',
 }
 
 /**

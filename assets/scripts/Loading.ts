@@ -88,6 +88,9 @@ class LoadModel {
                 0, 0, 0, 0, 0, 0, 0
             ]
         }
+        DB.data.player = {
+            gold: 0,
+        }
 
         callback && callback();
     };
