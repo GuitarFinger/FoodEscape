@@ -25,9 +25,11 @@ export default class Loading extends cc.Component {
 
     onLoad () {
         const collisionMgr = cc.director.getCollisionManager();
+        const physicsmgr = cc.director.getPhysicsManager();
         
         collisionMgr.enabled = true;
         // collisionMgr.enabledDebugDraw = true;
+        physicsmgr.enabled = true;
         
         Global.adsPF = this.adsPF;
     }

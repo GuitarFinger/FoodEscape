@@ -1,4 +1,4 @@
-import { ESceneName, EMsg } from "./mod/enum";
+import { ESceneName, EMsg, CGame } from "./mod/enum";
 import { ScreenTips } from "./mod/screentips";
 import { Global } from "./mod/global";
 import { GoldMachine } from "./mod/gameutils";
@@ -43,6 +43,9 @@ export default class Menu extends cc.Component {
     @property({ type: cc.Prefab, displayName: '换肤泡泡预制体' })
     bubbleChangeSkinPF: cc.Prefab = null;
 
+    @property({ type: cc.Prefab, displayName: '物理金币预制体' })
+    phyGoldPF: cc.Prefab = null;
+
     @property({ type: cc.ProgressBar, displayName: '金币产出进度条节点' })
     progressNode: cc.ProgressBar = null;
 
@@ -66,10 +69,10 @@ export default class Menu extends cc.Component {
     // ======LIFE-CYCLE CALLBACKS:
 
     onLoad () {
+        this.isDestory = false;
         this.textGoldNum = this.node.getChildByName('basePage')
                                     .getChildByName('gold')
                                     .getChildByName('label').getComponent(cc.Label);
-        this.isDestory = false;
         this.bindListener();
 
         ScreenTips.screenTipPreFab = this.screenTipsPreFab;
@@ -103,6 +106,7 @@ export default class Menu extends cc.Component {
         const leftMenuNode = basePageNode.getChildByName('leftMenu');
         const playerNode = basePageNode.getChildByName('player');
         const btnStartGameNode = basePageNode.getChildByName('btnStartGame');
+        const boxAddTime = basePageNode.getChildByName('box_addTime');
 
         pageTypes.forEach(type => {
             leftMenuNode.getChildByName(type).on(cc.Node.EventType.TOUCH_START, () => {
@@ -114,6 +118,8 @@ export default class Menu extends cc.Component {
         });
 
         btnStartGameNode.on(cc.Node.EventType.TOUCH_START, this.loadMainGameScene);
+
+        boxAddTime.on(cc.Node.EventType.TOUCH_START, this.goldAccelerate);
     }
 
     /**打开页面 */
@@ -147,8 +153,13 @@ export default class Menu extends cc.Component {
     createGold = () => {
         if (this.isDestory) return;
 
+        this.node.getChildByName('basePage').addChild(cc.instantiate(this.phyGoldPF));
         this.textGoldNum.string = `${(Global.goldMachine as GoldMachine).createNum}`;
         // console.log('create gold');
+    }
+
+    goldAccelerate = () => {
+        (Global.goldMachine as GoldMachine).accelerate(CGame.GOLD_OUTPUT_ACC);
     }
 }
 

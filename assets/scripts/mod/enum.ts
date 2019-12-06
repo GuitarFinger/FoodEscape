@@ -116,6 +116,9 @@ export class CGame {
 
     /**金币产出率(单位秒) */
     static GOLD_OUTPUT_RATE = 10;
+
+    /**金币产出加速(单位毫秒) */
+    static GOLD_OUTPUT_ACC = 333;
     // ================ 其它
 
 
