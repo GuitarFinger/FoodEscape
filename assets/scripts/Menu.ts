@@ -3,6 +3,8 @@ import { ScreenTips } from "./mod/screentips";
 import { Global } from "./mod/global";
 import { GoldMachine } from "./mod/gameutils";
 import DB from "./mod/db";
+import { MenuModel } from "./GameModel";
+import { CFG_BUILD_LEVEL } from "./config/buildLevelCfg";
 
 // ============================ 导入
 
@@ -50,6 +52,21 @@ export default class Menu extends cc.Component {
     @property({ type: cc.ProgressBar, displayName: '金币产出进度条节点' })
     progressNode: cc.ProgressBar = null;
 
+    @property({ type: cc.Label, displayName: '建筑等级节点' })
+    buildLvNode: cc.Label = null;
+
+    @property({ type: cc.Label, displayName: '金币数量文字' })
+    goldNumNode: cc.Label = null;
+
+    @property({ type: cc.Label, displayName: '钻石数量文字' })
+    diamondNumNode: cc.Label = null;
+
+    @property({ type: cc.Label, displayName: '金币产出率文字' })
+    diamondRatio: cc.Label = null;
+
+    @property({ type: cc.Label, displayName: '升级消耗文字' })
+    buildUpgradeCost: cc.Label = null;
+
     /**任务界面 */
     taskPage: cc.Node = null;
     /**排行榜界面 */
@@ -58,8 +75,7 @@ export default class Menu extends cc.Component {
     signPage: cc.Node = null;
     /**皮肤界面 */
     skinPage: cc.Node = null;
-    /**金币数量文字 */
-    textGoldNum: cc.Label = null;
+    
 
     /**当前打开的页面 */
     nowPage: TPage = null;
@@ -71,9 +87,6 @@ export default class Menu extends cc.Component {
 
     onLoad () {
         this.isDestory = false;
-        this.textGoldNum = this.node.getChildByName('basePage')
-                                    .getChildByName('gold')
-                                    .getChildByName('label').getComponent(cc.Label);
         this.bindListener();
 
         ScreenTips.screenTipPreFab = this.screenTipsPreFab;
@@ -90,7 +103,8 @@ export default class Menu extends cc.Component {
     }
 
     start () {
-
+        this.updateBase();
+        this.createNoCreateGold();
     }
 
     // update (dt) {}
@@ -146,6 +160,20 @@ export default class Menu extends cc.Component {
         });
     }
 
+    updateBase = () => {
+        const cfgKeys = Object.keys(CFG_BUILD_LEVEL);
+        const maxLv = cfgKeys[cfgKeys.length - 1];
+        const nowLv = DB.data.player.build_lv >= maxLv ? maxLv : DB.data.player.build_lv;
+        const cfgCost = CFG_BUILD_LEVEL[nowLv];
+
+
+        this.buildLvNode.getComponent(cc.Label).string = `${DB.data.player.build_lv}`;
+        this.goldNumNode.getComponent(cc.Label).string = `${DB.data.player.gold}`;
+        this.diamondNumNode.getComponent(cc.Label).string = `${DB.data.player.diamond}`;
+        this.diamondRatio.getComponent(cc.Label).string = `1/(5秒)`;
+        this.buildUpgradeCost.getComponent(cc.Label).string = `${nowLv >= maxLv ? '满级' : cfgCost.cost}`;
+    }
+
     updatePropgress = (precent: number) => {
         if (this.isDestory) return;
 
@@ -162,12 +190,55 @@ export default class Menu extends cc.Component {
     }
 
     collectGold = () => {
-        this.textGoldNum.string = `${DB.data.player.gold}`;
-        Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip(this.node, `金币+${1}`));
+        const goldVal = CFG_BUILD_LEVEL[DB.data.player.build_lv].goldVal;
+        this.goldNumNode.getComponent(cc.Label).string = `${DB.data.player.gold}`;
+        Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip(this.node, `金币+${goldVal}`));
     }
 
     goldAccelerate = () => {
         (Global.goldMachine as GoldMachine).accelerate(CGame.GOLD_OUTPUT_ACC);
+    }
+
+    createNoCreateGold = () => {
+        const noCreateNum = DB.data.player.no_collect_gold;
+
+        if (noCreateNum <= 0) return;
+
+        for (let i = 0; i < noCreateNum; i++) {
+            this.node.addChild(cc.instantiate(this.phyGoldPF));
+        }
+    }
+
+    isCanUpgradeBuild = () => {
+        const cfgKeys = Object.keys(CFG_BUILD_LEVEL);
+        const maxLv = cfgKeys[cfgKeys.length - 1];
+        const nowLv = DB.data.player.build_lv >= maxLv ? maxLv : DB.data.player.build_lv;
+        const cfgCost = CFG_BUILD_LEVEL[nowLv];
+
+        if (nowLv >= Number(maxLv)) {
+            Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip(this.node, `已经满级, 无法升级`));
+            return;
+        }
+
+        if (cfgCost.cost > DB.data.player.diamond) {
+            Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip(this.node, `钻石不足, 无法升级`));
+            return;
+        }
+
+        return true;
+    }
+
+    upgradeBuild () {
+        if (!this.isCanUpgradeBuild()) return;
+
+        const cost = Number(CFG_BUILD_LEVEL[DB.data.player.build_lv].cost);
+        MenuModel.upgradeBuild(
+            cost,
+            () => {
+                Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip(this.node, `升级成功`));
+                this.updateBase();
+            }
+        );
     }
 }
 

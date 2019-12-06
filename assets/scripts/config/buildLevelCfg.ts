@@ -1,0 +1,31 @@
+/**
+ * 建筑等级表
+ */
+export const CFG_BUILD_LEVEL = {
+    1: { level: 1, cost: 10, goldVal: 1  },
+    2: { level: 2, cost: 20, goldVal: 2  },
+    3: { level: 3, cost: 40, goldVal: 3  },
+    4: { level: 4, cost: 60, goldVal: 4  },
+    5: { level: 5, cost: 80, goldVal: 5  },
+    6: { level: 6, cost: 100, goldVal: 6  },
+    7: { level: 7, cost: 110, goldVal: 7  },
+    8: { level: 8, cost: 120, goldVal: 8  },
+    9: { level: 9, cost: 130, goldVal: 9  },
+    10: { level: 10, cost: 140, goldVal: 10  },
+    11: { level: 11, cost: 150, goldVal: 12  },
+    12: { level: 1, cost: 160, goldVal: 14  },
+    13: { level: 1, cost: 170, goldVal: 16  },
+    14: { level: 1, cost: 180, goldVal: 18  },
+    15: { level: 1, cost: 190, goldVal: 20  },
+    16: { level: 1, cost: 200, goldVal: 21  },
+    17: { level: 1, cost: 210, goldVal: 22 },
+    18: { level: 1, cost: 220, goldVal: 23  },
+    19: { level: 1, cost: 230, goldVal: 24 },
+    20: { level: 1, cost: 240, goldVal: 25  },
+    21: { level: 1, cost: 250, goldVal: 26  },
+    22: { level: 1, cost: 260, goldVal: 27  },
+    23: { level: 1, cost: 270, goldVal: 28  },
+    24: { level: 1, cost: 280, goldVal: 29 },
+    25: { level: 1, cost: 290, goldVal: 30 },
+    26: { level: 1, cost: 300, goldVal: 31 },
+};

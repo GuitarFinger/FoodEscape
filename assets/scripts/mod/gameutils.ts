@@ -3,6 +3,7 @@ import { Global } from "./global";
 import { Utils } from "./utils";
 import { Counter } from "./counter";
 import Frame from "./frame";
+import DB from "./db";
 
 export class FactoryUtils {
     /**
@@ -350,6 +351,7 @@ export class GoldMachine {
             this._stageTime = 0;
             this._precent = 1;
             this.createNum++;
+            DB.data.player.no_collect_gold += 1;
 
             if (this._createFunc) {
                 this._createFunc();

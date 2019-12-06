@@ -6,6 +6,7 @@
 import { ESceneName } from "./mod/enum";
 import DB from "./mod/db";
 import { Global } from "./mod/global";
+import { LoadModel } from "./GameModel";
 
 // ============================ 常量定义
 const {ccclass, property} = cc._decorator;
@@ -69,34 +70,6 @@ export default class Loading extends cc.Component {
     }
 }
 
-/**加载模块 */
-class LoadModel {
-    /**
-     * 初始化sign的前端字段
-     */
-    static initSignDB = () => {
-        DB.init('sign', {});
-    }
-
-    /**
-     * 获取基本数据
-     */
-    static getBaseData = (callback?: Function) => {
-        DB.data.sign = {
-            index: 1,
-            list: [
-                0, 0, 0, 0, 0, 0, 0
-            ]
-        }
-        DB.data.player = {
-            gold: 0,
-        }
-
-        callback && callback();
-    };
-}
-
 // ============================ 方法定义
 
 // ============================ 立即执行
-LoadModel.initSignDB();

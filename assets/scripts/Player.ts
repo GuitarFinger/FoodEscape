@@ -5,6 +5,7 @@
 import { CGame, EMsg, ETProp } from "./mod/enum";
 import { Global } from "./mod/global";
 import Prop from "./Prop";
+import DB from "./mod/db";
 
 // ============================ 常量定义
 const {ccclass, property} = cc._decorator;
@@ -191,6 +192,7 @@ export default class Player extends cc.Component {
      */
     getScore = () => {
         Global.score += CGame.DIAMOND_SCORE;
+        DB.data.player.diamond += CGame.DIAMOND_SCORE;
         Global.mainGame.modifyScore();
     }
 
