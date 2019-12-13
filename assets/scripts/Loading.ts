@@ -7,6 +7,7 @@ import { ESceneName } from "./mod/enum";
 import DB from "./mod/db";
 import { Global } from "./mod/global";
 import { LoadModel } from "./GameModel";
+import { CfgMgr } from "./mod/cfgmgr";
 
 // ============================ 常量定义
 const {ccclass, property} = cc._decorator;
@@ -49,6 +50,11 @@ export default class Loading extends cc.Component {
             if (content && content instanceof cc.SpriteAtlas) {
                 Global.spriteAtlasMap.set(content.name.split('.')[0], content);
             }
+
+            // if (item.type === 'cfg') {
+            //     CfgMgr.addOriginCfg(item._owner._name, JSON.parse(item.content));
+            // }
+
 
             this.loadBar.progress = loadProgress;
         };

@@ -1230,8 +1230,8 @@
     "clickEvents": [],
     "_N$interactable": true,
     "_N$enableAutoGrayEffect": false,
-    "_N$transition": 3,
-    "transition": 3,
+    "_N$transition": 0,
+    "transition": 0,
     "_N$normalColor": {
       "__type__": "cc.Color",
       "r": 230,
@@ -1873,7 +1873,7 @@
     "asset": {
       "__uuid__": "8be11af2-2b4d-4a7e-9bf1-f8112a31c2c4"
     },
-    "fileId": "dc+0lhCHNHp7HPcgHn/Tqv",
+    "fileId": "da3RIj/9xD8ppo5gB5cZDH",
     "sync": false
   },
   {
@@ -2526,7 +2526,7 @@
     "asset": {
       "__uuid__": "8be11af2-2b4d-4a7e-9bf1-f8112a31c2c4"
     },
-    "fileId": "25+PlgB55NQLCrfHiiHcj5",
+    "fileId": "e2JDYjX1NPuYF2judMoR/K",
     "sync": false
   },
   {
@@ -3473,7 +3473,7 @@
     "asset": {
       "__uuid__": "8be11af2-2b4d-4a7e-9bf1-f8112a31c2c4"
     },
-    "fileId": "542/9FX8NEpa26QLUB73Vw",
+    "fileId": "7eEL0SXzhEXphA9mHImZhE",
     "sync": false
   },
   {

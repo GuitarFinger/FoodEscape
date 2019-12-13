@@ -5,6 +5,7 @@ import { GoldMachine } from "./mod/gameutils";
 import DB from "./mod/db";
 import { MenuModel } from "./GameModel";
 import { CFG_BUILD_LEVEL } from "./config/buildLevelCfg";
+import { Utils } from "./mod/utils";
 
 // ============================ 导入
 
@@ -192,7 +193,13 @@ export default class Menu extends cc.Component {
     collectGold = () => {
         const goldVal = CFG_BUILD_LEVEL[DB.data.player.build_lv].goldVal;
         this.goldNumNode.getComponent(cc.Label).string = `${DB.data.player.gold}`;
-        Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip(this.node, `金币+${goldVal}`));
+
+        Global.emitter.dispatch( EMsg.SCREEN_TIPS,
+            new DTip(
+                this.node, 
+                Utils.screenTipsI18N(1001, [['number', goldVal]])
+            )
+        );
     }
 
     goldAccelerate = () => {
@@ -216,12 +223,12 @@ export default class Menu extends cc.Component {
         const cfgCost = CFG_BUILD_LEVEL[nowLv];
 
         if (nowLv >= Number(maxLv)) {
-            Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip(this.node, `已经满级, 无法升级`));
+            Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip(this.node, Utils.screenTipsI18N(1002)));
             return;
         }
 
         if (cfgCost.cost > DB.data.player.diamond) {
-            Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip(this.node, `钻石不足, 无法升级`));
+            Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip(this.node, Utils.screenTipsI18N(1002)));
             return;
         }
 
@@ -235,7 +242,7 @@ export default class Menu extends cc.Component {
         MenuModel.upgradeBuild(
             cost,
             () => {
-                Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip(this.node, `升级成功`));
+                Global.emitter.dispatch(EMsg.SCREEN_TIPS, new DTip(this.node, Utils.screenTipsI18N(1004)));
                 this.updateBase();
             }
         );

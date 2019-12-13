@@ -2,7 +2,7 @@
 // ========================================模块引入
 import { Queue } from './queue';
 import { Global } from './global';
-import { EMsg, DTip } from './enum';
+import { EMsg, DTip } from './enum'
 
 // ========================================常量定义
 

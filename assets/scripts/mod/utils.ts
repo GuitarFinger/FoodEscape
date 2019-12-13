@@ -1,5 +1,6 @@
-import { CGame, TProp, TPoint, TDuadrant, ETProp } from "./enum";
+import { CGame, TPoint, TDuadrant } from "./enum";
 import { Global } from "./global";
+import { CFG_SCREENTIPS_I18N } from "../config/cfgScreenTips";
 
 /**
  * @module 通用工具
@@ -124,7 +125,7 @@ export class Utils {
     /**
      * 修改图片(图片来自图集)
      */
-    public static modifyImageFromAltas = (node: cc.Node, altasName: string, imgName: string) => {
+    public static modifyImg = (node: cc.Node, altasName: string, imgName: string) => {
         node.getComponent(cc.Sprite).spriteFrame = Global.spriteAtlasMap.get(altasName).getSpriteFrame(imgName);
     };
 
@@ -132,5 +133,57 @@ export class Utils {
     public static caclToPointDistance = (point1: TPoint, point2: TPoint) => {
         return Math.sqrt( Math.pow(Math.abs(point1.x - point2.x), 2) +
                           Math.pow(Math.abs(point1.y - point2.y), 2) );
+    }
+
+    /**
+     * 深度克隆
+     */
+    public static deepCopy = (data: any) => {
+        const dataType = typeof data;
+
+        if (data === null || dataType !== 'object') return data;
+
+        const copyData:any = Array.isArray(data) ? [] : {};
+
+        for (let k in data) {
+            const item = data[k];
+
+            // 避免相互引用造成死循环
+            if (item == data) continue;
+
+            if (data.hasOwnProperty(k)) {
+                copyData[k] = Utils.deepCopy(item);
+            }
+
+        }
+        
+        return copyData;
+    }
+
+    public static screenTipsI18N = (code: number, replaceArr?: any[][]) => {
+        let resultStr:string = '';
+
+        if (!CFG_SCREENTIPS_I18N[code] || !CFG_SCREENTIPS_I18N[code][Global.language]) return resultStr;
+
+        resultStr = CFG_SCREENTIPS_I18N[code][Global.language];
+
+        if (!replaceArr) return resultStr;
+
+        for (let i = 0; i < replaceArr.length; i++) {
+            resultStr = resultStr.replace(`{{${replaceArr[i][0]}}}`, replaceArr[i][1]);
+        }
+
+        return resultStr;
+    };
+
+    /**
+     * 节点点击事件
+     */
+    public static nodeClick = (node: cc.Node, downFn?: Function, upFn?: Function) => {
+        if (!node) return;
+
+        downFn && node.on(cc.Node.EventType.TOUCH_START, downFn);
+
+        upFn && node.on(cc.Node.EventType.TOUCH_END, upFn);
     }
 }

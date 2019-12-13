@@ -114,6 +114,8 @@ export const Global = {
     adsPF: (null as cc.Prefab),
     // ============== 预制体
     
+    language: 'zh',
+
     /**主游戏上下文 */
     mainGame: null,
     /**发射器 */
@@ -185,6 +187,7 @@ export const Global = {
 
     /**所有图片集列表 */
     spriteAtlasMap: new Map<string, cc.SpriteAtlas>(),
+    config: {},
 
     /**距离 */
     distance: 0,

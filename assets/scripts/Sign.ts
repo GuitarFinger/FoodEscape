@@ -45,7 +45,13 @@ export default class Sign extends cc.Component {
 
         bgOpacity.on(cc.Node.EventType.TOUCH_START, this.closePage);
         boxSign.on(cc.Node.EventType.TOUCH_START, () => {});
-        btnClose.on(cc.Node.EventType.TOUCH_START, this.closePage);
+
+        btnClose.on(cc.Node.EventType.TOUCH_START, () => {
+            cc.tween(btnClose)
+                .to(0.1, { scale: 0.85 })
+                .call(this.closePage)
+                .start();
+        });
     }
 
     /**
@@ -59,7 +65,6 @@ export default class Sign extends cc.Component {
      * 创建签到列表
      */
     createSignList = () => {
-        const signIdx:number = DB.data.sign.index;
         const dbSignList: number[] = DB.data.sign.list;
         const signLength = dbSignList.length;
         const boxSign = this.node.getChildByName('box_sign');
@@ -73,7 +78,15 @@ export default class Sign extends cc.Component {
                 this.initSignItem(item, idx, !!val);
 
                 item.on(cc.Node.EventType.TOUCH_START, () => {
-                    this.handleSignIn(idx, item);
+                    cc.tween(item)
+                        .to(0.1, { scale: 0.8 })
+                        .call(() => {
+                            this.handleSignIn(idx, item);
+                            cc.tween(item)
+                                .to(0.1, { scale: 1 })
+                                .start()
+                        })
+                        .start()
                 });
 
                 boxSignLayout.addChild(item);
@@ -84,7 +97,16 @@ export default class Sign extends cc.Component {
         this.initSignItem(boxSignLast, signLength-1, !!dbSignList[signLength-1], true);
 
         boxSignLast.on(cc.Node.EventType.TOUCH_START, () => {
-            this.handleSignIn(signLength-1, boxSignLast, true);
+            boxSignLast.stopAllActions();
+            cc.tween(boxSignLast)
+                .to(0.1, { scale: 0.8 })
+                .call(() => {
+                    this.handleSignIn(signLength-1, boxSignLast, true);
+                    cc.tween(boxSignLast)
+                        .to(0.1, { scale: 1 })
+                        .start();
+                })
+                .start()
         });
     }
 
@@ -92,9 +114,9 @@ export default class Sign extends cc.Component {
      * 初始化签到项
      */
     initSignItem = (item: cc.Node, index: number, isSigned: boolean, isLast = false) => {
-        Utils.modifyImageFromAltas(item.getChildByName('bg_sign'), 'ui_sign', `bg_sign_${isSigned ? 'gray': 'normal'}`);
-        Utils.modifyImageFromAltas(item.getChildByName('icon_shadow'), 'ui_sign', `icon_shadow_${isSigned ? 'gray': 'normal'}`);
-        Utils.modifyImageFromAltas(item.getChildByName('icon_diamond'), 'ui_sign', `icon_diamond${isLast ? 's': ''}_${isSigned ? 'gray': 'normal'}`);
+        Utils.modifyImg(item.getChildByName('bg_sign'), 'ui_sign', `bg_sign_${isSigned ? 'gray': 'normal'}`);
+        Utils.modifyImg(item.getChildByName('icon_shadow'), 'ui_sign', `icon_shadow_${isSigned ? 'gray': 'normal'}`);
+        Utils.modifyImg(item.getChildByName('icon_diamond'), 'ui_sign', `icon_diamond${isLast ? 's': ''}_${isSigned ? 'gray': 'normal'}`);
         
         item.getChildByName('icon_dui').active = isSigned ? true : false;
         item.getChildByName('text_title').getComponent(cc.RichText).string = `<color=#5F371D><b>第${index+1}天</b></c>`;
@@ -111,7 +133,7 @@ export default class Sign extends cc.Component {
         if (whichDay > dbSignIdx) {
             Global.emitter.dispatch(
                 EMsg.SCREEN_TIPS,
-                new DTip(this.node, `isn't reach to ${whichDay} day`)
+                new DTip(this.node, Utils.screenTipsI18N(1005, [['day', whichDay]]))
             );
             return;
         }
@@ -119,7 +141,7 @@ export default class Sign extends cc.Component {
         if (dbSignList[whichDay] !== 0) {
             Global.emitter.dispatch(
                 EMsg.SCREEN_TIPS,
-                new DTip(this.node, `${whichDay} day is signed`)
+                new DTip(this.node, Utils.screenTipsI18N(1006))
             );
             return;
         }
